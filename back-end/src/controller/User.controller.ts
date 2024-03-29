@@ -30,6 +30,15 @@ class User {
         const specialCharRegex = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/;
 
         // Check if the password meets all criteria
+
+        // * login and sign up : authentication and authorization : jwt
+        // * authorization : jwt
+
+        // * voi lan api -> email+ password -> luu 2 cai nay vao client -> de mat email + password
+        // * luu token (exp) -> client -> gui kem theo token ->
+        // * jwt = { access_token : {exp : 2h}, refresh_token : { exp : 10 days} }
+        // * jwt luu trong cookie
+
         return (
           uppercaseRegex.test(password) &&
           numberRegex.test(password) &&
