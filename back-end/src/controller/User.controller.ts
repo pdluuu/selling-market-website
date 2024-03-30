@@ -32,7 +32,7 @@ class User {
             }
             
             // Continue with your logic
-            //const mess = userServices.tao_nguoi_dung(name, password);
+            const mess = userServices.tao_nguoi_dung(name, password);
             if(errors.length>0){
                 return res.json({...errors});
             } else return res.json({
