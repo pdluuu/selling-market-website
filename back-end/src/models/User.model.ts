@@ -1,24 +1,38 @@
-import { Model, DataType, Table, Column } from "sequelize-typescript";
-import sequelize from "../configs/sequelize";
+import { ObjectId } from "mongodb";
+import mongoose, {Schema, Document} from "mongoose";
+import { string } from "zod";
 
-@Table({ tableName: "users", timestamps: false })
-export class User extends Model {
-    @Column({ type: DataType.INTEGER, primaryKey: true, autoIncrement: true })
-    id!: number;
-
-    @Column({ type: DataType.STRING })
-    firstName!: string;
-
-    @Column({ type: DataType.STRING })
-    lastName!: string;
-}
-
-// Initialize the model
-User.init(
-    {
-        id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true },
-        firstName: { type: DataType.STRING },
-        lastName: { type: DataType.STRING },
+// Define the interface representing a user document
+interface User extends Document {
+    id: string;
+    password: string;
+    email: string;
+    name?: string;
+    status?: string;
+    username?: string;
+    role?: 'user' | 'admin' | 'staff' | 'deliver';
+    store_id?: string | null;
+    phoneNumber?: string;
+  }
+  
+  // Define the schema for the user model
+  const userSchema: Schema = new Schema({
+    password: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    name: { type: String, required: false },
+    status: { type: String, required: false },
+    username: { type: String, required: false },
+    role: {
+      type: String,
+      enum: ['user', 'admin', 'staff', 'deliver'],
+      required: true,
+      default: 'user',
     },
-    { sequelize }
-);
+    store_id: { type: String, default: null },
+    phoneNumber: { type: String, required: false },
+  });
+  
+  // Create and export the User model
+  const UserModel = mongoose.model<User>('User', userSchema);
+  
+  export default UserModel;
