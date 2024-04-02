@@ -22,18 +22,13 @@ class UserServices {
     console.log("start login");
 
     try {
-      const users = await UserModel.find();
-      console.log(users);
       const user = await UserModel.findOne({ email });
       if (!user) {
-        console.log("02");
         return "02";
       }
       if (user.password != password) {
-        console.log("03");
         return "03";
       }
-      console.log("00");
       return "00";
     } catch (error) {
       console.log(error);

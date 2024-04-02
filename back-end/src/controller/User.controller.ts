@@ -87,6 +87,21 @@ class User {
                 message: 'Login thanh cong',
             });
         }
+        if(loginuser == '02'){
+          return res.status(404).json({
+            message: 'user not found'
+          });
+        }
+        if(loginuser == '03'){
+          return res.status(403).json({
+            message: 'password incorrect'
+          });
+        }
+        if(loginuser == '01'){
+          return res.status(404).json({
+            message: 'error'
+          });
+        }
     
     } catch (error: ErrorResponseType | any) {
         console.log(error);
