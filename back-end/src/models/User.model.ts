@@ -7,21 +7,21 @@ interface User extends Document {
   id: string;
   password: string;
   email: string;
-  name?: string;
+  name: string;
   status?: string;
   username: string;
-  role?: 'user' | 'admin' | 'staff' | 'deliver';
+  role: 'user' | 'admin' | 'staff' | 'deliver';
   store_id?: string | null;
-  phoneNumber?: string;
+  phoneNumber: string;
 }
 
 // Define the schema for the user model
 const userSchema: Schema = new Schema({
   password: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  name: { type: String, required: false },
+  name: { type: String, required: true },
   status: { type: String, required: false },
-  username: { type: String, required: true },
+  username: { type: String, required: true, unique:true },
   role: {
     type: String,
     enum: ['user', 'admin', 'staff', 'deliver'],
@@ -29,7 +29,7 @@ const userSchema: Schema = new Schema({
     default: 'user',
   },
   store_id: { type: String, default: null },
-  phoneNumber: { type: String, required: false },
+  phoneNumber: { type: String, required: true, unique: true },
 });
 
 // Create and export the User model
