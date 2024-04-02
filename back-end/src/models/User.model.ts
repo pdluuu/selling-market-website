@@ -1,24 +1,38 @@
-import { Model, DataType, Table, Column } from "sequelize-typescript";
-import sequelize from "../configs/sequelize";
-
-@Table({ tableName: "users", timestamps: false })
-export class User extends Model {
-    @Column({ type: DataType.INTEGER, primaryKey: true, autoIncrement: true })
-    id!: number;
-
-    @Column({ type: DataType.STRING })
-    firstName!: string;
-
-    @Column({ type: DataType.STRING })
-    lastName!: string;
+import mongoose, { Schema, Document } from "mongoose";
+export interface IUser extends Document {
+    _id: string;
+    password: string;
+    email: string;
+    name?: string | null;
+    username: string;
+    status: "inactive" | "active" | "banned";
+    role: "user" | "deliver" | "admin" | "staff";
+    store_id?: string;
 }
 
-// Initialize the model
-User.init(
+const UserSchema: Schema = new Schema(
     {
-        id: { type: DataType.INTEGER, primaryKey: true, autoIncrement: true },
-        firstName: { type: DataType.STRING },
-        lastName: { type: DataType.STRING },
+        password: { type: String, required: true },
+        email: { type: String, required: true, unique: true },
+        name: { type: String },
+        username: { type: String, required: true, unique: true },
+        status: {
+            type: String,
+            enum: ["inactive", "active", "banned"],
+            required: true,
+            default: "inactive",
+        },
+        role: {
+            type: String,
+            enum: ["user", "deliver", "admin", "staff"],
+            required: true,
+            default: "user",
+        },
+        store_id: { type: String },
     },
-    { sequelize }
+    { timestamps: true }
 );
+
+const UserModel = mongoose.model<IUser>("User", UserSchema);
+
+export default UserModel;
