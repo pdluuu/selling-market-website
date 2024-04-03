@@ -1,12 +1,25 @@
 import mongoose, { Schema, Document } from "mongoose";
+
+export enum UserRole {
+    User = "user",
+    Deliver = "deliver",
+    Admin = "admin",
+    Staff = "staff",
+}
+
+export enum UserStatus {
+    Active = "active",
+    Inactive = "inactive",
+    Banned = "banned",
+}
 export interface IUser extends Document {
     _id: string;
     password: string;
     email: string;
     name?: string | null;
     username: string;
-    status: "inactive" | "active" | "banned";
-    role: "user" | "deliver" | "admin" | "staff";
+    status: UserStatus;
+    role: UserRole;
     store_id?: string;
 }
 
