@@ -16,8 +16,8 @@ class Product{
         res: Response
     ) {
         try {
-            const {category, brand = []} = req.body;
-            const product = await productService.getInfo(category, brand);
+            const {category, brand = [], sortProduct} = req.body;
+            const product = await productService.getInfo(category, brand, sortProduct);
             return res.status(200).json(product);
             
         } catch (error:any) {

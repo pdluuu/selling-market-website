@@ -3,4 +3,5 @@ import { AccessoriesBrand, LapTopBrand, ProductCategory, SmartPhoneBrand, Tablet
 export interface IProductFillter {
     category: ProductCategory;
     brand: (SmartPhoneBrand | LapTopBrand | TabletBrand | AccessoriesBrand) [];
+    sortProduct: string;
 }
