@@ -1,38 +1,51 @@
-import { ObjectId } from "mongodb";
-import mongoose, {Schema, Document} from "mongoose";
-import { string } from "zod";
+import mongoose, { Schema, Document } from "mongoose";
 
-// Define the interface representing a user document
-interface User extends Document {
-    id: string;
+export enum UserRole {
+    User = "user",
+    Deliver = "deliver",
+    Admin = "admin",
+    Staff = "staff",
+}
+
+export enum UserStatus {
+    Active = "active",
+    Inactive = "inactive",
+    Banned = "banned",
+}
+export interface IUser extends Document {
+    _id: string;
     password: string;
     email: string;
-    name?: string;
-    status?: string;
-    username?: string;
-    role?: 'user' | 'admin' | 'staff' | 'deliver';
-    store_id?: string | null;
-    phoneNumber?: string;
-  }
-  
-  // Define the schema for the user model
-  const userSchema: Schema = new Schema({
-    password: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    name: { type: String, required: false },
-    status: { type: String, required: false },
-    username: { type: String, required: false },
-    role: {
-      type: String,
-      enum: ['user', 'admin', 'staff', 'deliver'],
-      required: true,
-      default: 'user',
+    name?: string | null;
+    username: string;
+    status: UserStatus;
+    role: UserRole;
+    store_id?: string;
+}
+
+const UserSchema: Schema = new Schema(
+    {
+        password: { type: String, required: true },
+        email: { type: String, required: true, unique: true },
+        name: { type: String },
+        username: { type: String, required: true, unique: true },
+        status: {
+            type: String,
+            enum: ["inactive", "active", "banned"],
+            required: true,
+            default: "inactive",
+        },
+        role: {
+            type: String,
+            enum: ["user", "deliver", "admin", "staff"],
+            required: true,
+            default: "user",
+        },
+        store_id: { type: String },
     },
-    store_id: { type: String, default: null },
-    phoneNumber: { type: String, required: false },
-  });
-  
-  // Create and export the User model
-  const UserModel = mongoose.model<User>('User', userSchema);
-  
-  export default UserModel;
+    { timestamps: true }
+);
+
+const UserModel = mongoose.model<IUser>("User", UserSchema);
+
+export default UserModel;
