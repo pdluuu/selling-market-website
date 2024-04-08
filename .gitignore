@@ -49,3 +49,6 @@ coverage/
 # npm
 npm-debug.log*
 *.lock
+
+/.next/
+/out/
