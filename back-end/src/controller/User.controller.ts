@@ -169,6 +169,7 @@ class User {
             return res.status(Err.statusCode).json({ message: Err.message });
         }
     }
+    async googleAuth() {}
 }
 
 const user = new User();

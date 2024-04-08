@@ -9,7 +9,7 @@ import testConnection from "./src/database/portgres/connect.portgres";
 import userRouter from "./src/router/user.router/User.router";
 import appRouter from "./src/router/index.router";
 import { connectDB } from "./src/database/mongodb/connect.mongo";
-
+import cors from "cors";
 // * innitialization
 const app: Application = express();
 const PORT = process.env.PORT || 5000;
@@ -21,16 +21,26 @@ app.use(helmet());
 app.use(compression());
 app.use(json());
 app.use(express.urlencoded({ extended: true })); // support encoded bodies
-
+app.use(cors());
 // * connect to db
 
-connectDB();
+connectDB().then((res) => console.log(res));
 
 // * api version
 app.use(api_version, appRouter);
 // * server running
 const server = app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
+});
+
+app.get("/get-prod", (req, res) => {
+    return res.json({
+        data: [
+            { name: "prod1", price: 1 },
+            { name: "prod2", price: 2 },
+            { name: "prod3", price: 3 },
+        ],
+    });
 });
 
 process.on("unhandledRejection", (error, promise) => {
