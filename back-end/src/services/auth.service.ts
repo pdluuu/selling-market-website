@@ -29,13 +29,15 @@ class AuthService {
     }
     async signIn(email: string, password: string) {
         const user = await UserModel.findOne({ email: email });
+        console.log(email, password)
+        
         if (!user) {
             throw new InvalidInput("Email not found");
         }
+        console.log(user.email, user.password)
+        // let isMatch = compareSync(password, user.password);
 
-        let isMatch = compareSync(password, user.password);
-
-        if (!isMatch) {
+        if (password !== user.password) {
             throw new InvalidInput("Password not match");
         }
 
@@ -45,11 +47,15 @@ class AuthService {
     validate(type: "email" | "password", value: string) {
         if (type === "email") {
             const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            console.log(type)
+            console.log(emailRegex.test(value))
             return emailRegex.test(value);
         }
         if (type === "password") {
             const passwordRegex: RegExp =
                 /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/;
+            console.log(type)
+            console.log(passwordRegex.test(value))
             return passwordRegex.test(value);
         }
         return false;
