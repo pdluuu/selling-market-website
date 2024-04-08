@@ -1,8 +1,5 @@
 import { ObjectId } from "mongodb";
 import ProductModel, { IProduct } from "../models/Product.model";
-import { object } from "zod";
-
-
 
 class ProductServices {
     async createProduct(

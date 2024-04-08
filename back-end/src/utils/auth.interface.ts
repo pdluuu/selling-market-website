@@ -27,6 +27,12 @@ export interface IToken {
     refreshToken: string;
 }
 
+export interface ITokenWithRole{
+    userId: string;
+    role: string;
+    refreshToken: string;
+}
+
 export interface JwtPayLoad {
     userId: string;
     email: string;

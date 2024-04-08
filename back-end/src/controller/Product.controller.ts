@@ -15,10 +15,11 @@ import {
     ISignIn,
     ISignUp,
     ISuccessRes,
-    IToken,
+    ITokenWithRole,
 } from "../utils/auth.interface";
 import { IProduct } from "../models/Product.model"
 import { config } from "dotenv";
+import { authenticateRole } from "../middlerware/role.authentication";
 config();
 class Product {
     async createProduct(
@@ -26,27 +27,27 @@ class Product {
         res: Response<ISuccessRes | IFailRes>
     ) {
         try {
-            const { name, brand, discount, version, price, category, images } = req.body;
-
-            if ( !name || !brand || !price || !category || !images) {
-                throw new MissingParameter();
-            }
-
-            const product = await productServices.createProduct(name, brand, discount, version, price, category, images);
-            
-            return res.status(200).json({
-                message: "successful",
-               
+            authenticateRole(req, res, async () => {
+                const { name, brand, discount, version, price, category, images } = req.body;
+    
+                if (!name || !brand || !price || !category || !images) {
+                    throw new MissingParameter();
+                }
+    
+                const product = await productServices.createProduct(name, brand, discount, version, price, category, images);
+    
+                return res.status(200).json({
+                    message: "Create successfully"
+                });
             });
         } catch (error: any) {
-            // Logger.error(error);
             console.log(error);
-
+    
             const Err = new ErrorResponse(
                 error.message as string,
                 error.statusCode as number
             );
-
+    
             return res.status(Err.statusCode).json({ message: Err.message });
         }
     }
@@ -55,10 +56,12 @@ class Product {
         res: Response<ISuccessRes | IFailRes>
     ){
         try{
-            const { id } = req.body;
-            const product = productServices.deleteProduct(id)
-            return res.status(200).json({
-                message: "Delete successfully",
+            authenticateRole(req, res, async () => {
+                const { id } = req.body;
+                const product = productServices.deleteProduct(id)
+                return res.status(200).json({
+                    message: "Delete successfully",
+                });
             });
         }
         catch (error: any) {
@@ -78,18 +81,20 @@ class Product {
         res: Response<ISuccessRes | IFailRes>
     ) {
         try {
-            const { id, name, brand, discount, version, price, category, images } = req.body;
+            authenticateRole(req, res, async () => {
+                const { id, name, brand, discount, version, price, category, images } = req.body;
 
-            if ( !name || !brand || !price || !category || !images) {
-                throw new MissingParameter();
-            }
+                if ( !name || !brand || !price || !category || !images) {
+                    throw new MissingParameter();
+                }
 
-            const product = await productServices.updateProduct(req.body);
-            
-            return res.status(200).json({
-                message: "Update successfully",
+                const product = await productServices.updateProduct(req.body);
+                
+                return res.status(200).json({
+                    message: "Update successfully",
                
             });
+        });
         } catch (error: any) {
             // Logger.error(error);
             console.log(error);

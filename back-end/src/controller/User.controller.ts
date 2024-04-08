@@ -30,7 +30,6 @@ class User {
             if (!email || !password || !username) {
                 throw new MissingParameter();
             }
-
             if (
                 !auhtService.validate("email", email) ||
                 !auhtService.validate("password", password)
@@ -90,7 +89,6 @@ class User {
             if (!email || !password) {
                 throw new MissingParameter();
             }
-
             if (
                 !auhtService.validate("email", email) ||
                 !auhtService.validate("password", password)
