@@ -1,7 +1,8 @@
 Mai Linh
-Dang Ky
-Dang Nhap
-Xem Thong tin san pham
+
+Sign-up
+
+sign up api
 
 Truong Loc
 Dat mua san pham
