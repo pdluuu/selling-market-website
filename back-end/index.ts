@@ -8,32 +8,26 @@ import { json } from "body-parser";
 import testConnection from "./src/database/portgres/connect.portgres";
 import userRouter from "./src/router/user.router/User.router";
 import appRouter from "./src/router/index.router";
-import authRouter from "./src/router/auth/auth.route";
 import { connectDB } from "./src/database/mongodb/connect.mongo";
-import productRouter from "./src/router/product.router/product.router";
-//For env File
-dotenv.config();
-
+import cors from "cors";
+import authRouter from "./src/router/auth/auth.route";
+// * innitialization
 const app: Application = express();
 const PORT = process.env.PORT || 5000;
+const api_version = process.env.API_VERSION || "/api/v1";
 
 // * middleware
 app.use(morganMiddleware);
 app.use(helmet());
 app.use(compression());
 app.use(json());
+app.use(express.urlencoded({ extended: true })); // support encoded bodies
+app.use(cors());
+// * connect to db
 
-connectDB();
+connectDB().then((res) => console.log(res));
 
-//connect to db
-app.use(userRouter);
-app.use('/auth', authRouter);
-app.use('/product',productRouter)
-
-
-
-const api_version = process.env.API_VERSION || '/api/v1';
-
+//app.use('auth', authRouter);
 
 // * api version
 app.use(api_version, appRouter);
@@ -42,7 +36,19 @@ const server = app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
+app.get("/get-prod", (req, res) => {
+    return res.json({
+        data: [
+            { name: "prod1", price: 1 },
+            { name: "prod2", price: 2 },
+            { name: "prod3", price: 3 },
+        ],
+    });
+});
+
 process.on("unhandledRejection", (error, promise) => {
     console.log(`Logged Error: ${error}`);
     server.close(() => process.exit(1));
 });
+
+

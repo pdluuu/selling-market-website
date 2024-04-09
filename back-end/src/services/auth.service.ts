@@ -5,8 +5,12 @@ import { config } from "dotenv";
 import jwt from "jsonwebtoken";
 import TokenModel from "../models/Token.model";
 import RefreshTokenModel from "../models/Token.model";
+import { log } from "console";
 
 config();
+
+const sentCodes: { [email: string]: { code: string | false, expiresAt: number } } = {};
+
 class AuthService {
     async signUp(email: string, password: string, username: string) {
         if (
@@ -101,7 +105,61 @@ class AuthService {
 
         return Token._id;
     }
+
+    async sendCode(email: string): Promise<string | false>{       
+        const code = String(Math.floor(100000 + Math.random() * 900000));
+        try {
+            var nodemailer = require('nodemailer');
+        var transporter = nodemailer.createTransport({
+            service: 'gmail',
+            host: 'smtp.gmail.com',
+            port: 587,
+            auth: {
+              user: 'mailinhv534@gmail.com',
+              pass: 'nrydytummnqecfpn'
+            }
+          });
+          
+          var mailOptions = {
+            from: 'mailinhv534@gmail.com',
+            to: email,
+            subject: 'Sending Email to sendCode',
+            text: code
+          };
+          
+           await transporter.sendMail(mailOptions)
+            console.log(code);
+            const expiresAt = Date.now() + 3 * 60 * 1000;
+
+            sentCodes[email] = { code: code, expiresAt: expiresAt };
+            return code;
+        } catch (error:any) {
+            console.error(error);
+            return false;
+        }
+          
+    }
+
+    async vertifyUser(email: string, code: string) {
+        try {
+            if (email in sentCodes) {
+                // Tìm mã code trong mảng của email
+                const userCodes = sentCodes[email];
+                if(userCodes.code !== code){
+                    return 400;
+                }
+                if(userCodes.expiresAt < Date.now()){
+                    return 408;
+                }
+                return 200;
+            }else{
+                return 404;
+            }
+        } catch (error) {
+            
+        }
+    }
 }
 
-const auhtService = new AuthService();
-export default auhtService;
+const authService = new AuthService();
+export default authService;

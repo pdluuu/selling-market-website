@@ -3,173 +3,261 @@ import jwt from "jsonwebtoken";
 
 import { Response, Request } from "express";
 import {
-    ErrorResponse,
-    ErrorResponseType,
-    InvalidInput,
-    MissingParameter,
+  ErrorResponse,
+  ErrorResponseType,
+  InvalidInput,
+  MissingParameter,
 } from "../utils/errorResponse";
-import auhtService from "../services/auth.service";
+import authService from "../services/auth.service";
 import Logger from "../lib/logger";
 import {
-    IFailRes,
-    ISignIn,
-    ISignUp,
-    ISuccessRes,
-    IToken,
+  IFailRes,
+  IForgotPassEmail,
+  ISignIn,
+  ISignUp,
+  ISuccessRes,
+  IToken,
+  IVertifyUser,
 } from "../utils/auth.interface";
 import { config } from "dotenv";
+import authRouter from "../router/auth/auth.route";
 config();
+
 class User {
-    async sign_up(
-        req: Request<any, any, ISignUp>,
-        res: Response<ISuccessRes | IFailRes>
-    ) {
-        try {
-            const { email, password, username } = req.body;
+  async sign_up(
+    req: Request<any, any, ISignUp>,
+    res: Response<ISuccessRes | IFailRes>
+  ) {
+    try {
+      const { email, password, username } = req.body;
 
-            if (!email || !password || !username) {
-                throw new MissingParameter();
-            }
+      if (!email || !password || !username) {
+        throw new MissingParameter();
+      }
 
-            if (
-                !auhtService.validate("email", email) ||
-                !auhtService.validate("password", password)
-            ) {
-                throw new InvalidInput();
-            }
+      if (
+        !authService.validate("email", email) ||
+        !authService.validate("password", password)
+      ) {
+        throw new InvalidInput();
+      }
 
-            const user = await auhtService.signUp(email, password, username);
+      const user = await authService.signUp(email, password, username);
 
-            const payload = {
-                _id: user._id,
-                email: user.email,
-            };
+      const payload = {
+        _id: user._id,
+        email: user.email,
+      };
 
-            // * accesstoken la dang ma hoa cua { id, email } can co khoa
+      // * accesstoken la dang ma hoa cua { id, email } can co khoa
 
-            const accessToken = jwt.sign(
-                payload,
-                process.env.ACCESS_TOKEN_SECRET || "",
-                { expiresIn: process.env.EXPIRES_TOKEN_TIME }
-            );
+      const accessToken = jwt.sign(
+        payload,
+        process.env.ACCESS_TOKEN_SECRET || "",
+        { expiresIn: process.env.EXPIRES_TOKEN_TIME }
+      );
 
-            const refreshToken = jwt.sign(
-                payload,
-                process.env.REFRESH_TOKEN_SECRET || ""
-            );
+      const refreshToken = jwt.sign(
+        payload,
+        process.env.REFRESH_TOKEN_SECRET || ""
+      );
 
-            await auhtService.addTokens(refreshToken, user._id);
+      await authService.addTokens(refreshToken, user._id);
 
-            return res.status(200).json({
-                message: "successful",
-                data: {
-                    accessToken,
-                    refreshToken,
-                },
-            });
-        } catch (error: any) {
-            // Logger.error(error);
-            console.log(error);
+      return res.status(200).json({
+        message: "successful",
+        data: {
+          accessToken,
+          refreshToken,
+        },
+      });
+    } catch (error: any) {
+      // Logger.error(error);
+      console.log(error);
 
-            const Err = new ErrorResponse(
-                error.message as string,
-                error.statusCode as number
-            );
+      const Err = new ErrorResponse(
+        error.message as string,
+        error.statusCode as number
+      );
 
-            return res.status(Err.statusCode).json({ message: Err.message });
-        }
+      return res.status(Err.statusCode).json({ message: Err.message });
     }
+  }
 
-    async sign_in(
-        req: Request<any, any, ISignIn>,
-        res: Response<ISuccessRes | IFailRes>
-    ) {
-        try {
-            const { email, password } = req.body;
+  async sign_in(
+    req: Request<any, any, ISignIn>,
+    res: Response<ISuccessRes | IFailRes>
+  ) {
+    try {
+      const { email, password } = req.body;
 
-            if (!email || !password) {
-                throw new MissingParameter();
-            }
+      if (!email || !password) {
+        throw new MissingParameter();
+      }
 
-            if (
-                !auhtService.validate("email", email) ||
-                !auhtService.validate("password", password)
-            ) {
-                throw new InvalidInput(); // * return
-            }
+      if (
+        !authService.validate("email", email) ||
+        !authService.validate("password", password)
+      ) {
+        throw new InvalidInput(); // * return
+      }
 
-            const user = await auhtService.signIn(email, password);
+      const user = await authService.signIn(email, password);
 
-            const payload = {
-                _id: user._id,
-                email: user.email,
-            };
+      const payload = {
+        _id: user._id,
+        email: user.email,
+      };
 
-            // phien ban ma hoa
-            const accessToken = jwt.sign(
-                payload,
-                process.env.ACCESS_TOKEN_SECRET || "",
-                { expiresIn: process.env.EXPIRES_TOKEN_TIME }
-            );
-            // ma hoa + key -> phien ban chua decode
+      // phien ban ma hoa
+      const accessToken = jwt.sign(
+        payload,
+        process.env.ACCESS_TOKEN_SECRET || "",
+        { expiresIn: process.env.EXPIRES_TOKEN_TIME }
+      );
+      // ma hoa + key -> phien ban chua decode
 
-            // * save refresh Token vao database => lay lai access Token
-            // * luu 1 chuoi cac access token => nhieu ng dung cung dang nhap cung mot luc
-            // * xoa refreshToken tren dien thoai
-            // * xoa luon []
+      // * save refresh Token vao database => lay lai access Token
+      // * luu 1 chuoi cac access token => nhieu ng dung cung dang nhap cung mot luc
+      // * xoa refreshToken tren dien thoai
+      // * xoa luon []
 
-            const refreshToken = jwt.sign(
-                payload,
-                process.env.REFRESH_TOKEN_SECRET || ""
-            );
+      const refreshToken = jwt.sign(
+        payload,
+        process.env.REFRESH_TOKEN_SECRET || ""
+      );
 
-            await auhtService.addTokens(refreshToken, user._id);
+      await authService.addTokens(refreshToken, user._id);
 
-            return res.status(200).json({
-                message: "successful",
-                data: {
-                    accessToken,
-                    refreshToken,
-                },
-            });
-        } catch (error: any) {
-            // Logger.error(error);
-            console.log(error);
+      return res.status(200).json({
+        message: "successful",
+        data: {
+          accessToken,
+          refreshToken,
+        },
+      });
+    } catch (error: any) {
+      // Logger.error(error);
+      console.log(error);
 
-            const Err = new ErrorResponse(
-                error.message as string,
-                error.statusCode as number
-            );
+      const Err = new ErrorResponse(
+        error.message as string,
+        error.statusCode as number
+      );
 
-            return res.status(Err.statusCode).json({ message: Err.message });
-        }
+      return res.status(Err.statusCode).json({ message: Err.message });
     }
+  }
 
-    async logout(
-        req: Request<any, any, IToken>,
-        res: Response<ISuccessRes | IFailRes>
-    ) {
-        try {
-            const { userId, refreshToken } = req.body;
+  async logout(
+    req: Request<any, any, IToken>,
+    res: Response<ISuccessRes | IFailRes>
+  ) {
+    try {
+      const { userId, refreshToken } = req.body;
 
-            const Token_id = await auhtService.removeToken(
-                userId,
-                refreshToken
-            );
+      const Token_id = await authService.removeToken(userId, refreshToken);
 
-            return res.status(204).json({ message: "logged out!" });
-        } catch (error: any) {
-            console.log(error);
+      return res.status(204).json({ message: "logged out!" });
+    } catch (error: any) {
+      console.log(error);
 
-            const Err = new ErrorResponse(
-                error.message as string,
-                error.statusCode as number
-            );
+      const Err = new ErrorResponse(
+        error.message as string,
+        error.statusCode as number
+      );
 
-            return res.status(Err.statusCode).json({ message: Err.message });
-        }
+      return res.status(Err.statusCode).json({ message: Err.message });
     }
-}
+  }
+  async googleAuth() {}
+
+  async forgot_password() //req: Request<any, any, IForgotPassEmail>
+  //res: Response
+  {}
+
+  async sendCode(
+    req: Request<any, any, IForgotPassEmail>,
+    res: Response<ISuccessRes | IFailRes>
+  ) {
+    try {
+      const { email } = req.body;
+
+      if (!email) {
+        throw new MissingParameter();
+      }
+      if (!authService.validate("email", email)) {
+        return res.status(400).json({message: "Invalid email format"});
+      }
+
+      const sendCode = await authService.sendCode(email);     
+
+      return res.status(200).json({
+        message: "Verification code sent successfully"
+      })
+        
+      }catch (error : any) {
+        console.log(error);
+  
+        const Err = new ErrorResponse(
+          error.message as string,
+          error.statusCode as number
+        );
+  
+        return res.status(Err.statusCode).json({ message: Err.message });
+      }
+    }
+    
+    async verifyUser(
+      req: Request<any, any, IVertifyUser>,
+      res: Response<ISuccessRes| IFailRes>
+    ) {
+      try {
+        const {email, code} = req.body;
+
+        if (!email || !code) {
+          throw new MissingParameter();
+        }
+        if (!authService.validate("email", email)) {
+          return res.status(400).json({message: "Invalid email format"});
+        }
+
+        var result = await authService.vertifyUser(email, code);
+        if(result === 200){
+          return res.status(200).json({
+            message: "User verified successfully"
+          })
+        }
+        if(result === 400){
+          return res.status(400).json({
+            message: "Invalid verification code"
+          })
+        }
+
+        if(result === 404){
+          return res.status(404).json({
+            message: "User not found"
+          })
+        }
+
+        if(result === 408){
+          return res.status(408).json({
+            message: "Ma het hieu luc"
+          })
+        }
+      } catch (error: any) {
+        console.log(error);
+        const Err = new ErrorResponse(
+          error.message as string,
+          error.statusCode as number
+        );
+  
+        return res.status(Err.statusCode).json({ message: Err.message });
+      }
+
+    }
+ }
+
 
 const user = new User();
 export default user;

@@ -1,3 +1,5 @@
+import exp from "constants";
+
 export interface ISignUp {
     email: string;
     password: string;
@@ -7,7 +9,6 @@ export interface ISignIn {
     email: string;
     password: string;
 }
-
 
 export interface ISuccessRes {
     message: "successful";
@@ -26,4 +27,13 @@ export interface IToken {
 export interface JwtPayLoad {
     userId: string;
     email: string;
+}
+
+export interface IForgotPassEmail {
+    email: string;
+}
+
+export interface IVertifyUser {
+    email: string;
+    code: string
 }
