@@ -22,6 +22,7 @@ export interface IUser extends Document {
     role: UserRole;
     phoneNumber?: string;
     store_id?: string;
+    image?: string;
 }
 
 const UserSchema: Schema = new Schema(
@@ -44,6 +45,7 @@ const UserSchema: Schema = new Schema(
             default: "user",
         },
         store_id: { type: String },
+        image: { type: String },
     },
     { timestamps: true }
 );

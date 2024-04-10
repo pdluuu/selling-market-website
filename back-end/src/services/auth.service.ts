@@ -27,6 +27,25 @@ class AuthService {
 
         return newUser;
     }
+
+    async authGoogle(email: string, username: string, image: string) {
+        const user = await UserModel.findOne({ email: email });
+
+        if (user) {
+            return user;
+        }
+        const password: string = this.generateRandomString(10);
+        const salt = genSaltSync(10);
+        const hash = hashSync(password, salt);
+        const newUser = await UserModel.create({
+            email,
+            username,
+            image,
+            password: hash,
+        });
+
+        return newUser;
+    }
     async signIn(email: string, password: string) {
         const user = await UserModel.findOne({ email: email });
         if (!user) {
@@ -100,6 +119,17 @@ class AuthService {
         await Token.save();
 
         return Token._id;
+    }
+
+    generateRandomString(length: number): string {
+        const charset =
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        let randomString = "";
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * charset.length);
+            randomString += charset[randomIndex];
+        }
+        return randomString;
     }
 }
 
