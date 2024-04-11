@@ -20,6 +20,7 @@ import {
   IToken,
   IVertifyUser,
 } from "../utils/auth.interface";
+import { genSaltSync, hash, hashSync } from "bcrypt";
 import { config } from "dotenv";
 import authRouter from "../router/auth/auth.route";
 import UserModel from "../models/User.model";
@@ -172,14 +173,13 @@ class User {
       return res.status(Err.statusCode).json({ message: Err.message });
     }
   }
-  async googleAuth() {}
+  async googleAuth() { }
 
   async password_getcode(
     req: Request<any, any, IForgotPassEmail>,
     res: Response<ISuccessRes | IFailRes>
-  )
-  {
-    const {email} = req.body;
+  ) {
+    const { email } = req.body;
     try {
       const { email } = req.body;
 
@@ -187,15 +187,15 @@ class User {
         throw new MissingParameter();
       }
       if (!authService.validate("email", email)) {
-        return res.status(400).json({message: "Invalid email format"});
+        return res.status(400).json({ message: "Invalid email format" });
       }
 
-      const sendCode = await authService.sendCodePassword(email);     
+      const sendCode = await authService.sendCodePassword(email);
 
       return res.status(200).json({
         message: "Verify your email"
       })
-    } catch (error : any) {
+    } catch (error: any) {
       console.log(error);
 
       const Err = new ErrorResponse(
@@ -212,29 +212,33 @@ class User {
     res: Response<ISuccessRes | IFailRes>
   ) {
     try {
-      const {email, resetCode, password} = req.body;
+      const { email, resetCode, password } = req.body;
 
       if (!email || !resetCode || !password) {
         throw new MissingParameter();
       }
       if (!authService.validate("email", email)) {
-        return res.status(400).json({message: "Invalid email format"});
+        return res.status(400).json({ message: "Invalid email format" });
       }
       if (!authService.validate("password", password)) {
-        return res.status(400).json({message: "Invalid password format"});
+        return res.status(400).json({ message: "Invalid password format" });
       }
 
       var result = await authService.resetPassword(email, resetCode, password);
-      if(result === 200) {
-        const user = await UserModel.findOne({email : email});
-        if(user){
-          user.password = password;
+      if (result === 200) {
+        const user = await UserModel.findOne({ email: email });
+        if (user) {
+          const salt = genSaltSync(10);
+          const hash = hashSync(password, salt);
+          user.password = hash;
           await user.save();
+          console.log(hash);
+          
           const payload = {
             _id: user._id,
             email: user.email,
           };
-    
+
           // phien ban ma hoa
           const accessToken = jwt.sign(
             payload,
@@ -242,20 +246,20 @@ class User {
             { expiresIn: process.env.EXPIRES_TOKEN_TIME }
           );
           // ma hoa + key -> phien ban chua decode
-    
+
           // * save refresh Token vao database => lay lai access Token
           // * luu 1 chuoi cac access token => nhieu ng dung cung dang nhap cung mot luc
           // * xoa refreshToken tren dien thoai
           // * xoa luon []
-    
+
           const refreshToken = jwt.sign(
             payload,
             process.env.REFRESH_TOKEN_SECRET || ""
           );
-    
+
           await authService.addTokens(refreshToken, user._id);
           return res.status(200).json({
-            message:"successful",
+            message: "successful",
             data: {
               accessToken,
               refreshToken
@@ -263,20 +267,20 @@ class User {
           })
         }
       }
-      
-      if(result === 400){
+
+      if (result === 400) {
         return res.status(400).json({
           message: "Invalid verification passcode"
         })
       }
 
-      if(result === 404){
-        return res.status(404).json({ 
+      if (result === 404) {
+        return res.status(404).json({
           message: "User not found"
         })
       }
 
-      if(result === 408){
+      if (result === 408) {
         return res.status(408).json({
           message: "Ma het hieu luc"
         })
@@ -303,76 +307,76 @@ class User {
         throw new MissingParameter();
       }
       if (!authService.validate("email", email)) {
-        return res.status(400).json({message: "Invalid email format"});
+        return res.status(400).json({ message: "Invalid email format" });
       }
 
-      const sendCode = await authService.sendCode(email);     
+      const sendCode = await authService.sendCode(email);
 
       return res.status(200).json({
         message: "Verification code sent successfully"
       })
-        
-      }catch (error : any) {
-        console.log(error);
-  
-        const Err = new ErrorResponse(
-          error.message as string,
-          error.statusCode as number
-        );
-  
-        return res.status(Err.statusCode).json({ message: Err.message });
-      }
+
+    } catch (error: any) {
+      console.log(error);
+
+      const Err = new ErrorResponse(
+        error.message as string,
+        error.statusCode as number
+      );
+
+      return res.status(Err.statusCode).json({ message: Err.message });
     }
-    
-    async verifyUser(
-      req: Request<any, any, IVertifyUser>,
-      res: Response<ISuccessRes| IFailRes>
-    ) {
-      try {
-        const {email, code} = req.body;
+  }
 
-        if (!email || !code) {
-          throw new MissingParameter();
-        }
-        if (!authService.validate("email", email)) {
-          return res.status(400).json({message: "Invalid email format"});
-        }
+  async verifyUser(
+    req: Request<any, any, IVertifyUser>,
+    res: Response<ISuccessRes | IFailRes>
+  ) {
+    try {
+      const { email, code } = req.body;
 
-        var result = await authService.vertifyUser(email, code);
-        if(result === 200){
-          return res.status(200).json({
-            message: "User verified successfully"
-          })
-        }
-        if(result === 400){
-          return res.status(400).json({
-            message: "Invalid verification code"
-          })
-        }
-
-        if(result === 404){
-          return res.status(404).json({
-            message: "User not found"
-          })
-        }
-
-        if(result === 408){
-          return res.status(408).json({
-            message: "Ma het hieu luc"
-          })
-        }
-      } catch (error: any) {
-        console.log(error);
-        const Err = new ErrorResponse(
-          error.message as string,
-          error.statusCode as number
-        );
-  
-        return res.status(Err.statusCode).json({ message: Err.message });
+      if (!email || !code) {
+        throw new MissingParameter();
+      }
+      if (!authService.validate("email", email)) {
+        return res.status(400).json({ message: "Invalid email format" });
       }
 
+      var result = await authService.vertifyUser(email, code);
+      if (result === 200) {
+        return res.status(200).json({
+          message: "User verified successfully"
+        })
+      }
+      if (result === 400) {
+        return res.status(400).json({
+          message: "Invalid verification code"
+        })
+      }
+
+      if (result === 404) {
+        return res.status(404).json({
+          message: "User not found"
+        })
+      }
+
+      if (result === 408) {
+        return res.status(408).json({
+          message: "Ma het hieu luc"
+        })
+      }
+    } catch (error: any) {
+      console.log(error);
+      const Err = new ErrorResponse(
+        error.message as string,
+        error.statusCode as number
+      );
+
+      return res.status(Err.statusCode).json({ message: Err.message });
     }
- }
+
+  }
+}
 
 
 const user = new User();
