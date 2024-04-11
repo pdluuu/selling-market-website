@@ -37,3 +37,14 @@ export interface IVertifyUser {
     email: string;
     code: string
 }
+
+export interface IResetPass {
+    email: string;
+    resetCode: string;
+    password: string
+}
+
+export interface IResultResetPass {
+   message: "Successful",
+   data : any
+}

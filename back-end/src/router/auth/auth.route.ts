@@ -13,9 +13,10 @@ authRouter.post("/sign-up", user.sign_up);
 
 authRouter.post("/sign-in", user.sign_in);
 authRouter.post("/google-auth", user.googleAuth);
-authRouter.post("/forgot-password/getCode", user.forgot_password)
-authRouter.post("/sendCode", user.sendCode)
-authRouter.post("/verifyUser", user.verifyUser)
+authRouter.post("/forgot-password/getCode", user.password_getcode);
+authRouter.post("/forgot-password/reset-password", user.reset_pass);
+authRouter.post("/sendCode", user.sendCode);
+authRouter.post("/verifyUser", user.verifyUser);
 
 
 export default authRouter;
