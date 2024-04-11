@@ -228,6 +228,8 @@ class User {
       if(result === 200) {
         const user = await UserModel.findOne({email : email});
         if(user){
+          user.password = password;
+          await user.save();
           const payload = {
             _id: user._id,
             email: user.email,
