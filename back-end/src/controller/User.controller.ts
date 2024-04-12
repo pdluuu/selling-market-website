@@ -24,6 +24,8 @@ import { genSaltSync, hash, hashSync } from "bcrypt";
 import { config } from "dotenv";
 import authRouter from "../router/auth/auth.route";
 import UserModel from "../models/User.model";
+import RefreshTokenModel, { IRefreshToken } from "../models/Token.model";
+import { ObjectId } from "mongodb";
 config();
 
 class User {
@@ -296,6 +298,57 @@ class User {
     }
   }
 
+
+  async get_access_token (
+    req: Request<any, any, IRefreshToken>,
+    res: Response<ISuccessRes | IFailRes>
+  ){
+    try {
+      const { refreshTokens } = req.body;
+      const token = await RefreshTokenModel.findOne ({ refreshTokens : refreshTokens });
+      if(token){
+        const token_id = token.userId;
+        const id: string = token_id.toString();
+        const user = await UserModel.findOne({ _id: id});
+        if(user){
+          const payload = {
+            _id: user._id,
+            email: user.email,
+          };
+          // phien ban ma hoa
+        const accessToken = jwt.sign(
+          payload,
+          process.env.ACCESS_TOKEN_SECRET || "",
+          { expiresIn: process.env.EXPIRES_TOKEN_TIME }
+        );
+        // ma hoa + key -> phien ban chua decode
+
+        // * save refresh Token vao database => lay lai access Token
+        // * luu 1 chuoi cac access token => nhieu ng dung cung dang nhap cung mot luc
+        // * xoa refreshToken tren dien thoai
+        // * xoa luon []
+        return res.status(200).json({
+          message: "successful",
+          data: {
+            accessToken,
+            refreshTokens
+          }
+        })
+        }
+        
+      }
+
+    } catch (error:any) {
+      console.log(error);
+
+      const Err = new ErrorResponse(
+        error.message as string,
+        error.statusCode as number
+      );
+
+      return res.status(Err.statusCode).json({ message: Err.message });
+    }
+  }
   async sendCode(
     req: Request<any, any, IForgotPassEmail>,
     res: Response<ISuccessRes | IFailRes>
