@@ -1,4 +1,3 @@
-import userServices from "../services/User.services";
 import jwt from "jsonwebtoken";
 
 import { Response, Request } from "express";
@@ -167,7 +166,53 @@ class User {
             return res.status(Err.statusCode).json({ message: Err.message });
         }
     }
-    async googleAuth() {}
+    async googleAuth(req: Request, res: Response) {
+        const { code } = req.body;
+
+        const client_id = process.env.CLIENT_ID as string;
+
+        const client_secret = process.env.CLIENT_SECRET as string;
+
+        const redirect_uri = "http://localhost:8080/api/v1/auth/google-auth";
+
+        const grant_type = "authorization_code";
+
+        fetch("https://oauth2.googleapis.com/token", {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+
+            body: new URLSearchParams({
+                code,
+
+                client_id,
+
+                client_secret,
+
+                redirect_uri,
+
+                grant_type,
+            }),
+        })
+            .then((response) => response.json())
+
+            .then((tokens) => {
+                // Send the tokens back to the frontend, or store them securely and create a session
+                console.log(tokens);
+
+                res.json(tokens);
+            })
+
+            .catch((error) => {
+                // Handle errors in the token exchange
+
+                console.error("Token exchange error:", error);
+
+                res.status(500).json({ error: "Internal Server Error" });
+            });
+    }
 }
 
 const user = new User();
