@@ -53,6 +53,7 @@ export interface IProduct extends Document {
     version: [string];
     category: ProductCategory;
     images: [string];
+    items: [string];
 }
 
 const ProductSchema: Schema = new Schema({
@@ -63,6 +64,7 @@ const ProductSchema: Schema = new Schema({
     version: { type: [String] },
     category: { type: String, required: true },
     images: { type: [String], required: true },
+    items: { type: [String], required: true, ref: "Product" },
 });
 
 const ProductModel = mongoose.model<IProduct>("Product", ProductSchema);

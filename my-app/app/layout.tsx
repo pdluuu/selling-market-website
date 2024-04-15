@@ -30,7 +30,11 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
-                    {children}
+                    <GoogleOAuthProvider
+                        clientId={process.env.NEXT_PUBLIC_CLIENT_ID as string}
+                    >
+                        {children}
+                    </GoogleOAuthProvider>
                 </ThemeProvider>
             </body>
         </html>
