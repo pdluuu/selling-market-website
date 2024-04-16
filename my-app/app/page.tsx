@@ -57,8 +57,12 @@ export default function Home() {
         getUser();
     }, []);
     return (
-        <button type="button" onClick={() => router.push("/dashboard")}>
-            <div className=" lg:text-sm text-lg">Dashboard</div>
-        </button>
+        <div>
+            <button type="button" onClick={() => router.push("/dashboard")}>
+                <div className=" lg:text-sm text-lg">Dashboard</div>
+            </button>
+            <br/>
+            
+        </div>
     );
 }

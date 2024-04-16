@@ -9,21 +9,23 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 
-export function BreadcrumbWithCustomSeparator() {
+export default function BreadcrumbWithCustomSeparator() {
   return (
-    <Breadcrumb>
+    <Breadcrumb className="ml-0 mt-6 -mb-3 w-full lg:w-3/4 flex">
       <BreadcrumbList>
       <BreadcrumbItem>
-          <BreadcrumbPage>Home</BreadcrumbPage>
+          <Link href="/dashboard">
+            <BreadcrumbPage>Home</BreadcrumbPage>
+          </Link>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>Laptop</BreadcrumbPage>
+          <BreadcrumbPage>Điện thoại</BreadcrumbPage>
         </BreadcrumbItem>
-        <BreadcrumbSeparator />
+        {/* <BreadcrumbSeparator />
         <BreadcrumbItem>
           <BreadcrumbPage>Laptop Asus</BreadcrumbPage>
-        </BreadcrumbItem>
+        </BreadcrumbItem> */}
       </BreadcrumbList>
     </Breadcrumb>
   )

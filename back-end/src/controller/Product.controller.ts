@@ -129,6 +129,28 @@ class Product {
             return res.status(Err.statusCode).json({ message: Err.message });
         }
     }
+    async viewDetailProduct(
+        req: Request,
+        res: Response
+    ) {
+        try {
+            const { _id } = req.body;
+           
+            const product = await productServices.viewDetailProduct(_id);
+           
+            return res.status(200).json(product);
+        } catch (error: any) {
+            // Logger.error(error);
+            console.log(error);
+
+            const Err = new ErrorResponse(
+                error.message as string,
+                error.statusCode as number
+            );
+
+            return res.status(Err.statusCode).json({ message: Err.message });
+        }
+    }
 }
 const product = new Product();
 export default product;
