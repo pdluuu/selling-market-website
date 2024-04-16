@@ -1,13 +1,13 @@
-import samsung from '../../../Images/samsung-logo-text-png-1.png'
+import samsung from '../../../Images/samsung-logo.png'
 import huawei from '../../../Images/Huawei-Logo.png'
-import apple from '../../../Images/apple-logo-transparent.png'
-import xiaomi from '../../../Images/Xiaomi_logo_(2021-)png.png'
-import nokia from '../../../Images/Nokia_wordmark.svg.png'
+import apple from '../../../Images/apple-logo.png'
+import xiaomi from '../../../Images/xiaomi-logo.png'
+import nokia from '../../../Images/nokia-logo.png'
 import oppo from '../../../Images/Oppo-Logo.wine.png'
 import acer from '../../../Images/Acer-Logo.png'
-import asus from '../../../Images/AsusTek-black-logo.png'
+import asus from '../../../Images/asus-logo.png'
 import dell from '../../../Images/Dell_Logo.png'
-import Hp from '../../../Images/hewlett-packard-logo-black-and-white.png'
+import Hp from '../../../Images/hp-logo.png'
 
 export default function ListBrand() {
     return <div className="lg:w-3/4 ml-2 mr-2 border rounded-lg p-3 lg:p-5 grid grid-cols-7 items-center lg:gap-x-4 gap-x-2 lg:gap-y-2">
