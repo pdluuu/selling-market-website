@@ -64,6 +64,18 @@ class ProductServices {
         return '01';
       }
     }
+    async viewDetailProduct(_id:ObjectId) {
+      try {
+        
+        const result = ProductModel.find({_id:_id})
+        
+        return result;
+       
+      } catch (error) {
+        console.log(error);
+        return '01';
+      }
+    }
 }
 
 const productServices = new ProductServices();

@@ -27,29 +27,31 @@ import Link from 'next/link';
 
 export default function Header() {
     return (
-        <div className="flex h-86 items-center w-full justify-between p-2 pl-4 pr-7 border-b border-gray-400">
-            <Button className="bg-white text-2xl font-bold  text-blue-400 &:hover{bg-transparent}">
-                <MonitorCheck size={30} className="mr-2" />
-                <span>Brand</span>
-            </Button>
+        <div className="flex items-center w-full justify-between  p-2 lg:pl-8 lg:pr-7 h-86 ">
+            <Link href="/dashboard">
+                <Button className=" p-0 lg:text-2xl text-base font-bold">
+                    <MonitorCheck className="lg:mr-2" size={30}/>
+                    <span>Brand</span>
+                </Button>
+            </Link>
             <div className="flex flex-row-reverse w-1/4">
-                <Input type="text" className="w-full rounded-3xl border-blue-400" placeholder="Bạn tìm gì..." />
-                {/* <Separator color='black' className='w-2'/> */}
+                <Input type="text" className="w-full lg:text-base text-xs lg:rounded-3xl rounded-xl h-30 " placeholder="Bạn tìm gì..." />
+               
                 <Button
                     type="submit"
-                    className="bg-transparent text-blue-400 absolute mr-0 rounded-r-3xl rounded-l-none"
+                    className="absolute mr-0 lg:rounded-r-3xl lg:rounded-l-none rounded-1/2"
                 >
                     <SearchIcon />
                 </Button>
             </div>
-            <div className="flex items-center space-x-4 text-blue-400">
+            <div className="flex items-center lg:space-x-4 ">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <div className="flex space-x-1 items-center ">
                             <CircleUserRound size={35} />
                             <div className="flex flex-col">
-                                <p className="text-base text-black">Phan Khánh Linh</p>
-                                <p className="text-xs text-gray-500">Khách hàng</p>
+                                <p className="lg:text-base text-xs  ">Phan Khánh Linh</p>
+                                <p className="lg:text-xs text-[9px] ">Khách hàng</p>
                             </div>
                         </div>
                     </DropdownMenuTrigger>
@@ -60,17 +62,14 @@ export default function Header() {
                             <DropdownMenuItem>
                                 <User className="mr-2 h-4 w-4" />
                                 <span>Profile</span>
-                                <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                             </DropdownMenuItem>
                             <DropdownMenuItem>
                                 <CreditCard className="mr-2 h-4 w-4" />
                                 <span>Billing</span>
-                                <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
                             </DropdownMenuItem>
                             <DropdownMenuItem>
                                 <Settings className="mr-2 h-4 w-4" />
                                 <span>Settings</span>
-                                <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
@@ -83,7 +82,6 @@ export default function Header() {
                         <DropdownMenuItem>
                             <LogOut className="mr-2 h-4 w-4" />
                             <span>Log out</span>
-                            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
