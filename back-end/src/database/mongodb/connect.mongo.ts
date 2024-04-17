@@ -1,3 +1,4 @@
+
 import mongoose from 'mongoose';
 
 const MONGODB_URI = 'mongodb://localhost:27017/selling-market-website';
@@ -11,3 +12,5 @@ export const connectDB = async () => {
     console.error('Error connecting to MongoDB:', error);
   }
 };
+
+

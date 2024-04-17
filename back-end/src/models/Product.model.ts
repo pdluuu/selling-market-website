@@ -1,35 +1,72 @@
-import { ObjectId } from 'mongodb';
-import mongoose, { Schema, Document } from 'mongoose';
-import { string } from 'zod';
+import mongoose, { Schema, Document, Types } from "mongoose";
 
-// Define the interface representing a user document
-interface Product extends Document {
-  id: string;
-  name: string;
-  discount?: string;
-  price: string;
-  image: string;
-  brand: string;
-  version: string;
-  category: string;
-  
+export enum ProductCategory {
+    SmartPhone = "Smart Phone",
+    Laptop = "Laptop",
+    Tablet = "Tablet",
+    SmartWatch = "Smart Watch",
+    Accessories = "Accessories",
 }
 
-// Define the schema for the user model
-const productSchema: Schema = new Schema({
-  name: { type: String, required: true },
-  discount: { type: String, required: false },
-  price: { type: String, required: true },
-  image: {
-    type: String,
-    required: true,
-  },
-  brand: {type:String, required:true},
-  version: { type: String, required: false },
-  category: { type: String, required: false },
+export enum SmartPhoneBrand {
+    Apple = "Apple",
+    Samsung = "Samsung",
+    Huawei = "Huawei",
+    Oppo = "Oppo",
+    Xiaomi = "Xiaomi",
+    Nokia = "Nokia",
+}
+
+export enum LapTopBrand {
+    Asus = "Asus",
+    Dell = "Dell",
+    MacBook = "MacBook",
+    Acer = "Acer",
+    Hp = "Hp",
+    Msi = "Msi",
+}
+
+export enum TabletBrand {
+    Apple = "IPad",
+    Samsung = "Samsung",
+    Huawei = "Huawei",
+    Oppo = "Oppo",
+    Xiaomi = "Xiaomi",
+    Nokia = "Nokia",
+}
+
+export enum AccessoriesBrand {
+    Apple = "Apple",
+    Samsung = "Samsung",
+    Huawei = "Huawei",
+    Oppo = "Oppo",
+    Xiaomi = "Xiaomi",
+    Nokia = "Nokia",
+}
+
+export interface IProduct extends Document {
+    _id: string | Types.ObjectId;
+    name: string;
+    discount: number;
+    price: string;
+    brand: SmartPhoneBrand | TabletBrand | LapTopBrand | AccessoriesBrand;
+    version: [string];
+    category: ProductCategory;
+    images: [string];
+    items: [string];
+}
+
+const ProductSchema: Schema = new Schema({
+    name: { type: String, required: true },
+    discount: { type: Number, required: true, default: 0 },
+    price: { type: String, required: true },
+    brand: { type: String, required: true },
+    version: { type: [String] },
+    category: { type: String, required: true },
+    images: { type: [String], required: true },
+    items: { type: [String], required: true, ref: "Product" },
 });
 
-// Create and export the User model
-const ProductModel = mongoose.model<Product>('Product', productSchema);
+const ProductModel = mongoose.model<IProduct>("Product", ProductSchema);
 
 export default ProductModel;

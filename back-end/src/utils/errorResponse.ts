@@ -18,4 +18,10 @@ export class InvalidInput extends ErrorResponse {
     }
 }
 
+export class ErrorFromServer extends ErrorResponse {
+    constructor(message: string = "Server crash") {
+        super(message, 500);
+    }
+}
+
 export type ErrorResponseType = typeof ErrorResponse;
