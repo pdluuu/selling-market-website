@@ -18,5 +18,14 @@ appRouter.get("/hello", (req, res) => {
 });
 
 appRouter.use(authenticateToken).delete("/log-out", user.logout);
+appRouter.use(authenticateToken).post("/take-order", (req: any, res: any) => {
+    // * xu li take order
+    // * can co userId and productId
+
+    const { user } = req;
+    const { product_id } = req.body;
+    console.log(user, product_id);
+    return res.status(200).json({ message: "take order" });
+});
 
 export default appRouter;
