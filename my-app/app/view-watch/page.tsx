@@ -12,12 +12,10 @@ export default function Dashboard() {
         <div className="flex flex-col items-center">
             <Header />
             <MenubarDemo />
-            <BreadcrumbWithCustomSeparator category="Điện thoại"/>
-            <DisplayedItem brand="Oppo" category="Điện thoại"  />
-            <DisplayedItem brand="Samsung" category="Điện thoại" />
-            <DisplayedItem brand="Apple" category="Điện thoại" />
-            <DisplayedItem brand="Nokia" category="Điện thoại" />
-            <DisplayedItem brand="Xiaomi" category="Điện thoại" />
+            <BreadcrumbWithCustomSeparator category="Đồng hồ"/>
+            <DisplayedItem brand="Garmin" category="Đồng hồ" />
+            <DisplayedItem brand="Samsung" category="Đồng hồ" />
+            <DisplayedItem brand="Apple" category="Đồng hồ" />
             <Footer />
         </div>
     );

@@ -13,7 +13,7 @@ import {
     MenubarSubTrigger,
     MenubarTrigger,
 } from '@/components/ui/menubar';
-import { Headset, Laptop, Smartphone, Tablet, Watch, WatchIcon } from 'lucide-react';
+import { Headset, Laptop, Smartphone, Tablet, Watch } from 'lucide-react';
 import Link from 'next/link';
 
 export function MenubarDemo() {
@@ -37,10 +37,12 @@ export function MenubarDemo() {
                     </MenubarContent>
                 </MenubarMenu>
                 <MenubarMenu>
-                    <MenubarTrigger className="lg:w-48 lg:text-base text-xs">
-                        <Laptop />
-                        Máy tính
-                    </MenubarTrigger>
+                    <Link href="/view-laptop">
+                        <MenubarTrigger className="lg:w-48 lg:text-base text-xs">
+                            <Laptop />
+                            Máy tính
+                        </MenubarTrigger>
+                    </Link>
                     <MenubarContent className="w-32 min-w-10">
                         <MenubarItem>Msi</MenubarItem>
                         <MenubarItem>Hp</MenubarItem>
@@ -51,10 +53,12 @@ export function MenubarDemo() {
                     </MenubarContent>
                 </MenubarMenu>
                 <MenubarMenu>
-                    <MenubarTrigger className="lg:w-48 lg:text-base text-xs">
-                        <Watch />
-                        Smart watch
-                    </MenubarTrigger>
+                    <Link href="/view-watch">
+                        <MenubarTrigger className="lg:w-48 lg:text-base text-xs">
+                            <Watch />
+                            Smart watch
+                        </MenubarTrigger>
+                    </Link>
                     <MenubarContent className="w-32 min-w-10">
                         <MenubarItem>Garmin</MenubarItem>
                         <MenubarItem>Samsung</MenubarItem>
@@ -62,10 +66,12 @@ export function MenubarDemo() {
                     </MenubarContent>
                 </MenubarMenu>
                 <MenubarMenu>
-                    <MenubarTrigger className="lg:w-48 lg:text-base text-xs">
-                        <Tablet />
-                        Tablet
-                    </MenubarTrigger>
+                    <Link href="/view-tablet">
+                        <MenubarTrigger className="lg:w-48 lg:text-base text-xs">
+                            <Tablet />
+                            Tablet
+                        </MenubarTrigger>
+                    </Link>
                     <MenubarContent className="w-32 min-w-10">
                         <MenubarItem>Xiaomi</MenubarItem>
                         <MenubarItem>Oppo</MenubarItem>
@@ -75,10 +81,12 @@ export function MenubarDemo() {
                     </MenubarContent>
                 </MenubarMenu>
                 <MenubarMenu>
-                    <MenubarTrigger className="lg:w-48 lg:text-base text-xs">
-                        <Headset />
-                        Phụ kiện
-                    </MenubarTrigger>
+                    <Link href="/view-accessory">
+                        <MenubarTrigger className="lg:w-48 lg:text-base text-xs">
+                            <Headset />
+                            Phụ kiện
+                        </MenubarTrigger>
+                    </Link>
                     <MenubarContent className="w-32 min-w-10">
                         <MenubarItem>Ốp lưng</MenubarItem>
                         <MenubarItem>Tai nghe</MenubarItem>
