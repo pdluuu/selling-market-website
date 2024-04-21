@@ -34,12 +34,12 @@ export default function Header() {
                     <span>Brand</span>
                 </Button>
             </Link>
-            <div className="flex flex-row-reverse w-1/4">
+            <div className="flex flex-row-reverse items-center w-1/4">
                 <Input type="text" className="w-full lg:text-base text-xs lg:rounded-3xl rounded-xl h-30 " placeholder="Bạn tìm gì..." />
                
                 <Button
                     type="submit"
-                    className="absolute mr-0 lg:rounded-r-3xl lg:rounded-l-none rounded-1/2"
+                    className="absolute  lg:rounded-r-3xl lg:rounded-l-none rounded-1/2"
                 >
                     <SearchIcon />
                 </Button>
