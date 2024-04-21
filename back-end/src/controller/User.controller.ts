@@ -29,12 +29,13 @@ class User {
         res: Response<ISuccessRes | IFailRes>
     ) {
         try {
-            const { email, password, username } = req.body;
+            const { email, password, username, role,phoneNumber } = req.body;
 
-            if (!email || !password || !username) {
+            if (!email || !password || !username || !role || !phoneNumber) {
                 throw new MissingParameter();
             }
 
+            console.log(email,password,username,role,phoneNumber);
             if (
                 !auhtService.validate("email", email) ||
                 !auhtService.validate("password", password)
@@ -42,7 +43,7 @@ class User {
                 throw new InvalidInput();
             }
 
-            const user = await auhtService.signUp(email, password, username);
+            const user = await auhtService.signUp(email, password, username,role,phoneNumber);
 
             const payload = {
                 _id: user._id,
@@ -53,13 +54,16 @@ class User {
 
             const accessToken = jwt.sign(
                 payload,
-                process.env.ACCESS_TOKEN_SECRET || "",
-                { expiresIn: process.env.EXPIRES_TOKEN_TIME }
+                // process.env.ACCESS_TOKEN_SECRET || "",
+                "kkk",
+                // { expiresIn: process.env.EXPIRES_TOKEN_TIME }
+                { expiresIn: 3 * 24 * 60 * 60 }
             );
 
             const refreshToken = jwt.sign(
                 payload,
-                process.env.REFRESH_TOKEN_SECRET || ""
+                // process.env.REFRESH_TOKEN_SECRET || ""
+                "kkk"
             );
 
             await auhtService.addTokens(refreshToken, user._id);
@@ -112,8 +116,10 @@ class User {
             // phien ban ma hoa
             const accessToken = jwt.sign(
                 payload,
-                process.env.ACCESS_TOKEN_SECRET || "",
-                { expiresIn: process.env.EXPIRES_TOKEN_TIME }
+                // process.env.ACCESS_TOKEN_SECRET || "",
+                "kkk",
+                // { expiresIn: process.env.EXPIRES_TOKEN_TIME }
+                { expiresIn: 3 * 24 * 60 * 60 }
             );
             // ma hoa + key -> phien ban chua decode
 
@@ -124,7 +130,8 @@ class User {
 
             const refreshToken = jwt.sign(
                 payload,
-                process.env.REFRESH_TOKEN_SECRET || ""
+                // process.env.REFRESH_TOKEN_SECRET || ""
+                "kkk"
             );
 
             await auhtService.addTokens(refreshToken, user._id);
@@ -173,47 +180,52 @@ class User {
             return res.status(Err.statusCode).json({ message: Err.message });
         }
     }
-    async GetUserByName (req: any, res: any){
+    async GetUserById (req: any, res: any){
         try {
-            const { username } = req.params;
-            console.log("Received data:", req.params);
-            const result = await userServices.getUserByName(username);
+            const {userId} = req.body;
+            // const userId = req.user._id; 
+            console.log(userId);
+            console.log("Received data:",  userId);
+            const result = await userServices.getUserById(userId);
             if (result.success) {
-                return res.status(200).json("successful operation");
+                return res.status(200).json({message:"successful operation"});
             } else {
-                return res.status(404).json("User not found");
+                return res.status(404).json({message:"User not found"});
             }
         } catch (error) {
-            return res.status(400).json("Invalid username supplied");
+            return res.status(400).json({message:"Invalid username supplied"});
         }
     }
 
     async RegisterStaff (
-      req: Request<any, any,Irestaff>,
+      req: any,
       res: Response<ISuccessRes | IFailRes>
-  ){
+    ){
         try {
-            const {_id,email} = req.body;
-            console.log("Received data:", req.body);
-            const result = await userServices.registerStaff(email, _id);
+            const {userId} = req.body;
+            const {email}  = req.body;
+            console.log("Received data:", userId,email);
+            const result = await userServices.saveRegister(userId,email, "staff");
             if (result.success) {
                 return res.status(200).json({message: "successful operation"});
             } else {
-                return res.status(400).json({message:"failed"});
+                return res.status(400).json({message:"failed xx"});
             }
         } catch (error) {
-            return res.status(400).json({message:"failed"});
+            console.log(error);
+            return res.status(400).json({message:"failed xx"});
         }
     }
 
     async RegisterDeliver (
-      req: Request<any, any,IreDeliver>,
+      req: any,
       res: Response<ISuccessRes | IFailRes>
-  ){
+    ){
         try {
-            const {_id,email} = req.body;
+            const {userId} = req.body;
+            const {email}  = req.body;
             console.log("Received data:", req.body);
-            const result = await userServices.registerDeliver(email, _id);
+            const result = await userServices.saveRegister(userId,email, "deliver");
             if (result.success) {
                 return res.status(200).json({message:"successful operation"});
             } else {
@@ -224,12 +236,14 @@ class User {
         }
     }
     async UpdateUser (
-      req: Request<any, any,IupDateUser>,
+      req: any,
       res: Response<ISuccessRes | IFailRes>
-  ){
+    ){
         try{
-            const {_id, name, username,password, email,phone} = req.body;
-            const result = await userServices.updateUser(_id, name, username,password, email,phone);
+            const {userId} = req.body;
+            console.log(userId);
+            const { name, username,password, email,phone} = req.body;
+            const result = await userServices.updateUser(userId, name, username,password, email,phone);
             if (result.success) {
                 return res.status(200).json({message:"successful operation"});
             } else {
@@ -240,17 +254,71 @@ class User {
         }
     }
     async TakeOrder (
-      req: Request<any, any,ItakeOrder>,
+      req: any,
       res: Response<ISuccessRes | IFailRes>
-  ){
+    ){
         try{
-            const {product_id, user_id} = req.body;
-            const result = await userServices.takeOrder(product_id,user_id);
+            const {userId} = req.body;
+            const {product_id} = req.body;
+            const result = await userServices.takeOrder(product_id,userId);
             if (result.success) {
                 return res.status(200).json({message:"successful operation"});
             }
         }catch(error){
             return res.status(400).json({message:"fail operation"});
+        }
+    }
+
+
+
+// đồng ý đăng kí của user
+    async AgreeRegister (
+        req: any,
+        res: Response<ISuccessRes | IFailRes>
+    ){
+          try{
+              const { email,role} = req.body;
+              const result = await userServices.agreeRegister(email,role);
+              if (result.success) {
+                  return res.status(200).json({message:"successful operation"});
+              } else {
+                  return res.status(404).json({message:" ko dong y thanh cong"});
+              }
+          }catch(error){
+              return res.status(400).json({message:"fail operation"});
+          }
+      }
+// không đồng ý các đăng kí của user
+      async DeleteRegister (
+        req: any,
+        res: Response<ISuccessRes | IFailRes>
+    ){
+          try{
+              const { _id} = req.body;
+              console.log(_id);
+              const result = await userServices.deleteRegister(_id);
+              if (result.success) {
+                  return res.status(200).json({message:"successful operation"});
+              } else {
+                  return res.status(404).json({message:" ko thanh cong"});
+              }
+          }catch(error){
+              return res.status(400).json({message:"fail operation"});
+          }
+      }
+
+      async ListRegister(req: Request<any, any, any>, res: Response<ISuccessRes | IFailRes>) {
+        try {
+            // Sử dụng service để lấy danh sách đăng kí từ cơ sở dữ liệu
+            const listRegister = await userServices.getAllRegister();
+            if (!listRegister) {
+                return res.status(404).json({ message: "List register not found" });
+            }
+            return res.status(200).json({ message: "Successful operation"});
+        } catch (error: any) {
+            console.log(error);
+            const Err = new ErrorResponse(error.message as string, error.statusCode as number);
+            return res.status(Err.statusCode).json({ message: Err.message });
         }
     }
 }

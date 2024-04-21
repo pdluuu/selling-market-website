@@ -2,16 +2,19 @@ export interface ISignUp {
     email: string;
     password: string;
     username: string;
+    role: string;
+    phoneNumber: string;
 }
 export interface ISignIn {
     email: string;
     password: string;
 }
-export interface ISignUp {
-    email: string;
-    password: string;
-    username: string;
-}
+// export interface ISignUp {
+//     email: string;
+//     password: string;
+//     username: string;
+
+// }
 
 export interface ISuccessRes {
     message: "successful";

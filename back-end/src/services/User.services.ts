@@ -2,9 +2,11 @@ import UserModel from '../models/User.model';
 import { ErrorResponse, InvalidInput } from "../utils/errorResponse";
 import OrderModel from '../models/Order.model';
 import ProductModel from '../models/Product.model';
+import ListRegisterModelModel from '../models/ListRegister.model';
+import ListRegisterModel from '../models/ListRegister.model';
 class UserServices {
-    async getUserByName(username: string) {
-        const user = await UserModel.findOne({ username }).select('email name username status role');
+    async getUserById(_id: string) {
+        const user = await UserModel.findById({ _id }).select('email name username status role');
         if (!user) {
             return {
                 success: false,
@@ -17,66 +19,7 @@ class UserServices {
         };
     }
 
-    async registerStaff(email: string, _id: string) {
-        
-        // Kiểm tra nếu user đã tồn tại
-        const existingUser = await UserModel.findOne({ email });
-        if (!existingUser) {
-            return {
-                success: false,
-                message: "User dont't exists",
-            };
-        }
-        
-        const updatedUser = await UserModel.findOneAndUpdate(
-            { email },
-            { role: "staff" }, 
-            { new: true } 
-        );
-
-        if (!updatedUser) {
-            return {
-                success: false,
-                message: "Failed to update user role",
-            };
-        }
-
-        return {
-            success: true,
-            message: "User registered as staff successfully",
-        };
-        
-    }
-
-    async registerDeliver(email: string, _id: string) {
-        // Kiểm tra nếu user đã tồn tại
-        const existingUser = await UserModel.findOne({ email });
-        if (!existingUser) {
-            return {
-                success: false,
-                message: "User dont't exists",
-            };
-        }
-        
-        const updatedUser = await UserModel.findOneAndUpdate(
-            { email },
-            { role: "deliver" }, 
-            { new: true } 
-        );
-
-        if (!updatedUser) {
-            return {
-                success: false,
-                message: "Failed to update user role",
-            };
-        }
-
-        return {
-            success: true,
-            message: "User registered as deliver successfully",
-        };
-    }
-
+    
     async takeOrder(product_id: string, user_id: string) {
       try {
           const product = await ProductModel.findOne({ _id: product_id });
@@ -177,6 +120,104 @@ class UserServices {
             return true;
         }
         return false;
+    }
+    async saveRegister(_id:string,email: string, role:string) {
+        try {
+            const newUser = await ListRegisterModel.create({
+                userId: _id,
+                email: email,
+                role: role
+            });
+            if (newUser) {
+                return {
+                    success: true,
+                    message: "ok",
+                }
+            } else {
+                return {
+                    success: false,
+                    message: "no ok",
+                }
+            }
+        } catch (error) {
+            console.error("Error saving user:", error);
+            return {
+                success: false,
+                message: "error",
+            }
+        }
+    }
+    // chỉ admin được đồng ý
+    async agreeRegister(email: string,role:string){
+        try {
+            const data: {role:string} = {role};
+            const response = await UserModel.findByIdAndUpdate(email, data, { new: true }).select('-password -role -refreshToken');
+            if(response){
+                // sau khi thay đồng ý thay đổi trường role trong model user thì xóa bản ghi trong listRegister.
+                await ListRegisterModel.deleteOne({ email: email });
+                return {
+                    success: true,
+                    message: "ok",
+                }
+            }else{
+                return {
+                    success: false,
+                    message: "no ok",
+                }
+            }
+        } catch (error) {
+            console.error("Error saving user:", error);
+            return {
+                success: false,
+                message: "error",
+            }
+        }
+    }
+    // xóa một bản ghi trong danh sách register
+    async deleteRegister(userId: string){
+        try {
+            const response = await ListRegisterModel.deleteOne({ _id: userId });
+            if(response){
+                return {
+                    success: true,
+                    message: "ok",
+                }
+            }else{
+                return {
+                    success: false,
+                    message: "no ok",
+                }
+            }
+        } catch (error) {
+            console.error("Error saving user:", error);
+            return {
+                success: false,
+                message: "error",
+            }
+        }
+    }
+
+    async getAllRegister(){
+        try {
+            const listRegisters = await ListRegisterModel.find();
+            if(listRegisters){
+                return {
+                    success: true,
+                    listRegisters,
+                }
+            }else{
+                return {
+                    success: false,
+                    message: "no ok",
+                }
+            }
+        } catch (error) {
+            console.error("Error saving user:", error);
+            return {
+                success: false,
+                message: "error",
+            }
+        }
     }
 
     tao_nguoi_dung(email: string, password: string): string {
