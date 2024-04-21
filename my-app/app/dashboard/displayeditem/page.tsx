@@ -67,7 +67,7 @@ export default function DisplayedItem({
         }
     };
     return (
-        <div className="lg:w-3/4 max-w-sm lg:max-w-full m-y-2 m-0 md:my-4">
+        <div className="lg:w-3/4 max-w-sm lg:max-w-full  m-y-2 m-0 md:my-4">
             <div className=" flex justify-between items-center">
                 <Label className="font-bold md:text-xl text-base">{brand || category}</Label>
                 <Button onClick={handleViewMore}>
@@ -75,15 +75,15 @@ export default function DisplayedItem({
                     <ChevronLast />
                 </Button>
             </div>
-            <Carousel>
-                <CarouselContent className="-ml-1">
+            <Carousel className=''>
+                <CarouselContent className="-ml-1 ">
                     {listProduct.map((product, index) => (
                         <CarouselItem key={index} className="pl-1 basis-1/3 lg:basis-1/5 ">
-                            <div className="p-[3px] md:p-1 ">
-                                <Card>
-                                    <CardContent className="md:pt-4 h-[290px] p-[12px] flex flex-col md:space-y-2 space-y-1">
-                                        <div className="w-auto flex justify-center h-[107px]">
-                                            <img src={product.images[0]} className="object-cover h-full" alt="asus" />
+                            <div className="p-[3px] md:p-1  ">
+                                <Card className=''>
+                                    <CardContent className="md:pt-4 h-[290px] p-[12px]  flex flex-col md:space-y-2 space-y-1">
+                                        <div className="w-auto  flex justify-center h-[107px]">
+                                            <img src={product.images[0]} className="object-cover h-full hover:scale-110 transition duration-500" alt="asus" />
                                         </div>
                                         {product.discount && (
                                             <Badge

@@ -1,3 +1,4 @@
+'use client';
 import {
     Menubar,
     MenubarCheckboxItem,
@@ -15,86 +16,59 @@ import {
 } from '@/components/ui/menubar';
 import { Headset, Laptop, Smartphone, Tablet, Watch } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
+import NewMenubarMenu from '../menubar/page';
 
 export function MenubarDemo() {
+    const [openDropdown, setOpenDropdown] = useState(false);
     return (
         <div className="flex h-12 justify-center items-center border border-y w-full">
             <Menubar className="border-none">
-                <MenubarMenu>
-                    <Link href="/view-smartphone">
-                        <MenubarTrigger className="lg:w-48 lg:text-base text-xs">
+                <NewMenubarMenu
+                    icon={
+                        <div>
                             <Smartphone />
-                            Điện thoại
-                        </MenubarTrigger>
-                    </Link>
-                    <MenubarContent className="w-32 min-w-10">
-                        <MenubarItem>Nokia</MenubarItem>
-                        <MenubarItem>Xiaomi</MenubarItem>
-                        <MenubarItem>Oppo</MenubarItem>
-                        <MenubarItem>Huawei</MenubarItem>
-                        <MenubarItem>Samsung</MenubarItem>
-                        <MenubarItem>Apple</MenubarItem>
-                    </MenubarContent>
-                </MenubarMenu>
-                <MenubarMenu>
-                    <Link href="/view-laptop">
-                        <MenubarTrigger className="lg:w-48 lg:text-base text-xs">
+                        </div>
+                    }
+                    category="Điện thoại"
+                    brands={['Oppo', 'Samsung', 'Huawei', 'Xiaomi', 'Apple', 'Nokia']}
+                />
+                <NewMenubarMenu
+                    icon={
+                        <div>
                             <Laptop />
-                            Máy tính
-                        </MenubarTrigger>
-                    </Link>
-                    <MenubarContent className="w-32 min-w-10">
-                        <MenubarItem>Msi</MenubarItem>
-                        <MenubarItem>Hp</MenubarItem>
-                        <MenubarItem>Acer</MenubarItem>
-                        <MenubarItem>MacBook</MenubarItem>
-                        <MenubarItem>Dell</MenubarItem>
-                        <MenubarItem>Asus</MenubarItem>
-                    </MenubarContent>
-                </MenubarMenu>
-                <MenubarMenu>
-                    <Link href="/view-watch">
-                        <MenubarTrigger className="lg:w-48 lg:text-base text-xs">
+                        </div>
+                    }
+                    category="Máy tính"
+                    brands={['Msi', 'Hp', 'Acer', 'Macbook', 'Dell', 'Asus']}
+                />
+                <NewMenubarMenu
+                    icon={
+                        <div>
                             <Watch />
-                            Smart watch
-                        </MenubarTrigger>
-                    </Link>
-                    <MenubarContent className="w-32 min-w-10">
-                        <MenubarItem>Garmin</MenubarItem>
-                        <MenubarItem>Samsung</MenubarItem>
-                        <MenubarItem>Apple</MenubarItem>
-                    </MenubarContent>
-                </MenubarMenu>
-                <MenubarMenu>
-                    <Link href="/view-tablet">
-                        <MenubarTrigger className="lg:w-48 lg:text-base text-xs">
+                        </div>
+                    }
+                    category="Đồng hồ"
+                    brands={['Garmin', 'Samsung', 'Apple']}
+                />
+                <NewMenubarMenu
+                    icon={
+                        <div>
                             <Tablet />
-                            Tablet
-                        </MenubarTrigger>
-                    </Link>
-                    <MenubarContent className="w-32 min-w-10">
-                        <MenubarItem>Xiaomi</MenubarItem>
-                        <MenubarItem>Oppo</MenubarItem>
-                        <MenubarItem>Huawei</MenubarItem>
-                        <MenubarItem>Samsung</MenubarItem>
-                        <MenubarItem>IPad</MenubarItem>
-                    </MenubarContent>
-                </MenubarMenu>
-                <MenubarMenu>
-                    <Link href="/view-accessory">
-                        <MenubarTrigger className="lg:w-48 lg:text-base text-xs">
+                        </div>
+                    }
+                    category="Tablet"
+                    brands={['Xiaomi', 'Oppo', 'Huawei', 'Samsung', 'Ipad']}
+                />
+                <NewMenubarMenu
+                    icon={
+                        <div>
                             <Headset />
-                            Phụ kiện
-                        </MenubarTrigger>
-                    </Link>
-                    <MenubarContent className="w-32 min-w-10">
-                        <MenubarItem>Ốp lưng</MenubarItem>
-                        <MenubarItem>Tai nghe</MenubarItem>
-                        <MenubarItem>Sạc dự phòng</MenubarItem>
-                        <MenubarItem>Chuột</MenubarItem>
-                        <MenubarItem>Bàn phím</MenubarItem>
-                    </MenubarContent>
-                </MenubarMenu>
+                        </div>
+                    }
+                    category="Phụ kiện"
+                    brands={['Ốp lưng', 'Tai nghe', 'Sạc dự phòng', 'Chuột', 'Bàn phím']}
+                />
             </Menubar>
         </div>
     );
