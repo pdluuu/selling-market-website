@@ -601,7 +601,7 @@ components:
                 discount:
                     type: number
                 price:
-                    type: string
+                    type: number
                 brand:
                     type: string
                     enum:
