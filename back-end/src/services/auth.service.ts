@@ -5,8 +5,21 @@ import { config } from "dotenv";
 import jwt from "jsonwebtoken";
 import TokenModel from "../models/Token.model";
 import RefreshTokenModel from "../models/Token.model";
+import { log } from "console";
+import { IResultResetPass } from "../utils/auth.interface";
 
 config();
+
+const sentCodes: {
+    [email: string]: { code: string | false; expiresAt: number };
+} = {};
+const sentCodePass: {
+    [email: string]: {
+        resetCode: string | false;
+        expiresAt: number;
+    };
+} = {};
+
 class AuthService {
     async signUp(email: string, password: string, username: string) {
         if (
@@ -74,6 +87,25 @@ class AuthService {
         return false;
     }
 
+    randomPass() {
+        const characters =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@$!%*?&.";
+        let password = "";
+        for (let i = 0; i < 16; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            password += characters[randomIndex];
+        }
+        return password;
+    }
+
+    checkrandomPass() {
+        let password = this.randomPass();
+        while (!this.validate("password", password)) {
+            password = this.randomPass();
+        }
+        return password;
+    }
+
     async isExistEmail(email: string) {
         const user = await UserModel.findOne({ email }).lean().exec();
 
@@ -131,7 +163,114 @@ class AuthService {
         }
         return randomString;
     }
+    async sendCodePassword(email: string): Promise<string | false> {
+        const code = this.checkrandomPass();
+        console.log(email);
+
+        try {
+            var nodemailer = require("nodemailer");
+            var transporter = nodemailer.createTransport({
+                service: "gmail",
+                host: "smtp.gmail.com",
+                port: 587,
+                auth: {
+                    user: "mailinhv534@gmail.com",
+                    pass: "nrydytummnqecfpn",
+                },
+            });
+
+            var mailOptions = {
+                from: "mailinhv534@gmail.com",
+                to: email,
+                subject: "Sending Email to code to reset password",
+                text: code,
+            };
+
+            await transporter.sendMail(mailOptions);
+            console.log(code);
+            const expiresAt = Date.now() + 5 * 60 * 1000;
+
+            sentCodePass[email] = { resetCode: code, expiresAt: expiresAt };
+            return code;
+        } catch (error: any) {
+            console.error(error);
+            return false;
+        }
+    }
+
+    async resetPassword(email: string, resetCode: string, password: string) {
+        try {
+            if (email in sentCodePass) {
+                // Tìm mã code trong mảng của email
+                const passCodes = sentCodePass[email];
+                if (passCodes.resetCode !== resetCode) {
+                    return 400;
+                }
+                if (passCodes.expiresAt < Date.now()) {
+                    return 408;
+                }
+                return 200;
+            } else {
+                return 404;
+            }
+        } catch (error: any) {
+            console.log(error);
+        }
+    }
+
+    async sendCode(email: string): Promise<string | false> {
+        const code = String(Math.floor(100000 + Math.random() * 900000));
+        try {
+            var nodemailer = require("nodemailer");
+            var transporter = nodemailer.createTransport({
+                service: "gmail",
+                host: "smtp.gmail.com",
+                port: 587,
+                auth: {
+                    user: "mailinhv534@gmail.com",
+                    pass: "nrydytummnqecfpn",
+                },
+            });
+
+            var mailOptions = {
+                from: "mailinhv534@gmail.com",
+                to: email,
+                subject: "Sending Email to sendCode",
+                text: code,
+            };
+
+            await transporter.sendMail(mailOptions);
+            console.log(code);
+            const expiresAt = Date.now() + 3 * 60 * 1000;
+
+            sentCodes[email] = { code: code, expiresAt: expiresAt };
+            return code;
+        } catch (error: any) {
+            console.error(error);
+            return false;
+        }
+    }
+
+    async vertifyUser(email: string, code: string) {
+        try {
+            if (email in sentCodes) {
+                // Tìm mã code trong mảng của email
+                const userCodes = sentCodes[email];
+                if (userCodes.code !== code) {
+                    return 400;
+                }
+                if (userCodes.expiresAt < Date.now()) {
+                    return 408;
+                }
+                return 200;
+            } else {
+                return 404;
+            }
+        } catch (error: any) {
+            console.log(error);
+        }
+    }
 }
 
-const auhtService = new AuthService();
-export default auhtService;
+const authService = new AuthService();
+export default authService;

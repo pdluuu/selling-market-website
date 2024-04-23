@@ -20,6 +20,7 @@ export interface IUser extends Document {
     username: string;
     status: UserStatus;
     role: UserRole;
+
     phoneNumber?: string;
     store_id?: string;
     image?: string;

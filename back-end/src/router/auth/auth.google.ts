@@ -1,17 +1,16 @@
 import { Router } from "express";
 import passport from "../../lib/passport";
-const CLIENT_URL = "http://localhost:3000/";
+
+const CLIENT_URL = "http://localhost:3000/auth/login";
 const router = Router();
 
 router.get("/login/success", (req, res) => {
-    if (req.user) {
-        res.status(200).json({
-            success: true,
-            message: "successful",
-            data: req.user,
-            //cookies: req.cookies,
-        });
-    }
+    res.status(200).json({
+        success: true,
+        message: "successful",
+        data: req.user,
+        //cookies: req.cookies,
+    });
 });
 
 router.get("/login/failed", (req, res) => {
@@ -31,14 +30,10 @@ router.get(
     passport.authenticate("google", { scope: ["email", "profile"] })
 );
 
-router.get(
-    "/google/callback",
-    passport.authenticate("google", {
-        session: true,
-    }),
-    (_, res) => {
-        res.redirect(CLIENT_URL);
-    }
-);
+router.get("/google/callback", passport.authenticate("google"), (req, res) => {
+    console.log(req.user);
+
+    res.redirect(CLIENT_URL);
+});
 
 export default router;

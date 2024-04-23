@@ -1,3 +1,4 @@
+import userServices from "../services/User.services";
 import jwt from "jsonwebtoken";
 
 import { Response, Request } from "express";
@@ -7,17 +8,26 @@ import {
     InvalidInput,
     MissingParameter,
 } from "../utils/errorResponse";
-import auhtService from "../services/auth.service";
+import authService from "../services/auth.service";
 import Logger from "../lib/logger";
 import {
     IFailRes,
+    IForgotPassEmail,
+    IResetPass,
     ISignIn,
     ISignUp,
     ISuccessRes,
     IToken,
+    IVertifyUser,
 } from "../utils/auth.interface";
+import { genSaltSync, hash, hashSync } from "bcrypt";
 import { config } from "dotenv";
+import authRouter from "../router/auth/auth.route";
+import UserModel from "../models/User.model";
+import RefreshTokenModel, { IRefreshToken } from "../models/Token.model";
+import { ObjectId } from "mongodb";
 config();
+
 class User {
     async sign_up(
         req: Request<any, any, ISignUp>,
@@ -31,13 +41,13 @@ class User {
             }
 
             if (
-                !auhtService.validate("email", email) ||
-                !auhtService.validate("password", password)
+                !authService.validate("email", email) ||
+                !authService.validate("password", password)
             ) {
                 throw new InvalidInput();
             }
 
-            const user = await auhtService.signUp(email, password, username);
+            const user = await authService.signUp(email, password, username);
 
             const payload = {
                 _id: user._id,
@@ -57,7 +67,7 @@ class User {
                 process.env.REFRESH_TOKEN_SECRET || ""
             );
 
-            await auhtService.addTokens(refreshToken, user._id);
+            await authService.addTokens(refreshToken, user._id);
 
             return res.status(200).json({
                 message: "successful",
@@ -91,13 +101,13 @@ class User {
             }
 
             if (
-                !auhtService.validate("email", email) ||
-                !auhtService.validate("password", password)
+                !authService.validate("email", email) ||
+                !authService.validate("password", password)
             ) {
                 throw new InvalidInput(); // * return
             }
 
-            const user = await auhtService.signIn(email, password);
+            const user = await authService.signIn(email, password);
 
             const payload = {
                 _id: user._id,
@@ -122,7 +132,7 @@ class User {
                 process.env.REFRESH_TOKEN_SECRET || ""
             );
 
-            await auhtService.addTokens(refreshToken, user._id);
+            await authService.addTokens(refreshToken, user._id);
 
             return res.status(200).json({
                 message: "successful",
@@ -151,7 +161,7 @@ class User {
         try {
             const { userId, refreshToken } = req.body;
 
-            const Token_id = await auhtService.removeToken(
+            const Token_id = await authService.removeToken(
                 userId,
                 refreshToken
             );
@@ -168,52 +178,263 @@ class User {
             return res.status(Err.statusCode).json({ message: Err.message });
         }
     }
-    async googleAuth(req: Request, res: Response) {
-        const { code } = req.body;
+    async googleAuth() {}
 
-        const client_id = process.env.CLIENT_ID as string;
+    async password_getcode(
+        req: Request<any, any, IForgotPassEmail>,
+        res: Response<ISuccessRes | IFailRes>
+    ) {
+        const { email } = req.body;
+        try {
+            const { email } = req.body;
 
-        const client_secret = process.env.CLIENT_SECRET as string;
+            if (!email) {
+                throw new MissingParameter();
+            }
+            if (!authService.validate("email", email)) {
+                return res
+                    .status(400)
+                    .json({ message: "Invalid email format" });
+            }
 
-        const redirect_uri = "http://localhost:8080/api/v1/auth/google-auth";
+            const sendCode = await authService.sendCodePassword(email);
 
-        const grant_type = "authorization_code";
-
-        fetch("https://oauth2.googleapis.com/token", {
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-
-            body: new URLSearchParams({
-                code,
-
-                client_id,
-
-                client_secret,
-
-                redirect_uri,
-
-                grant_type,
-            }),
-        })
-            .then((response) => response.json())
-
-            .then((tokens) => {
-                // Send the tokens back to the frontend, or store them securely and create a session
-                console.log(tokens);
-
-                res.json(tokens);
-            })
-
-            .catch((error) => {
-                // Handle errors in the token exchange
-
-                console.error("Token exchange error:", error);
-
-                res.status(500).json({ error: "Internal Server Error" });
+            return res.status(200).json({
+                message: "Verify your email",
             });
+        } catch (error: any) {
+            console.log(error);
+
+            const Err = new ErrorResponse(
+                error.message as string,
+                error.statusCode as number
+            );
+
+            return res.status(Err.statusCode).json({ message: Err.message });
+        }
+    }
+
+    async reset_pass(
+        req: Request<any, any, IResetPass>,
+        res: Response<ISuccessRes | IFailRes>
+    ) {
+        try {
+            const { email, resetCode, password } = req.body;
+
+            if (!email || !resetCode || !password) {
+                throw new MissingParameter();
+            }
+            if (!authService.validate("email", email)) {
+                return res
+                    .status(400)
+                    .json({ message: "Invalid email format" });
+            }
+            if (!authService.validate("password", password)) {
+                return res
+                    .status(400)
+                    .json({ message: "Invalid password format" });
+            }
+
+            var result = await authService.resetPassword(
+                email,
+                resetCode,
+                password
+            );
+            if (result === 200) {
+                const user = await UserModel.findOne({ email: email });
+                if (user) {
+                    const salt = genSaltSync(10);
+                    const hash = hashSync(password, salt);
+                    user.password = hash;
+                    await user.save();
+                    console.log(hash);
+
+                    const payload = {
+                        _id: user._id,
+                        email: user.email,
+                    };
+
+                    const accessToken = jwt.sign(
+                        payload,
+                        process.env.ACCESS_TOKEN_SECRET || "",
+                        { expiresIn: process.env.EXPIRES_TOKEN_TIME }
+                    );
+
+                    const refreshToken = jwt.sign(
+                        payload,
+                        process.env.REFRESH_TOKEN_SECRET || ""
+                    );
+
+                    await authService.addTokens(refreshToken, user._id);
+                    return res.status(200).json({
+                        message: "successful",
+                        data: {
+                            accessToken,
+                            refreshToken,
+                        },
+                    });
+                }
+            }
+
+            if (result === 400) {
+                return res.status(400).json({
+                    message: "Invalid verification passcode",
+                });
+            }
+
+            if (result === 404) {
+                return res.status(404).json({
+                    message: "User not found",
+                });
+            }
+
+            if (result === 408) {
+                return res.status(408).json({
+                    message: "Ma het hieu luc",
+                });
+            }
+        } catch (error: any) {
+            console.log(error);
+            const Err = new ErrorResponse(
+                error.message as string,
+                error.statusCode as number
+            );
+
+            return res.status(Err.statusCode).json({ message: Err.message });
+        }
+    }
+
+    async get_access_token(
+        req: Request<any, any, IRefreshToken>,
+        res: Response<ISuccessRes | IFailRes>
+    ) {
+        try {
+            const { refreshTokens } = req.body;
+            const token = await RefreshTokenModel.findOne({
+                refreshTokens: refreshTokens,
+            });
+            if (token) {
+                const token_id = token.userId;
+                const id: string = token_id.toString();
+                const user = await UserModel.findOne({ _id: id });
+                if (user) {
+                    const payload = {
+                        _id: user._id,
+                        email: user.email,
+                    };
+                    // phien ban ma hoa
+                    const accessToken = jwt.sign(
+                        payload,
+                        process.env.ACCESS_TOKEN_SECRET || "",
+                        { expiresIn: process.env.EXPIRES_TOKEN_TIME }
+                    );
+                    // ma hoa + key -> phien ban chua decode
+
+                    // * save refresh Token vao database => lay lai access Token
+                    // * luu 1 chuoi cac access token => nhieu ng dung cung dang nhap cung mot luc
+                    // * xoa refreshToken tren dien thoai
+                    // * xoa luon []
+                    return res.status(200).json({
+                        message: "successful",
+                        data: {
+                            accessToken,
+                            refreshTokens,
+                        },
+                    });
+                }
+            }
+        } catch (error: any) {
+            console.log(error);
+
+            const Err = new ErrorResponse(
+                error.message as string,
+                error.statusCode as number
+            );
+
+            return res.status(Err.statusCode).json({ message: Err.message });
+        }
+    }
+    async sendCode(
+        req: Request<any, any, IForgotPassEmail>,
+        res: Response<ISuccessRes | IFailRes>
+    ) {
+        try {
+            const { email } = req.body;
+
+            if (!email) {
+                throw new MissingParameter();
+            }
+            if (!authService.validate("email", email)) {
+                return res
+                    .status(400)
+                    .json({ message: "Invalid email format" });
+            }
+
+            const sendCode = await authService.sendCode(email);
+
+            return res.status(200).json({
+                message: "Verification code sent successfully",
+            });
+        } catch (error: any) {
+            console.log(error);
+
+            const Err = new ErrorResponse(
+                error.message as string,
+                error.statusCode as number
+            );
+
+            return res.status(Err.statusCode).json({ message: Err.message });
+        }
+    }
+
+    async verifyUser(
+        req: Request<any, any, IVertifyUser>,
+        res: Response<ISuccessRes | IFailRes>
+    ) {
+        try {
+            const { email, code } = req.body;
+
+            if (!email || !code) {
+                throw new MissingParameter();
+            }
+            if (!authService.validate("email", email)) {
+                return res
+                    .status(400)
+                    .json({ message: "Invalid email format" });
+            }
+
+            var result = await authService.vertifyUser(email, code);
+            if (result === 200) {
+                return res.status(200).json({
+                    message: "User verified successfully",
+                });
+            }
+            if (result === 400) {
+                return res.status(400).json({
+                    message: "Invalid verification code",
+                });
+            }
+
+            if (result === 404) {
+                return res.status(404).json({
+                    message: "User not found",
+                });
+            }
+
+            if (result === 408) {
+                return res.status(408).json({
+                    message: "Ma het hieu luc",
+                });
+            }
+        } catch (error: any) {
+            console.log(error);
+            const Err = new ErrorResponse(
+                error.message as string,
+                error.statusCode as number
+            );
+
+            return res.status(Err.statusCode).json({ message: Err.message });
+        }
     }
 }
 
