@@ -39,7 +39,6 @@ class User {
             if (!email || !password || !username) {
                 throw new MissingParameter();
             }
-
             if (
                 !authService.validate("email", email) ||
                 !authService.validate("password", password)
@@ -99,7 +98,6 @@ class User {
             if (!email || !password) {
                 throw new MissingParameter();
             }
-
             if (
                 !authService.validate("email", email) ||
                 !authService.validate("password", password)
