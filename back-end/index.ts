@@ -1,21 +1,20 @@
-import express, { Express, Request, Response, Application } from "express";
-import dotenv from "dotenv";
-import morganMiddleware from "./src/configs/morganMiddleware";
-import helmet from "helmet";
-const passport = require("passport");
-import compression from "compression";
-import { json } from "body-parser";
+import express, { Express, Request, Response, Application } from 'express';
+import dotenv from 'dotenv';
+import morganMiddleware from './src/configs/morganMiddleware';
+import helmet from 'helmet';
+const passport = require('passport');
+import compression from 'compression';
+import { json } from 'body-parser';
 // * innitialization
-import appRouter from "./src/router/index.router";
-import { connectDB } from "./src/database/mongodb/connect.mongo";
-import cors from "cors";
-const cookieSession = require("cookie-session");
-import session from "express-session";
-const passportSetup = require("./src/lib/passport");
+import appRouter from './src/router/index.router';
+import { connectDB } from './src/database/mongodb/connect.mongo';
+import cors from 'cors';
+const cookieSession = require('cookie-session');
+import session from 'express-session';
+const passportSetup = require('./src/lib/passport');
 // * innitialization
 const app: Application = express();
 const PORT = process.env.PORT || 5000;
-const api_version = process.env.API_VERSION || "/api/v1";
 
 // * middleware
 app.use(morganMiddleware);
@@ -26,10 +25,10 @@ app.use(express.urlencoded({ extended: true })); // support encoded bodies
 // app.use(cors());
 app.use(
     cors({
-        origin: "http://localhost:3000",
-        methods: "GET,POST,PUT,DELETE",
+        origin: 'http://localhost:3000',
+        methods: 'GET,POST,PUT,DELETE',
         credentials: true,
-    })
+    }),
 );
 // * connect to db
 
@@ -43,10 +42,10 @@ app.use(express.urlencoded({ extended: true })); // support encoded bodies
 
 app.use(
     cookieSession({
-        name: "session",
-        keys: ["openreplay"],
+        name: 'session',
+        keys: ['openreplay'],
         maxAge: 24 * 60 * 60 * 100,
-    })
+    }),
 );
 
 app.use(passport.initialize());
@@ -55,14 +54,21 @@ app.use(passport.session());
 // * connect to db
 connectDB().then((res) => console.log(res));
 
-// * api version
-app.use(api_version, appRouter);
+// * router
+
+const api_version = process.env.API_VERSION || '/api/v1';
+// app.route(api_version);
+
+app.use('/auth', authRotuer);
+app.use(appRouter);
+// * handle Error
+// testConnection();
 // * server running
 const server = app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
-process.on("unhandledRejection", (error, promise) => {
+process.on('unhandledRejection', (error, promise) => {
     console.log(`Logged Error: ${error}`);
     server.close(() => process.exit(1));
 });

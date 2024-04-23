@@ -21,7 +21,7 @@ const sentCodePass: {
 } = {};
 
 class AuthService {
-    async signUp(email: string, password: string, username: string) {
+    async signUp(email: string, password: string, username: string, role:string,phoneNumber:string) {
         if (
             (await this.isExistEmail(email)) ||
             (await this.isExistUsername(username))
@@ -36,6 +36,8 @@ class AuthService {
             email: email,
             password: hash,
             username: username,
+            role: role,
+            phoneNumber: phoneNumber,
         });
 
         return newUser;
