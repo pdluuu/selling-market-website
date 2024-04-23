@@ -1,6 +1,6 @@
-"use client";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+'use client';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 export default function Home() {
     const router = useRouter();
 
@@ -42,11 +42,10 @@ export default function Home() {
     useEffect(() => {}, []);
     return (
         <div>
-            <button type="button" onClick={() => router.push("/dashboard")}>
+            <button type="button" onClick={() => router.push('/dashboard')}>
                 <div className=" lg:text-sm text-lg">Dashboard</div>
             </button>
-            <br/>
-            
+            <br />
         </div>
     );
 }
