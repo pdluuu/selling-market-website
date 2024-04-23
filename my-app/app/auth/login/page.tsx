@@ -61,6 +61,20 @@ export default function Login() {
         // ✅ This will be type-safe and validated.
         console.log(values);
     }
+    React.useEffect(() => {
+        fetch("http://localhost:8080/api/v1/auth/google-auth/login/success", {
+            method: "GET",
+            credentials: "include",
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data);
+            })
+
+            .catch((err) => {
+                console.log(err);
+            });
+    }, []);
 
     return (
         <div className=" w-4/12">

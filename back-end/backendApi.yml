@@ -10,7 +10,7 @@ paths:
             tags:
                 - auth
                 - mai linh
-            summary: Register a new user
+            summary: Register a new user (checked)
             description: Endpoint to register a new user with email, password, and username.
             requestBody:
                 required: true
@@ -45,7 +45,7 @@ paths:
             tags:
                 - auth
                 - mai linh
-            summary: Register a new user
+            summary: Register a new user (checked)
             description: Endpoint to register a new user with email, password, and username.
             requestBody:
                 required: true
@@ -79,7 +79,7 @@ paths:
                 - auth
                 - mai linh
             summary: Send code to reset password
-            description: Endpoint to send code to reset password
+            description: Endpoint to send code to reset password (create 6 number code then save into user collection)
             requestBody:
                 required: true
                 content:
@@ -108,7 +108,7 @@ paths:
                 - auth
                 - mai linh
             summary: Send code to reset password
-            description: Endpoint to send code to reset password
+            description: Endpoint to send code to reset password (check if email existd and code )
             requestBody:
                 required: true
                 content:
@@ -445,84 +445,6 @@ paths:
                                 type: array
                                 items:
                                     $ref: "#/components/schemas/Product"
-
-    /user/view-cart?page={page}:
-        get:
-            tags:
-                - user
-            summary: view all cart's order User have but yet haven't finished
-            description: by authenticated, checking if user are that user is exist or not, then query all products in cart
-            responses:
-                "200":
-                    description: successful operation
-                    content:
-                        application/json:
-                            schema:
-                                type: array
-                                items:
-                                    properties:
-                                        quantity:
-                                            type: integer
-                                            example: 3
-                                        discount:
-                                            type: string
-                                            example: 10%
-                                        price:
-                                            type: integer
-                                            example: 100.000$
-                                        name:
-                                            type: string
-                                            example: iPhone 11 Pro Max
-                                        id:
-                                            type: string
-                                            example: "1332d1g2"
-                                        images:
-                                            type: string
-                                            example: "https://scontent.fhan6-1.fna.fbcdn.net/v/t39.30808-6/436225029_122158799744064433_8176839238095918723_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeFJpj_5oloz5HNE23wS3fdqDFvibXTwnk8MW-JtdPCeTz7zboCCMbbP6FH9rsOyjwdozqPz1rgmXdo4j0EGcVud&_nc_ohc=3ZrvsCEWys4Ab55cRgZ&_nc_ht=scontent.fhan6-1.fna&oh=00_AfANPcsNYmedxayKK2DbKLRfJajrJmgmJEEmbw5AWRa7lg&oe=661AB5DA"
-                "400":
-                    description: Invalid
-
-    /user/purchase:
-        post:
-            tags:
-                - user
-            summary: choose products in cart and purchase
-            description: after vaildate user, send id of products, and quantity
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            type: array
-                            items:
-                                properties:
-                                    product_id:
-                                        type: string
-                                        example: 1nasd2132nss34
-
-                                    quantity:
-                                        type: integer
-                                        example: 3
-            responses:
-                "200":
-                    description: successful operation
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    message:
-                                        type: string
-                                        example: "success"
-                "400":
-                    description: fail operation
-                    content:
-                        application/json:
-                            schema:
-                                type: object
-                                properties:
-                                    message:
-                                        type: string
-                                        example: "Fail"
 
     /product/add-smart-phone:
         post:

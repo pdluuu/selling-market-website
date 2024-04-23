@@ -1,47 +1,47 @@
-import mongoose, { Schema, Document, Types } from "mongoose";
+import mongoose, { Schema, Document, Types } from 'mongoose';
 
 export enum ProductCategory {
-    SmartPhone = "Smart Phone",
-    Laptop = "Laptop",
-    Tablet = "Tablet",
-    SmartWatch = "Smart Watch",
-    Accessories = "Accessories",
+    SmartPhone = 'Smart Phone',
+    Laptop = 'Laptop',
+    Tablet = 'Tablet',
+    SmartWatch = 'Smart Watch',
+    Accessories = 'Accessories',
 }
 
 export enum SmartPhoneBrand {
-    Apple = "Apple",
-    Samsung = "Samsung",
-    Huawei = "Huawei",
-    Oppo = "Oppo",
-    Xiaomi = "Xiaomi",
-    Nokia = "Nokia",
+    Apple = 'Apple',
+    Samsung = 'Samsung',
+    Huawei = 'Huawei',
+    Oppo = 'Oppo',
+    Xiaomi = 'Xiaomi',
+    Nokia = 'Nokia',
 }
 
 export enum LapTopBrand {
-    Asus = "Asus",
-    Dell = "Dell",
-    MacBook = "MacBook",
-    Acer = "Acer",
-    Hp = "Hp",
-    Msi = "Msi",
+    Asus = 'Asus',
+    Dell = 'Dell',
+    MacBook = 'MacBook',
+    Acer = 'Acer',
+    Hp = 'Hp',
+    Msi = 'Msi',
 }
 
 export enum TabletBrand {
-    Apple = "IPad",
-    Samsung = "Samsung",
-    Huawei = "Huawei",
-    Oppo = "Oppo",
-    Xiaomi = "Xiaomi",
-    Nokia = "Nokia",
+    Apple = 'IPad',
+    Samsung = 'Samsung',
+    Huawei = 'Huawei',
+    Oppo = 'Oppo',
+    Xiaomi = 'Xiaomi',
+    Nokia = 'Nokia',
 }
 
 export enum AccessoriesBrand {
-    Apple = "Apple",
-    Samsung = "Samsung",
-    Huawei = "Huawei",
-    Oppo = "Oppo",
-    Xiaomi = "Xiaomi",
-    Nokia = "Nokia",
+    Apple = 'Apple',
+    Samsung = 'Samsung',
+    Huawei = 'Huawei',
+    Oppo = 'Oppo',
+    Xiaomi = 'Xiaomi',
+    Nokia = 'Nokia',
 }
 
 export interface IProduct extends Document {
@@ -54,6 +54,7 @@ export interface IProduct extends Document {
     category: ProductCategory;
     images: [string];
     items: [string];
+    items: [string];
 }
 
 const ProductSchema: Schema = new Schema({
@@ -63,10 +64,10 @@ const ProductSchema: Schema = new Schema({
     brand: { type: String, required: true },
     version: { type: [String] },
     category: { type: String, required: true },
-    images: { type: [String], required: true },
-    items: { type: [String], required: true, ref: "Product" },
+    images: { type: [String], required: false },
+    items: { type: [String], required: true, ref: 'Product' },
 });
 
-const ProductModel = mongoose.model<IProduct>("Product", ProductSchema);
+const ProductModel = mongoose.model<IProduct>('Product', ProductSchema);
 
 export default ProductModel;
