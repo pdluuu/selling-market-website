@@ -1,15 +1,15 @@
-import React from "react";
+import React from 'react';
 
-import { Button } from "./ui/button";
-import axios from "axios";
-import api from "@/config/axios.config";
-import { useRouter } from "next/navigation";
+import { Button } from './ui/button';
+import axios from 'axios';
+import api from '@/config/axios.config';
+import { useRouter } from 'next/navigation';
 
 function GoogleSignIn() {
     const router = useRouter();
     const googleLogin = async () => {
         try {
-            window.open("http://localhost:8080/api/v1/auth/google", "_self");
+            window.open('http://localhost:8080/api/v1/auth/google-auth/google', '_self');
         } catch (error) {
             // Handle error
         }
