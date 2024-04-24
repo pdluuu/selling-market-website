@@ -1,0 +1,22 @@
+<CommandGroup>
+                      {
+                        provinces.map((province) => (
+                          <CommandItem
+                            key={province.value}
+                            value={province.value}
+                            onSelect={(curValue) => {
+                              setValue(curValue === value ? "" : curValue)
+                              setOpen(false)
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                value === province.value ? "opacity-100" : "opacity-0"
+                              )}
+                            />
+                            {province.label}
+                          </CommandItem>
+                        ))
+                      }
+                    </CommandGroup>
