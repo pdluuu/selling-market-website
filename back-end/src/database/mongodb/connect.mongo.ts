@@ -1,16 +1,13 @@
-// db.ts
-import { config } from "dotenv";
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-config();
-const MONGODB_URI = process.env.MONGODB_URI || "";
+const MONGODB_URI = 'mongodb://localhost:27017/selling-market-website';
 
 // bat dong bo
 export const connectDB = async () => {
     try {
-        await mongoose.connect(MONGODB_URI);
-        console.log("MongoDB connected successfully");
+        mongoose.connect(MONGODB_URI);
+        console.log('MongoDB connected successfully');
     } catch (error) {
-        console.error("Error connecting to MongoDB");
+        console.error('Error connecting to MongoDB:', error);
     }
 };

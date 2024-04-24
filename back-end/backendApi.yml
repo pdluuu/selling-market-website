@@ -10,7 +10,7 @@ paths:
             tags:
                 - auth
                 - mai linh
-            summary: Register a new user
+            summary: Register a new user (checked)
             description: Endpoint to register a new user with email, password, and username.
             requestBody:
                 required: true
@@ -45,7 +45,7 @@ paths:
             tags:
                 - auth
                 - mai linh
-            summary: Register a new user
+            summary: Register a new user (checked)
             description: Endpoint to register a new user with email, password, and username.
             requestBody:
                 required: true
@@ -79,7 +79,7 @@ paths:
                 - auth
                 - mai linh
             summary: Send code to reset password
-            description: Endpoint to send code to reset password
+            description: Endpoint to send code to reset password (create 6 number code then save into user collection)
             requestBody:
                 required: true
                 content:
@@ -108,7 +108,7 @@ paths:
                 - auth
                 - mai linh
             summary: Send code to reset password
-            description: Endpoint to send code to reset password
+            description: Endpoint to send code to reset password (check if email existd and code )
             requestBody:
                 required: true
                 content:
@@ -601,7 +601,7 @@ components:
                 discount:
                     type: number
                 price:
-                    type: string
+                    type: number
                 brand:
                     type: string
                     enum:

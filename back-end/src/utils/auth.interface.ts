@@ -4,11 +4,19 @@ export interface ISignUp {
     email: string;
     password: string;
     username: string;
+    role: string;
+    phoneNumber: string;
 }
 export interface ISignIn {
     email: string;
     password: string;
 }
+// export interface ISignUp {
+//     email: string;
+//     password: string;
+//     username: string;
+
+// }
 
 export interface ISuccessRes {
     message: "successful";
@@ -24,6 +32,12 @@ export interface IToken {
     refreshToken: string;
 }
 
+export interface ITokenWithRole{
+    userId: string;
+    role: string;
+    refreshToken: string;
+}
+
 export interface JwtPayLoad {
     userId: string;
     email: string;
@@ -35,16 +49,16 @@ export interface IForgotPassEmail {
 
 export interface IVertifyUser {
     email: string;
-    code: string
+    code: string;
 }
 
 export interface IResetPass {
     email: string;
     resetCode: string;
-    password: string
+    password: string;
 }
 
 export interface IResultResetPass {
-   message: "Successful",
-   data : any
+    message: "Successful";
+    data: any;
 }
