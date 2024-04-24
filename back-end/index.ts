@@ -1,44 +1,73 @@
 import express, { Express, Request, Response, Application } from 'express';
 import dotenv from 'dotenv';
-import morgan from 'morgan';
 import morganMiddleware from './src/configs/morganMiddleware';
 import helmet from 'helmet';
+const passport = require('passport');
 import compression from 'compression';
 import { json } from 'body-parser';
-import userRouter from './src/router/user.router/User.router';
-import { connectDB } from './src/database/mongodb/connect.mongo';
-import authRotuer from './src/router/auth/auth.route';
+// * innitialization
 import appRouter from './src/router/index.router';
-//For env File
-dotenv.config();
-
+import { connectDB } from './src/database/mongodb/connect.mongo';
+import cors from 'cors';
+const cookieSession = require('cookie-session');
+import authRouter from './src/router/auth/auth.route';
+import session from 'express-session';
+const passportSetup = require('./src/lib/passport');
+// * innitialization
 const app: Application = express();
 const PORT = process.env.PORT || 5000;
-
+const api_version = process.env.API_VERSION || '/api/v1';
 // * middleware
 app.use(morganMiddleware);
 app.use(helmet());
 app.use(compression());
 app.use(json());
+app.use(express.urlencoded({ extended: true })); // support encoded bodies
+// app.use(cors());
+app.use(
+    cors({
+        origin: 'http://localhost:3000',
+        methods: 'GET,POST,PUT,DELETE',
+        credentials: true,
+    }),
+);
+// * connect to db
 
-//connect to db
-connectDB();
+connectDB().then((res) => console.log(res));
+
+//app.use('auth', authRouter);
+
+// * api version
+app.use(api_version, appRouter);
+app.use(express.urlencoded({ extended: true })); // support encoded bodies
+
+app.use(
+    cookieSession({
+        name: 'session',
+        keys: ['openreplay'],
+        maxAge: 24 * 60 * 60 * 100,
+    }),
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// * connect to db
+connectDB().then((res) => console.log(res));
 
 // * router
 
-const api_version = process.env.API_VERSION || '/api/v1';
-// app.route(api_version);
 
-app.use('/auth', authRotuer);
+app.use('/auth', authRouter);
 app.use(appRouter);
 // * handle Error
 // testConnection();
 // * server running
 const server = app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });
 
 process.on('unhandledRejection', (error, promise) => {
-  console.log(`Logged Error: ${error}`);
-  server.close(() => process.exit(1));
+    console.log(`Logged Error: ${error}`);
+    server.close(() => process.exit(1));
 });

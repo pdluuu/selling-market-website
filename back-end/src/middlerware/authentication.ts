@@ -70,6 +70,3 @@ export async function isAdmin(
         });
     }
 }
-
-
-

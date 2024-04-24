@@ -48,7 +48,7 @@ export interface IProduct extends Document {
     _id: string | Types.ObjectId;
     name: string;
     discount: number;
-    price: string;
+    price: number;
     brand: SmartPhoneBrand | TabletBrand | LapTopBrand | AccessoriesBrand;
     version: [string];
     category: ProductCategory;
@@ -59,7 +59,7 @@ export interface IProduct extends Document {
 const ProductSchema: Schema = new Schema({
     name: { type: String, required: true },
     discount: { type: Number, required: true, default: 0 },
-    price: { type: String, required: true },
+    price: { type: Number, required: true },
     brand: { type: String, required: true },
     version: { type: [String] },
     category: { type: String, required: true },
