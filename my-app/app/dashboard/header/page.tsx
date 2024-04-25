@@ -56,39 +56,40 @@ export default function Header() {
                         </div>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56">
-                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                            <DropdownMenuItem>
-                                <User className="mr-2 h-4 w-4" />
-                                <span>Profile</span>
-                            </DropdownMenuItem>
+                            <Link href='/user'>
+                                <DropdownMenuItem>
+                                    <User className="mr-2 h-4 w-4" />
+                                    <span>Tài khoản của tôi</span>
+                                </DropdownMenuItem>
+                            </Link>
                             <Link href="/view-order">
                                 <DropdownMenuItem>
                                     <CreditCard className="mr-2 h-4 w-4" />
-                                    <span>Billing</span>
+                                    <span>Đơn hàng</span>
                                 </DropdownMenuItem>
                             </Link>
                             <DropdownMenuItem>
                                 <Settings className="mr-2 h-4 w-4" />
-                                <span>Settings</span>
+                                <span>Cài đặt</span>
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
-                        <DropdownMenuSeparator />
                         <DropdownMenuItem>
                             <LifeBuoy className="mr-2 h-4 w-4" />
-                            <span>Support</span>
+                            <span>Hỗ trợ</span>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>
                             <LogOut className="mr-2 h-4 w-4" />
-                            <span>Log out</span>
+                            <span>Đăng xuất</span>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
                 <Bell size={25} />
-                <ShoppingCart size={25} />
+                <Link href='/cart'>
+                    <ShoppingCart size={25}/>
+                </Link> 
             </div>
         </div>
     );

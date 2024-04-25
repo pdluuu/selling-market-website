@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import {
     Menubar,
     MenubarCheckboxItem,
@@ -14,7 +14,7 @@ import {
     MenubarSubTrigger,
     MenubarTrigger,
 } from '@/components/ui/menubar';
-import Link from 'next/link'
+import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 export default function NewMenubarMenu({
@@ -45,14 +45,13 @@ export default function NewMenubarMenu({
             categoryLink = './view-accessory';
             break;
     }
-    const router=useRouter();
-    const handleClick=(brand:string)=>{
+    const router = useRouter();
+    const handleClick = (brand: string) => {
         const url = `/view-category-brand`;
-            window.category = category;
-            window.brand = brand;
-            console.log(category, brand)
-            router.push(url);
-    }
+        window.category = category;
+        window.brand = brand;
+        router.push(url);
+    };
     return (
         <MenubarMenu open={openDropdown} onOpenChange={() => setOpenDropdown(false)}>
             <Link href={categoryLink}>
@@ -71,9 +70,9 @@ export default function NewMenubarMenu({
                 className="w-32 min-w-10"
             >
                 {brands.map((brand, index) => (
-                    
-                        <MenubarItem onClick={()=>handleClick(brand)} key={index}>{brand}</MenubarItem>
-                    
+                    <MenubarItem onClick={() => handleClick(brand)} key={index}>
+                        {brand}
+                    </MenubarItem>
                 ))}
             </MenubarContent>
         </MenubarMenu>

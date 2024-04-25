@@ -9,24 +9,43 @@ import {
     BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 
-export default function BreadcrumbWithCustomSeparator({ category, brand }: { category: string; brand?: string }) {
-    let categoryLink = '';
-    switch (category) {
-        case 'Điện thoại':
-            categoryLink = './view-smartphone';
-            break;
-        case 'Laptop':
-            categoryLink = './view-laptop';
-            break;
-        case 'Đồng hồ':
-            categoryLink = './view-watch';
-            break;
-        case 'Tablet':
-            categoryLink = './view-tablet';
-            break;
-        case 'Phụ kiện':
-            categoryLink = './view-accessory';
-            break;
+export default function BreadcrumbWithCustomSeparator({
+    category,
+    brand,
+    reverse,
+}: {
+    category?: string;
+    brand?: string;
+    reverse?: boolean;
+}) {
+    let sectionLink = '';
+    let firstt = '';
+    let secondd = '';
+
+    if (reverse===true) {
+        if (brand) firstt = brand;
+        if (category) secondd = category;
+        sectionLink = './view-brand';
+    } else {
+        if (brand) secondd = brand;
+        if (category) firstt = category;
+        switch (category) {
+            case 'Điện thoại':
+                sectionLink = './view-smartphone';
+                break;
+            case 'Laptop':
+                sectionLink = './view-laptop';
+                break;
+            case 'Đồng hồ':
+                sectionLink = './view-watch';
+                break;
+            case 'Tablet':
+                sectionLink = './view-tablet';
+                break;
+            case 'Phụ kiện':
+                sectionLink = './view-accessory';
+                break;
+        }
     }
     return (
         <Breadcrumb className="ml-0 mt-6 -mb-3 w-full lg:w-3/4 flex">
@@ -39,16 +58,16 @@ export default function BreadcrumbWithCustomSeparator({ category, brand }: { cat
 
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
-                    <Link href={categoryLink}>
-                        <BreadcrumbPage>{category}</BreadcrumbPage>
+                    <Link href={sectionLink}>
+                        <BreadcrumbPage>{firstt}</BreadcrumbPage>
                     </Link>
                 </BreadcrumbItem>
-                {brand && (
+                {secondd && (
                     <div className="flex gap-1.5 items-center">
                         <BreadcrumbSeparator />
                         <BreadcrumbItem>
                             <BreadcrumbPage>
-                                {category} {brand}
+                                {firstt} {secondd}
                             </BreadcrumbPage>
                         </BreadcrumbItem>
                     </div>

@@ -4,6 +4,7 @@ import OrderModel from '../models/Order.model';
 import ProductModel from '../models/Product.model';
 import ListRegisterModelModel from '../models/ListRegister.model';
 import ListRegisterModel from '../models/ListRegister.model';
+import { ObjectId } from 'mongoose';
 
 class UserServices {
     // * tao nguoi dung
@@ -255,7 +256,20 @@ class UserServices {
             };
         }
     }
-
+    async extractUserRole(user_id: ObjectId): Promise<string> {
+        try {
+            const user = await UserModel.findById(user_id);
+    
+            if (!user) {
+                throw new Error('Id is not existed'); // User not found
+            }
+    
+            return user.role; // Return role of user
+        } catch (error) {
+            throw new Error('Error checking user role');
+        }
+    }
+    
     tao_nguoi_dung(email: string, password: string): string {
         // ket noi database de tao nguoi dung
         if (1) {
