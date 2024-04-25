@@ -35,7 +35,7 @@ export default function Footer() {
                     <Card className="bg-transparent border-none  ">
                         <CardContent className='space-y-1 lg:p-6 p-3'>
                             <CardTitle className=' lg:text-2xl text-base'>Liên hệ</CardTitle>
-                            <CardDescription className=" w-auto lg:text-base text-[11px]">Số điện thoai: 0395235125</CardDescription>
+                            <CardDescription className=" w-auto lg:text-base text-[11px]">Số điện thoại: 0395235125</CardDescription>
                             <CardDescription className="lg:text-base text-[11px]">Địa chỉ: Số 1 Đại Cồ Việt</CardDescription>
                         </CardContent>
                     </Card>

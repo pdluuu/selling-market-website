@@ -14,12 +14,13 @@ export default function ViewCategoryBrand() {
     let listProduct = laptopData;
     const category = window.category;
     const brand = window.brand;
+    const reverse = window.reverse;
     return (
         <div className="flex flex-col items-center">
             <Header />
             <MenubarDemo />
-            <BreadcrumbWithCustomSeparator category={category} brand={brand} />
-            <div className='grid grid-cols-5 lg:w-3/4 max-w-sm lg:max-w-full my-6'>
+            <BreadcrumbWithCustomSeparator reverse={reverse} category={category} brand={brand} />
+            <div className="grid grid-cols-5 lg:w-3/4 max-w-sm lg:max-w-full my-6">
                 {listProduct.map((product, index) => (
                     <div key={index} className="p-[3px] md:p-1 ">
                         <Card>
