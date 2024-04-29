@@ -21,7 +21,7 @@ const sentCodePass: {
 } = {};
 
 class AuthService {
-    async signUp(email: string, password: string, username: string, role:string,phoneNumber:string) {
+    async signUp(email: string, password: string, username: string, role?: string, phoneNumber?: string) {
         if (
             (await this.isExistEmail(email)) ||
             (await this.isExistUsername(username))
@@ -64,7 +64,7 @@ class AuthService {
     async signIn(email: string, password: string) {
         const user = await UserModel.findOne({ email: email });
         console.log(email, password)
-        
+
         if (!user) {
             throw new InvalidInput("Email not found");
         }
@@ -93,25 +93,6 @@ class AuthService {
             return passwordRegex.test(value);
         }
         return false;
-    }
-
-    randomPass() {
-        const characters =
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@$!%*?&.";
-        let password = "";
-        for (let i = 0; i < 16; i++) {
-            const randomIndex = Math.floor(Math.random() * characters.length);
-            password += characters[randomIndex];
-        }
-        return password;
-    }
-
-    checkrandomPass() {
-        let password = this.randomPass();
-        while (!this.validate("password", password)) {
-            password = this.randomPass();
-        }
-        return password;
     }
 
     async isExistEmail(email: string) {
@@ -172,7 +153,7 @@ class AuthService {
         return randomString;
     }
     async sendCodePassword(email: string): Promise<string | false> {
-        const code = this.checkrandomPass();
+        const code = String(Math.floor(100000 + Math.random() * 900000));
         console.log(email);
 
         try {
@@ -198,7 +179,18 @@ class AuthService {
             console.log(code);
             const expiresAt = Date.now() + 5 * 60 * 1000;
 
-            sentCodePass[email] = { resetCode: code, expiresAt: expiresAt };
+            await UserModel.findByIdAndUpdate(
+                { email: email },
+                {
+                    $set: {
+                        passcode: code,
+                        timepass: expiresAt
+
+                    }
+                },
+                { new: true }
+            );
+
             return code;
         } catch (error: any) {
             console.error(error);
@@ -208,19 +200,18 @@ class AuthService {
 
     async resetPassword(email: string, resetCode: string, password: string) {
         try {
-            if (email in sentCodePass) {
-                // Tìm mã code trong mảng của email
-                const passCodes = sentCodePass[email];
-                if (passCodes.resetCode !== resetCode) {
+            const user = await UserModel.findOne({ email: email });
+            if (!user) {
+                return 404;
+            } else {
+                if (user.passcode !== resetCode) {
                     return 400;
                 }
-                if (passCodes.expiresAt < Date.now()) {
+                if (user.timepass && user.timepass < Date.now()) {
                     return 408;
                 }
-                return 200;
-            } else {
-                return 404;
             }
+            return 200;
         } catch (error: any) {
             console.log(error);
         }
@@ -251,7 +242,17 @@ class AuthService {
             console.log(code);
             const expiresAt = Date.now() + 3 * 60 * 1000;
 
-            sentCodes[email] = { code: code, expiresAt: expiresAt };
+            await UserModel.findByIdAndUpdate(
+                { email: email },
+                {
+                    $set: {
+                        vertifycode: code,
+                        timevertify: expiresAt
+                    }
+                },
+                { new: true }
+            );
+
             return code;
         } catch (error: any) {
             console.error(error);
@@ -261,19 +262,18 @@ class AuthService {
 
     async vertifyUser(email: string, code: string) {
         try {
-            if (email in sentCodes) {
-                // Tìm mã code trong mảng của email
-                const userCodes = sentCodes[email];
-                if (userCodes.code !== code) {
+            const user = await UserModel.findOne({ email: email });
+            if (!user) {
+                return 404;
+            } else {
+                if (user.vertifycode !== code) {
                     return 400;
                 }
-                if (userCodes.expiresAt < Date.now()) {
+                if (user.timevertify && user.timevertify < Date.now()) {
                     return 408;
                 }
-                return 200;
-            } else {
-                return 404;
             }
+            return 200;
         } catch (error: any) {
             console.log(error);
         }

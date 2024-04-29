@@ -24,6 +24,10 @@ export interface IUser extends Document {
     phoneNumber?: string;
     store_id?: string;
     image?: string;
+    vertifycode?: string;
+    timevertify?: number;
+    passcode?: string;
+    timepass?: number;
 }
 
 const UserSchema: Schema = new Schema(
@@ -47,6 +51,10 @@ const UserSchema: Schema = new Schema(
         },
         store_id: { type: String },
         image: { type: String },
+        vertifycode: { type: String },
+        timevertify: { type: Number },
+        passcode: { type: String },
+        timepass: { type: Number },
     },
     { timestamps: true },
 );

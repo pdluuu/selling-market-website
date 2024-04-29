@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 
 import auhtService from '../services/auth.service';
 import { Irestaff, IreDeliver, IupDateUser, ItakeOrder } from '../utils/user.interface';
-config();
 import { Response, Request } from 'express';
 import { ErrorResponse, ErrorResponseType, InvalidInput, MissingParameter } from '../utils/errorResponse';
 import authService from '../services/auth.service';
@@ -94,12 +93,6 @@ class User {
             const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET || '', {
                 expiresIn: process.env.EXPIRES_TOKEN_TIME,
             });
-            // ma hoa + key -> phien ban chua decode
-
-            // * save refresh Token vao database => lay lai access Token
-            // * luu 1 chuoi cac access token => nhieu ng dung cung dang nhap cung mot luc
-            // * xoa refreshToken tren dien thoai
-            // * xoa luon []
 
             const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET || '');
 
@@ -137,10 +130,9 @@ class User {
             return res.status(Err.statusCode).json({ message: Err.message });
         }
     }
-    async googleAuth() {}
+    async googleAuth() { }
 
     async password_getcode(req: Request<any, any, IForgotPassEmail>, res: Response<ISuccessRes | IFailRes>) {
-        const { email } = req.body;
         try {
             const { email } = req.body;
 
@@ -148,7 +140,11 @@ class User {
                 throw new MissingParameter();
             }
             if (!authService.validate('email', email)) {
-                return res.status(400).json({ message: 'Invalid email format' });
+                throw new ErrorResponse('Invalid email format', 400);
+            }
+
+            if (!await auhtService.isExistEmail(email)) {
+                throw new ErrorResponse('Email not exist', 400);
             }
 
             const sendCode = await authService.sendCodePassword(email);
@@ -173,10 +169,10 @@ class User {
                 throw new MissingParameter();
             }
             if (!authService.validate('email', email)) {
-                return res.status(400).json({ message: 'Invalid email format' });
+                throw new ErrorResponse('Invalid email format', 400);
             }
             if (!authService.validate('password', password)) {
-                return res.status(400).json({ message: 'Invalid password format' });
+                throw new ErrorResponse('Invalid password format', 400);
             }
 
             var result = await authService.resetPassword(email, resetCode, password);
@@ -212,21 +208,15 @@ class User {
             }
 
             if (result === 400) {
-                return res.status(400).json({
-                    message: 'Invalid verification passcode',
-                });
+                throw new ErrorResponse('Invalid verification passcode', 400);
             }
 
             if (result === 404) {
-                return res.status(404).json({
-                    message: 'User not found',
-                });
+                throw new ErrorResponse('User not found', 404);
             }
 
             if (result === 408) {
-                return res.status(408).json({
-                    message: 'Ma het hieu luc',
-                });
+                throw new ErrorResponse('Ma het hieu luc', 408);
             }
         } catch (error: any) {
             console.log(error);
@@ -255,12 +245,7 @@ class User {
                     const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET || '', {
                         expiresIn: process.env.EXPIRES_TOKEN_TIME,
                     });
-                    // ma hoa + key -> phien ban chua decode
 
-                    // * save refresh Token vao database => lay lai access Token
-                    // * luu 1 chuoi cac access token => nhieu ng dung cung dang nhap cung mot luc
-                    // * xoa refreshToken tren dien thoai
-                    // * xoa luon []
                     return res.status(200).json({
                         message: 'successful',
                         data: {
@@ -281,12 +266,15 @@ class User {
     async sendCode(req: Request<any, any, IForgotPassEmail>, res: Response<ISuccessRes | IFailRes>) {
         try {
             const { email } = req.body;
+            if (!await auhtService.isExistEmail(email)) {
+                throw new ErrorResponse('Email not exit', 400);
+            }
 
             if (!email) {
                 throw new MissingParameter();
             }
             if (!authService.validate('email', email)) {
-                return res.status(400).json({ message: 'Invalid email format' });
+                throw new ErrorResponse('Invalid email format', 400);
             }
 
             const sendCode = await authService.sendCode(email);
@@ -311,7 +299,7 @@ class User {
                 throw new MissingParameter();
             }
             if (!authService.validate('email', email)) {
-                return res.status(400).json({ message: 'Invalid email format' });
+                throw new ErrorResponse('Invalid email format', 400);
             }
 
             var result = await authService.vertifyUser(email, code);
@@ -321,21 +309,15 @@ class User {
                 });
             }
             if (result === 400) {
-                return res.status(400).json({
-                    message: 'Invalid verification code',
-                });
+                throw new ErrorResponse('Invalid vertification', 400);
             }
 
             if (result === 404) {
-                return res.status(404).json({
-                    message: 'User not found',
-                });
+                throw new ErrorResponse('User not found', 404);
             }
 
             if (result === 408) {
-                return res.status(408).json({
-                    message: 'Ma het hieu luc',
-                });
+                throw new ErrorResponse('Ma het hieu luc', 400);
             }
         } catch (error: any) {
             console.log(error);

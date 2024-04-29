@@ -11,6 +11,7 @@ import { connectDB } from './src/database/mongodb/connect.mongo';
 import cors from 'cors';
 const cookieSession = require('cookie-session');
 import session from 'express-session';
+import authRouter from './src/router/auth/auth.route';
 const passportSetup = require('./src/lib/passport');
 // * innitialization
 const app: Application = express();
@@ -32,12 +33,12 @@ app.use(
 );
 // * connect to db
 
-connectDB().then((res) => console.log(res));
+//connectDB().then((res) => console.log(res));
 
 //app.use('auth', authRouter);
 
 // * api version
-app.use(api_version, appRouter);
+//app.use(api_version, appRouter);
 app.use(express.urlencoded({ extended: true })); // support encoded bodies
 
 app.use(
@@ -59,7 +60,7 @@ connectDB().then((res) => console.log(res));
 const api_version = process.env.API_VERSION || '/api/v1';
 // app.route(api_version);
 
-app.use('/auth', authRotuer);
+app.use('/auth', authRouter);
 app.use(appRouter);
 // * handle Error
 // testConnection();
