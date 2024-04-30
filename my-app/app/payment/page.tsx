@@ -20,22 +20,9 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command"
-
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
 import { useState } from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
+import ComboboxDemo from "./combobox";
+
 
 
 
@@ -70,23 +57,7 @@ const carts = [
   },
 ];
 
-const provinces = [
-  {
-    value: "hanoi",
-    label: "Ha Noi",
-  },
-  {
-    value: "thaibinh",
-    label: "Thai Binh",
-  }, {
-    value: "hochiminh",
-    label: "Ho Chi Minh",
-  }, {
-    value: "danang",
-    label: "Da Nang",
-  },
 
-]
 
 export default function Payment() {
   const [open, setOpen] = useState(false);
@@ -104,49 +75,7 @@ export default function Payment() {
               <DialogHeader>
                 <DialogTitle>Update</DialogTitle>
               </DialogHeader>
-              <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
-                    className="w-[200px] justify-between"
-                  >
-                    {value
-                      ? provinces.find((province) => province.value === value)?.label
-                      : "Select province..."}
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[200px] p-0">
-                  <Command>
-                    <CommandInput placeholder="Search province" />
-                    <CommandEmpty> No province found.</CommandEmpty>
-                    <CommandGroup>
-                      {
-                        provinces.map((province) => (
-                          <CommandItem
-                            key={province.value}
-                            value={province.value}
-                            onSelect={(curValue) => {
-                              setValue(curValue === value ? "" : curValue)
-                              setOpen(false)
-                            }}
-                          >
-                            <Check
-                              className={cn(
-                                "mr-2 h-4 w-4",
-                                value === province.value ? "opacity-100" : "opacity-0"
-                              )}
-                            />
-                            {province.label}
-                          </CommandItem>
-                        ))
-                      }
-                    </CommandGroup>
-                  </Command>
-                </PopoverContent>
-              </Popover>
+              <ComboboxDemo></ComboboxDemo>
               <DialogFooter>
                 <Button type="submit">Save changes</Button>
               </DialogFooter>
