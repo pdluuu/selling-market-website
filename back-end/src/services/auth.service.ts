@@ -10,15 +10,6 @@ import { IResultResetPass } from "../utils/auth.interface";
 
 config();
 
-const sentCodes: {
-    [email: string]: { code: string | false; expiresAt: number };
-} = {};
-const sentCodePass: {
-    [email: string]: {
-        resetCode: string | false;
-        expiresAt: number;
-    };
-} = {};
 
 class AuthService {
     async signUp(email: string, password: string, username: string, role?: string, phoneNumber?: string) {

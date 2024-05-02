@@ -50,7 +50,7 @@ export default function Header() {
                         <div className="flex space-x-1 items-center ">
                             <CircleUserRound size={35} />
                             <div className="flex flex-col">
-                                <p className="lg:text-base text-xs  ">Phan Khánh Linh</p>
+                                <p className="lg:text-base text-xs  ">Vu Thi Mai Linh</p>
                                 <p className="lg:text-xs text-[9px] ">Khách hàng</p>
                             </div>
                         </div>
