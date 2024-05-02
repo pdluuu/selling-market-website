@@ -327,9 +327,7 @@ class User {
             }
 
             if (result === 404) {
-                return res.status(404).json({
-                    message: 'User not found',
-                });
+                throw new ErrorResponse('un verification code', 400);
             }
 
             if (result === 408) {
