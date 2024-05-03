@@ -54,7 +54,6 @@ export interface IProduct extends Document {
     category: ProductCategory;
     images: [string];
     items: [string];
-    items: [string];
 }
 
 const ProductSchema: Schema = new Schema({
