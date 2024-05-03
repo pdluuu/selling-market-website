@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 
 import auhtService from '../services/auth.service';
 import { Irestaff, IreDeliver, IupDateUser, ItakeOrder } from '../utils/user.interface';
-config();
 import { Response, Request } from 'express';
 import { ErrorResponse, ErrorResponseType, InvalidInput, MissingParameter } from '../utils/errorResponse';
 import authService from '../services/auth.service';
@@ -327,9 +326,7 @@ class User {
             }
 
             if (result === 404) {
-                return res.status(404).json({
-                    message: 'User not found',
-                });
+                throw new ErrorResponse('un verification code', 400);
             }
 
             if (result === 408) {
