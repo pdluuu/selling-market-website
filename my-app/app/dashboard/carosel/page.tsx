@@ -26,8 +26,8 @@ export function CarouselPlugin() {
                     </CarouselItem>
                 ))}
             </CarouselContent>
-            <CarouselPrevious className='border-none'/>
-            <CarouselNext className='border-none'/>
+            <CarouselPrevious className="border-none" />
+            <CarouselNext className="border-none" />
         </Carousel>
     );
 }
