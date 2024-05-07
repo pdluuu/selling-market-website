@@ -55,7 +55,6 @@ class AuthService {
     async signIn(email: string, password: string) {
         const user = await UserModel.findOne({ email: email });
         console.log(email, password)
-
         if (!user) {
             throw new InvalidInput("Email not found");
         }

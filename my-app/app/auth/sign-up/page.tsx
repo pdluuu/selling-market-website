@@ -110,7 +110,7 @@ export default function Login() {
                                             <FormLabel>Username</FormLabel>
                                             <FormControl>
                                                 <Input
-                                                    placeholder="Pham Luu..."
+                                                    placeholder="..."
                                                     {...field}
                                                 />
                                             </FormControl>

@@ -110,7 +110,7 @@ export default function Payment() {
       </div>
       <div className="flex justify-between">
         <div>
-          Total: 0
+          Total: 110
         </div>
         <div>
           <Button>Dat Hang</Button>

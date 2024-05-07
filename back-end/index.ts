@@ -33,7 +33,7 @@ app.use(
 );
 // * connect to db
 
-//connectDB().then((res) => console.log(res));
+connectDB().then((res) => console.log(res));
 
 //app.use('auth', authRouter);
 

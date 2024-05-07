@@ -245,7 +245,6 @@ class User {
                     const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET || '', {
                         expiresIn: process.env.EXPIRES_TOKEN_TIME,
                     });
-
                     return res.status(200).json({
                         message: 'successful',
                         data: {
