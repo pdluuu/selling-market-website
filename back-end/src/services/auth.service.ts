@@ -1,12 +1,12 @@
-import { compare, compareSync, genSaltSync, hash, hashSync } from "bcrypt";
-import UserModel from "../models/User.model";
-import { ErrorResponse, InvalidInput } from "../utils/errorResponse";
-import { config } from "dotenv";
-import jwt from "jsonwebtoken";
-import TokenModel from "../models/Token.model";
-import RefreshTokenModel from "../models/Token.model";
-import { log } from "console";
-import { IResultResetPass } from "../utils/auth.interface";
+import { compare, compareSync, genSaltSync, hash, hashSync } from 'bcrypt';
+import UserModel from '../models/User.model';
+import { ErrorResponse, InvalidInput } from '../utils/errorResponse';
+import { config } from 'dotenv';
+import jwt from 'jsonwebtoken';
+import TokenModel from '../models/Token.model';
+import RefreshTokenModel from '../models/Token.model';
+import { log } from 'console';
+import { IResultResetPass } from '../utils/auth.interface';
 
 config();
 
@@ -21,12 +21,9 @@ const sentCodePass: {
 } = {};
 
 class AuthService {
-    async signUp(email: string, password: string, username: string, role:string,phoneNumber:string) {
-        if (
-            (await this.isExistEmail(email)) ||
-            (await this.isExistUsername(username))
-        ) {
-            throw new InvalidInput("Email already exists");
+    async signUp(email: string, password: string, username: string, role?: string, phoneNumber?: string) {
+        if ((await this.isExistEmail(email)) || (await this.isExistUsername(username))) {
+            throw new InvalidInput('Email already exists');
         }
 
         const salt = genSaltSync(10);
@@ -63,42 +60,40 @@ class AuthService {
     }
     async signIn(email: string, password: string) {
         const user = await UserModel.findOne({ email: email });
-        console.log(email, password)
-        
+        console.log(email, password);
+
         if (!user) {
-            throw new InvalidInput("Email not found");
+            throw new InvalidInput('Email not found');
         }
-        console.log(user.email, user.password)
+        console.log(user.email, user.password);
         // let isMatch = compareSync(password, user.password);
 
         if (password !== user.password) {
-            throw new InvalidInput("Password not match");
+            throw new InvalidInput('Password not match');
         }
 
         return user;
     }
 
-    validate(type: "email" | "password", value: string) {
-        if (type === "email") {
+    validate(type: 'email' | 'password', value: string) {
+        if (type === 'email') {
             const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            console.log(type)
-            console.log(emailRegex.test(value))
+            console.log(type);
+            console.log(emailRegex.test(value));
             return emailRegex.test(value);
         }
-        if (type === "password") {
-            const passwordRegex: RegExp =
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/;
-            console.log(type)
-            console.log(passwordRegex.test(value))
+        if (type === 'password') {
+            const passwordRegex: RegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/;
+            console.log(type);
+            console.log(passwordRegex.test(value));
             return passwordRegex.test(value);
         }
         return false;
     }
 
     randomPass() {
-        const characters =
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@$!%*?&.";
-        let password = "";
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@$!%*?&.';
+        let password = '';
         for (let i = 0; i < 16; i++) {
             const randomIndex = Math.floor(Math.random() * characters.length);
             password += characters[randomIndex];
@@ -108,7 +103,7 @@ class AuthService {
 
     checkrandomPass() {
         let password = this.randomPass();
-        while (!this.validate("password", password)) {
+        while (!this.validate('password', password)) {
             password = this.randomPass();
         }
         return password;
@@ -146,14 +141,12 @@ class AuthService {
     async removeToken(userId: string, refreshToken: string) {
         const Token = await RefreshTokenModel.findOne({ userId });
 
-        console.log("da vao duoc log out");
+        console.log('da vao duoc log out');
 
         if (!Token) {
-            throw new ErrorResponse("User had logged out!", 400);
+            throw new ErrorResponse('User had logged out!', 400);
         }
-        let refreshTokens = Token.refreshTokens.filter(
-            (token) => token !== refreshToken
-        );
+        let refreshTokens = Token.refreshTokens.filter((token) => token !== refreshToken);
 
         Token.refreshTokens = refreshTokens;
         await Token.save();
@@ -162,9 +155,8 @@ class AuthService {
     }
 
     generateRandomString(length: number): string {
-        const charset =
-            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        let randomString = "";
+        const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let randomString = '';
         for (let i = 0; i < length; i++) {
             const randomIndex = Math.floor(Math.random() * charset.length);
             randomString += charset[randomIndex];
@@ -176,21 +168,21 @@ class AuthService {
         console.log(email);
 
         try {
-            var nodemailer = require("nodemailer");
+            var nodemailer = require('nodemailer');
             var transporter = nodemailer.createTransport({
-                service: "gmail",
-                host: "smtp.gmail.com",
+                service: 'gmail',
+                host: 'smtp.gmail.com',
                 port: 587,
                 auth: {
-                    user: "mailinhv534@gmail.com",
-                    pass: "nrydytummnqecfpn",
+                    user: 'mailinhv534@gmail.com',
+                    pass: 'nrydytummnqecfpn',
                 },
             });
 
             var mailOptions = {
-                from: "mailinhv534@gmail.com",
+                from: 'mailinhv534@gmail.com',
                 to: email,
-                subject: "Sending Email to code to reset password",
+                subject: 'Sending Email to code to reset password',
                 text: code,
             };
 
@@ -229,21 +221,21 @@ class AuthService {
     async sendCode(email: string): Promise<string | false> {
         const code = String(Math.floor(100000 + Math.random() * 900000));
         try {
-            var nodemailer = require("nodemailer");
+            var nodemailer = require('nodemailer');
             var transporter = nodemailer.createTransport({
-                service: "gmail",
-                host: "smtp.gmail.com",
+                service: 'gmail',
+                host: 'smtp.gmail.com',
                 port: 587,
                 auth: {
-                    user: "mailinhv534@gmail.com",
-                    pass: "nrydytummnqecfpn",
+                    user: 'mailinhv534@gmail.com',
+                    pass: 'nrydytummnqecfpn',
                 },
             });
 
             var mailOptions = {
-                from: "mailinhv534@gmail.com",
+                from: 'mailinhv534@gmail.com',
                 to: email,
-                subject: "Sending Email to sendCode",
+                subject: 'Sending Email to sendCode',
                 text: code,
             };
 
