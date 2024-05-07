@@ -3,7 +3,6 @@ import { MenubarDemo } from '../dashboard/category/page';
 import DisplayedItem from '../dashboard/displayeditem/page';
 import Header from '../dashboard/header/page';
 import BreadcrumbWithCustomSeparator from '../dashboard/breadcrumb/page';
-import { phoneData } from '../dashboard/sample-data';
 
 export default function Dashboard() {
     
