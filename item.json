@@ -1,24 +1,24 @@
 {
-  "name": "Oppo Phone Case 1",
+  "name": "XBN34",
   "brand": "Oppo",
   "category": "Phone Case",
-  "images": ["oppo_case.jpg"],
+  "images": "oppo_case.jpg",
   "description": "This is a phone case designed for Oppo smartphones.",
   "imageUrl": "https://img.myipadbox.com/sec/product_l/EDA002331001D.jpg",
   "manufacturer": "Oppo Accessories"
 }
 
 {
-  "name": "Samsung Phone Case 1",
+  "name": "KXZ1",
   "brand": "Samsung",
   "category": "Phone Case",
-  "images": ["samsung_case.jpg"],
+  "images": "samsung_case.jpg",
   "description": "This is a phone case designed for Samsung smartphones.",
   "imageUrl": "https://ae01.alicdn.com/kf/S7b1148e0d996449b81492c708df40addS.jpg_640x640Q90.jpg_.webp",
   "manufacturer": "Samsung Accessories"
 }
   {
-    "name": "Apple Phone Case 1",
+    "name": "DFH456",
     "brand": "Apple",
     "category": "Phone Case",
     "images": "apple_case.jpg",
@@ -27,7 +27,7 @@
     "manufacturer": "Apple Accessories"
   }
   {
-    "name": "Nokia Phone Case 1",
+    "name": "DFG245",
     "brand": "Nokia",
     "category": "Phone Case",
     "images": 
@@ -37,7 +37,7 @@
     "manufacturer": "Nokia Accessories"
   }
   {
-    "name": "Xiaomi Phone Case 1",
+    "name": "SDAFHJJ345",
     "brand": "Xiaomi",
     "category": "Phone Case",
     "images": 
@@ -50,7 +50,7 @@
 
 
   {
-    "name": "Oppo Phone Charger 1",
+    "name": "TRTY345",
     "brand": "Oppo",
     "category": "Phone Charger",
     "images": 
@@ -60,7 +60,7 @@
     "manufacturer": "Oppo Accessories"
   }
   {
-    "name": "Samsung Phone Charger 1",
+    "name": "ỴKSKLF3456",
     "brand": "Samsung",
     "category": "Phone Charger",
     "images": 
@@ -70,7 +70,7 @@
     "manufacturer": "Samsung Accessories"
   }
   {
-    "name": "Apple Phone Charger 1",
+    "name": "APFLEO850",
     "brand": "Apple",
     "category": "Phone Charger",
     "images": 
@@ -80,7 +80,7 @@
     "manufacturer": "Apple Accessories"
   }
   {
-    "name": "Nokia Phone Charger 1",
+    "name": "FSAOI3565",
     "brand": "Nokia",
     "category": "Phone Charger",
     "images": 
@@ -90,7 +90,7 @@
     "manufacturer": "Nokia Accessories"
   }
   {
-    "name": "Xiaomi Phone Charger 1",
+    "name": "XRTSAF1",
     "brand": "Xiaomi",
     "category": "Phone Charger",
     "images": [
@@ -105,7 +105,7 @@
 
 
   {
-    "name": "Oppo Phone Earphone 1",
+    "name": "ERAEXXX2",
     "brand": "Oppo",
     "category": "Phone Earphone",
     "images": 
@@ -115,7 +115,7 @@
     "manufacturer": "Oppo Accessories"
   }
   {
-    "name": "Samsung Phone Earphone 1",
+    "name": "SAFLK234",
     "brand": "Samsung",
     "category": "Phone Earphone",
     "images": 
@@ -126,7 +126,7 @@
     "manufacturer": "Samsung Accessories"
   }
   {
-    "name": "Apple Phone Earphone 1",
+    "name": "2VA4FDS3",
     "brand": "Apple",
     "category": "Phone Earphone",
     "images": 
@@ -137,7 +137,7 @@
     "manufacturer": "Apple Accessories"
   }
   {
-    "name": "Nokia Phone Earphone 1",
+    "name": "2FSDFSG4",
     "brand": "Nokia",
     "category": "Phone Earphone",
     "images": 
@@ -148,7 +148,7 @@
     "manufacturer": "Nokia Accessories"
   }
   {
-    "name": "Xiaomi Phone Earphone 1",
+    "name": "FEFGR445",
     "brand": "Xiaomi",
     "category": "Phone Earphone",
     "images": 
@@ -163,7 +163,7 @@
 
 
   {
-    "name": "Oppo Laptop Backpack 1",
+    "name": "FSAFDTE3",
     "brand": "Oppo",
     "category": "Laptop Backpack",
     "images": 
@@ -173,7 +173,7 @@
     "manufacturer": "Oppo Accessories"
   }
   {
-    "name": "Samsung Laptop Backpack 1",
+    "name": "SFDSF445",
     "brand": "Samsung",
     "category": "Laptop Backpack",
     "images": 
@@ -184,7 +184,7 @@
     "manufacturer": "Samsung Accessories"
   }
   {
-    "name": "Apple Laptop Backpack 1",
+    "name": "SFDAF4",
     "brand": "Apple",
     "category": "Laptop Backpack",
     "images": 
@@ -195,7 +195,7 @@
     "manufacturer": "Apple Accessories"
   }
   {
-    "name": "Nokia Laptop Backpack 1",
+    "name": "NFDSG456",
     "brand": "Nokia",
     "category": "Laptop Backpack",
     "images": 
@@ -206,7 +206,7 @@
     "manufacturer": "Nokia Accessories"
   }
   {
-    "name": "Xiaomi Laptop Backpack 1",
+    "name": "XFGTYH67",
     "brand": "Xiaomi",
     "category": "Laptop Backpack",
     "images": 
@@ -225,7 +225,7 @@
 
 
   {
-    "name": "Oppo Bluetooth Wireless Mouse 1",
+    "name": "SDFAF45",
     "brand": "Oppo",
     "category": "Bluetooth Wireless Mouse",
     "images": 
@@ -236,7 +236,7 @@
     "manufacturer": "Oppo Accessories"
   }
   {
-    "name": "Samsung Bluetooth Wireless Mouse 1",
+    "name": "SDFF45",
     "brand": "Samsung",
     "category": "Bluetooth Wireless Mouse",
     "images": 
@@ -247,7 +247,7 @@
     "manufacturer": "Samsung Accessories"
   }
   {
-    "name": "Apple Bluetooth Wireless Mouse 1",
+    "name": "AF4565",
     "brand": "Apple",
     "category": "Bluetooth Wireless Mouse",
     "images": 
@@ -258,7 +258,7 @@
     "manufacturer": "Apple Accessories"
   }
   {
-    "name": "Nokia Bluetooth Wireless Mouse 1",
+    "name": "NoGFY45",
     "brand": "Nokia",
     "category": "Bluetooth Wireless Mouse",
     "images": 
@@ -269,7 +269,7 @@
     "manufacturer": "Nokia Accessories"
   }
   {
-    "name": "Xiaomi Bluetooth Wireless Mouse 1",
+    "name": "SFA456",
     "brand": "Xiaomi",
     "category": "Bluetooth Wireless Mouse",
     "images": 
@@ -285,7 +285,7 @@
 
 
   {
-    "name": "Oppo Keyboard 1",
+    "name": "OKH31",
     "brand": "Oppo",
     "category": "Keyboard",
     "images": 
@@ -296,7 +296,7 @@
     "manufacturer": "Oppo Accessories"
   }
   {
-    "name": "Samsung Keyboard 1",
+    "name": "SSDF4T5",
     "brand": "Samsung",
     "category": "Keyboard",
     "images": 
@@ -307,7 +307,7 @@
     "manufacturer": "Samsung Accessories"
   }
   {
-    "name": "Apple Keyboard 1",
+    "name": "CMT81945",
     "brand": "Apple",
     "category": "Keyboard",
     "images": 
@@ -318,7 +318,7 @@
     "manufacturer": "Apple Accessories"
   }
   {
-    "name": "MSI Keyboard 1",
+    "name": "FDSF4T45",
     "brand": "MSI",
     "category": "Keyboard",
     "images": 
@@ -329,7 +329,7 @@
     "manufacturer": "MSI Accessories"
   }
   {
-    "name": "Dell Keyboard 1",
+    "name": "DSF4F4",
     "brand": "Dell",
     "category": "Keyboard",
     "images": 
