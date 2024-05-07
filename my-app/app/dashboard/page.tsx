@@ -4,7 +4,6 @@ import { MenubarDemo } from './category/page';
 import DisplayedItem from './displayeditem/page';
 import Header from './header/page';
 import ListBrand from './listbrand/page';
-import { phoneData, watchData, laptopData, tabletData, accessoryData } from './sample-data';
 
 export default function Dashboard() {
     return (

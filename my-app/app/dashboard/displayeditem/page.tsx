@@ -7,9 +7,9 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { ChevronLast, Router } from 'lucide-react';
 import Link from 'next/link';
-import { laptopData } from '../sample-data';
+import { phoneData } from '../sample-data';
 import { useRouter } from 'next/navigation';
-
+import tag from '../../../Images/tag3.png';
 declare global {
     interface Window {
         category: string;
@@ -40,7 +40,7 @@ export default function DisplayedItem({
         images: string[];
         items: string[];
     }[] = [];
-    listProduct = laptopData;
+    listProduct = phoneData;
     const router = useRouter();
 
     const handleViewMore = () => {
@@ -78,6 +78,7 @@ export default function DisplayedItem({
             }
         }
     };
+    
     return (
         <div className="lg:w-3/4 max-w-sm lg:max-w-full  m-y-2 m-0 md:my-4">
             <div className=" flex justify-between items-center">
@@ -95,22 +96,25 @@ export default function DisplayedItem({
                         <CarouselItem key={index} className="pl-1  basis-1/3 lg:basis-1/5 ">
                             <div className="p-[3px] md:p-1  ">
                                 <Card className="">
+                                    {product.discount && (
+                                        <div className="absolute z-10 -ml-[30px] -mt-10 h-auto w-auto ">
+                                            <img
+                                                src={tag.src}
+                                                width={120}
+                                                className="transform scale-y-[-1]"
+                                            />
+                                            <p className=' absolute ml-8 -mt-[75px] text-white font-bold text-xs'>Giảm giá</p>
+                                        </div>
+                                    )}
                                     <CardContent className="md:pt-4 h-[290px] shadow-md p-[12px]  flex flex-col md:space-y-2 space-y-1">
-                                        <div className="w-auto  flex justify-center h-[107px]">
+                                        <div className="w-auto z-0 flex justify-center h-[107px]">
                                             <img
                                                 src={product.images[0]}
                                                 className="object-cover h-full hover:scale-110 transition duration-500"
                                                 alt="asus"
                                             />
                                         </div>
-                                        {product.discount && (
-                                            <Badge
-                                                variant={'destructive'}
-                                                className="md:w-20 h-4 md:h-4.5 md:text-xs text-[9px] w-16"
-                                            >
-                                                Giảm giá
-                                            </Badge>
-                                        )}
+
                                         <CardTitle className="text-[18px]">{product.name}</CardTitle>
                                         <CardDescription>{product.discount}</CardDescription>
                                         <p className="text-[16px] relative">
@@ -128,6 +132,7 @@ export default function DisplayedItem({
                 <CarouselPrevious className=" border-none" />
                 <CarouselNext className=" border-none" />
             </Carousel>
+            
         </div>
     );
 }
