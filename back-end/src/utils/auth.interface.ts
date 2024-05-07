@@ -61,4 +61,5 @@ export interface IResetPass {
 export interface IResultResetPass {
     message: "Successful";
     data: any;
+
 }

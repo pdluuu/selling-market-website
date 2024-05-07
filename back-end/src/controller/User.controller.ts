@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 
 import auhtService from '../services/auth.service';
 import { Irestaff, IreDeliver, IupDateUser, ItakeOrder } from '../utils/user.interface';
-config();
 import { Response, Request } from 'express';
 import { ErrorResponse, ErrorResponseType, InvalidInput, MissingParameter } from '../utils/errorResponse';
 import authService from '../services/auth.service';
@@ -31,14 +30,15 @@ class User {
         try {
             const {email, password, username, role, phoneNumber} = req.body;
 
+
             if (!email || !password || !username) {
                 throw new MissingParameter();
             }
             if (!authService.validate('email', email) || !authService.validate('password', password)) {
                 throw new InvalidInput();
             }
-
             const user = await authService.signUp(email, password, username, role, phoneNumber);
+
 
             const payload = {
                 _id: user._id,

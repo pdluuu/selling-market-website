@@ -10,10 +10,15 @@ import appRouter from './src/router/index.router';
 import { connectDB } from './src/database/mongodb/connect.mongo';
 import cors from 'cors';
 const cookieSession = require('cookie-session');
+
 import authRouter from './src/router/auth/auth.route';
+
 import session from 'express-session';
+
+dotenv.config();
 const passportSetup = require('./src/lib/passport');
 // * innitialization
+
 const app: Application = express();
 const PORT = process.env.PORT || 5000;
 const api_version = process.env.API_VERSION || '/api/v1';
@@ -71,3 +76,4 @@ process.on('unhandledRejection', (error, promise) => {
     console.log(`Logged Error: ${error}`);
     server.close(() => process.exit(1));
 });
+

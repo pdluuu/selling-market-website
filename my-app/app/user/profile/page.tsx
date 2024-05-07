@@ -151,7 +151,7 @@ export default function Profile() {
         
                             {/* <!-- Sửa hồ sơ --> */}
                             <div className="py-3">
-                                <h2 className="text-lg font-poppins font-bold text-top-color">Professional Experience</h2>
+
                                 <div className="border-2 w-20 border-top-color my-3"></div>
         
                                 <div className="flex flex-col">
@@ -220,8 +220,9 @@ export default function Profile() {
                                 </div>
                             </div>
                             <div className="flex flex-col mt-8">
+                                
                                 <p className="text-lg font-bold text-gray-700">Ngày sinh</p>
-                                <div className="flex flex-row">
+                                <div className="flex flex-col">
                                 
                                         <Label htmlFor="dob">Ngày sinh:</Label>
                                         <Input type="date" id="dob" name="dob"/>

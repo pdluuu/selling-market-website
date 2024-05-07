@@ -15,7 +15,6 @@ const appRouter = Router();
 appRouter.use('/auth', authRouter);
 // appRouter.use(authenticateToken).delete("/log-out", user.logout);
 appRouter.use('/product', productRouter);
-
 appRouter.use(authenticateToken).delete('/log-out', user.logout);
 appRouter.use('/auth', authRouter);
 appRouter.use('/api/v1/user', userRouter);

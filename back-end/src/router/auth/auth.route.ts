@@ -12,4 +12,6 @@ authRouter.post("/sendCode", user.sendCode);
 authRouter.post("/verifyUser", user.verifyUser);
 
 authRouter.use("/google-auth", GoogleAuth);
+
 export default authRouter;
+

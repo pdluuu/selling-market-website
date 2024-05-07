@@ -1,6 +1,6 @@
-"use client";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+'use client';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 export default function Home() {
     const router = useRouter();
 
@@ -39,26 +39,13 @@ export default function Home() {
     //     getUser();
     // }, []);
 
-    useEffect(() => {
-        const getUser = () => {
-            fetch("http://localhost:8080/api/v1/auth/login/success", {
-                method: "GET",
-                credentials: "include",
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    console.log(data);
-                })
-
-                .catch((err) => {
-                    console.log(err);
-                });
-        };
-        getUser();
-    }, []);
+    useEffect(() => {}, []);
     return (
-        <button type="button" onClick={() => router.push("/dashboard")}>
-            <div className=" lg:text-sm text-lg">Dashboard</div>
-        </button>
+        <div>
+            <button type="button" onClick={() => router.push('/dashboard')}>
+                <div className=" lg:text-sm text-lg">Dashboard</div>
+            </button>
+            <br />
+        </div>
     );
 }
