@@ -161,8 +161,16 @@ class AuthService {
         }
         return randomString;
     }
+    generateRandomDigits(length: number = 6): string {
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += Math.floor(Math.random() * 10); // Generates random digits from 0 to 9
+        }
+        return result;
+    }
+
     async sendCodePassword(email: string): Promise<string | false> {
-        const code = this.checkrandomPass();
+        const code = this.generateRandomDigits();
         console.log(email);
 
         try {

@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, Types } from 'mongoose';
 
 export enum UserRole {
     User = 'user',
@@ -20,7 +20,10 @@ export interface IUser extends Document {
     username: string;
     status: UserStatus;
     role: UserRole;
-
+    reset_password: {
+        code: string;
+        expiresAt: number;
+    };
     phoneNumber?: string;
     store_id?: string;
     image?: string;
@@ -45,6 +48,7 @@ const UserSchema: Schema = new Schema(
             required: true,
             default: 'user',
         },
+        reset_password: { type: Schema.Types.Mixed },
         store_id: { type: String },
         image: { type: String },
     },
