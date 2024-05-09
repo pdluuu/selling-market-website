@@ -79,7 +79,7 @@ class User {
                 throw new MissingParameter();
             }
             if (!authService.validate('email', email) || !authService.validate('password', password)) {
-                throw new InvalidInput(); // * return
+                throw new InvalidInput();
             }
 
             const user = await authService.signIn(email, password);
@@ -146,8 +146,12 @@ class User {
             if (!email) {
                 throw new MissingParameter();
             }
+
             if (!authService.validate('email', email)) {
                 return res.status(400).json({ message: 'Invalid email format' });
+            }
+            if (!(await authService.isExistEmail(email))) {
+                throw new InvalidInput('Email is not exist');
             }
 
             const sendCode = await authService.sendCodePassword(email);
