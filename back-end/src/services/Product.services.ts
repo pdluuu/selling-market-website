@@ -6,14 +6,15 @@ class ProductServices {
         name: string,
         brand: string,
         discount: number,
-        version: [string],
+        version: string[],
         price: number,
         category: string,
-        images: [string],
+        images: string[],
+        items: string[],
     ): Promise<string> {
         // ket noi database de tao san pham
         try {
-            const new_product = await ProductModel.create({ name, brand, discount, version, price, category, images });
+            const new_product = await ProductModel.create({ name, brand, discount, version, price, category, images,items });
             return '00';
         } catch (error) {
             console.log(error);

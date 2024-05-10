@@ -3,6 +3,7 @@ import { MenubarDemo } from '../dashboard/category/page';
 import DisplayedItem from '../dashboard/displayeditem/page';
 import Header from '../dashboard/header/page';
 import BreadcrumbWithCustomSeparator from '../dashboard/breadcrumb/page';
+import Filter from '../dashboard/filter/page';
 
 export default function Dashboard() {
     
@@ -12,6 +13,7 @@ export default function Dashboard() {
             <Header />
             <MenubarDemo />
             <BreadcrumbWithCustomSeparator category="Tablet"/>
+            <Filter category="Tablet"/>
             <DisplayedItem brand="Oppo" category="Tablet" />
             <DisplayedItem brand="Samsung" category="Tablet" />
             <DisplayedItem brand="Huawei" category="Tablet" />
