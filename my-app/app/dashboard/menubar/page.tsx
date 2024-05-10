@@ -32,7 +32,7 @@ export default function NewMenubarMenu({
         case 'Điện thoại':
             categoryLink = './view-smartphone';
             break;
-        case 'Laptop':
+        case 'Máy tính':
             categoryLink = './view-laptop';
             break;
         case 'Đồng hồ':
@@ -54,15 +54,16 @@ export default function NewMenubarMenu({
     };
     return (
         <MenubarMenu open={openDropdown} onOpenChange={() => setOpenDropdown(false)}>
-            <Link href={categoryLink}>
+            
                 <MenubarTrigger
+                    onClick={() => router.push(categoryLink)}
                     onMouseEnter={() => setOpenDropdown(true)}
                     className="lg:w-48 lg:text-base text-xs hover:bg-accent"
                 >
                     {icon}
                     {category}
                 </MenubarTrigger>
-            </Link>
+           
             <MenubarContent
                 onMouseLeave={() => {
                     setOpenDropdown(false);

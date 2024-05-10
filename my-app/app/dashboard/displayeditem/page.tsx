@@ -41,6 +41,7 @@ export default function DisplayedItem({
         items: string[];
     }[] = [];
     listProduct = phoneData;
+
     const router = useRouter();
 
     const handleViewMore = () => {
@@ -74,11 +75,12 @@ export default function DisplayedItem({
                 const url = `/view-category-brand`;
                 window.category = category;
                 window.brand = brand;
+
                 router.push(url);
             }
         }
     };
-    
+    if (listProduct.length === 0) return null;
     return (
         <div className="lg:w-3/4 max-w-sm lg:max-w-full  m-y-2 m-0 md:my-4">
             <div className=" flex justify-between items-center">
@@ -98,12 +100,10 @@ export default function DisplayedItem({
                                 <Card className="">
                                     {product.discount && (
                                         <div className="absolute z-10 -ml-[30px] -mt-10 h-auto w-auto ">
-                                            <img
-                                                src={tag.src}
-                                                width={120}
-                                                className="transform scale-y-[-1]"
-                                            />
-                                            <p className=' absolute ml-8 -mt-[75px] text-white font-bold text-xs'>Giảm giá</p>
+                                            <img src={tag.src} width={120} className="transform scale-y-[-1]" />
+                                            <p className=" absolute ml-8 -mt-[75px] text-white font-bold text-xs">
+                                                Giảm giá
+                                            </p>
                                         </div>
                                     )}
                                     <CardContent className="md:pt-4 h-[290px] shadow-md p-[12px]  flex flex-col md:space-y-2 space-y-1">
@@ -132,7 +132,6 @@ export default function DisplayedItem({
                 <CarouselPrevious className=" border-none" />
                 <CarouselNext className=" border-none" />
             </Carousel>
-            
         </div>
     );
 }
