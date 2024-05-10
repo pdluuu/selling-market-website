@@ -20,11 +20,10 @@ export default function ViewLaptop() {
         <div className="flex flex-col items-center">
             <Header />
             <MenubarDemo />
-            <BreadcrumbWithCustomSeparator category="Laptop" />
+            <BreadcrumbWithCustomSeparator category="Máy tính" />
             <Filter category="Máy tính" filterPrices={filterPrice} />
-            
             {brands.map((brand, index) => {
-                return <DisplayedItem key={index} category="Laptop" brand={brand} price={price} />;
+                return <DisplayedItem key={index} category="Máy tính" brand={brand} price={price} />;
             })}
             <Footer />
         </div>
