@@ -20,7 +20,7 @@ export interface IUser extends Document {
     username: string;
     status: UserStatus;
     role: UserRole;
-    reset_password: {
+    reset_password?: {
         code: string;
         expiresAt: number;
     };
