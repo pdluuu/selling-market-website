@@ -22,10 +22,13 @@ const sentCodePass: {
 
 class AuthService {
     async signUp(email: string, password: string, username: string, role?: string, phoneNumber?: string) {
-        if ((await this.isExistEmail(email)) || (await this.isExistUsername(username))) {
+        if (await this.isExistEmail(email)) {
             throw new InvalidInput('Email already exists');
         }
 
+        if (await this.isExistUsername(username)) {
+            throw new InvalidInput('Username already exists');
+        }
         const salt = genSaltSync(10);
         const hash = hashSync(password, salt);
 
@@ -171,7 +174,6 @@ class AuthService {
 
     async sendCodePassword(email: string): Promise<string | false> {
         const code = this.generateRandomDigits();
-        console.log(email);
 
         try {
             var nodemailer = require('nodemailer');
@@ -193,10 +195,15 @@ class AuthService {
             };
 
             await transporter.sendMail(mailOptions);
-            console.log(code);
             const expiresAt = Date.now() + 5 * 60 * 1000;
 
-            sentCodePass[email] = { resetCode: code, expiresAt: expiresAt };
+            const user = await UserModel.findOne({ email });
+            if (user) {
+                user.reset_password = { code: code, expiresAt: expiresAt };
+                await user.save();
+            }
+            console.log(code);
+
             return code;
         } catch (error: any) {
             console.error(error);
@@ -206,19 +213,20 @@ class AuthService {
 
     async resetPassword(email: string, resetCode: string, password: string) {
         try {
-            if (email in sentCodePass) {
-                // Tìm mã code trong mảng của email
-                const passCodes = sentCodePass[email];
-                if (passCodes.resetCode !== resetCode) {
-                    return 400;
-                }
-                if (passCodes.expiresAt < Date.now()) {
-                    return 408;
-                }
-                return 200;
-            } else {
+            // Tìm mã code trong mảng của email
+            const user = await UserModel.findOne({ email });
+
+            if (!user) {
                 return 404;
             }
+            const passcode = user?.reset_password;
+            if (!passcode || passcode.code !== resetCode) {
+                return 400;
+            }
+            if (passcode.expiresAt < Date.now()) {
+                return 408;
+            }
+            return 200;
         } catch (error: any) {
             console.log(error);
         }

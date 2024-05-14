@@ -21,13 +21,13 @@ export function authenticateRole(req: Request<any, any, any>, res: Response, nex
                 message: 'Un-verified',
             });
         }
-        // const role = await userServices.extractUserRole(payload._id);
+        const role = await userServices.extractUserRole(payload._id);
 
-        // if (await role !== "admin" && role !== "staff") {
-        //     return res.status(403).json({
-        //         message: "Access denied"
-        //     });
-        // }
+        if (role !== 'admin' && role !== 'staff') {
+            return res.status(403).json({
+                message: 'Access denied',
+            });
+        }
         req.user = payload;
         req.body.userId = payload._id;
         next();

@@ -13,26 +13,24 @@ config();
 class Product {
     async createProduct(req: Request<any, any, IProduct>, res: Response<ISuccessRes | IFailRes>) {
         try {
-            authenticateRole(req, res, async () => {
-                const { name, brand, discount, version, price, category, images } = req.body;
+            const { name, brand, discount, version, price, category, images } = req.body;
 
-                if (!name || !brand || !price || !category || !images) {
-                    throw new MissingParameter();
-                }
+            if (!name || !brand || !price || !category || !images) {
+                throw new MissingParameter();
+            }
 
-                const product = await productServices.createProduct(
-                    name,
-                    brand,
-                    discount,
-                    version,
-                    price,
-                    category,
-                    images,
-                );
+            const product = await productServices.createProduct(
+                name,
+                brand,
+                discount,
+                version,
+                price,
+                category,
+                images,
+            );
 
-                return res.status(200).json({
-                    message: 'Create successfully',
-                });
+            return res.status(200).json({
+                message: 'Create successfully',
             });
         } catch (error: any) {
             console.log(error);
