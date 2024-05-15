@@ -16,7 +16,7 @@ export default function UserMenuBar() {
         <div className="flex space-x-1 w-[250px] h-[740px] p-2 border rounded-lg items-center flex-col">
             <div className="flex ml-0 text-base items-center space-x-1 pt-3 pb-[15px]">
                 <CircleUserRound size={35} />
-                <p className="text-xl">Phan Khánh Linh</p>
+                <p className="text-xl">{window.user.username}</p>
             </div>
             <Button className="w-full mb-[2px] justify-start" onClick={() => router.push('/user')}>
                 <User className="mr-2  h-4 w-4 ml-3" />

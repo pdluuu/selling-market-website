@@ -136,7 +136,7 @@ class User {
             return res.status(204).json({ message: 'logged out!' });
         } catch (error: any) {
             console.log(error);
-
+            
             const Err = new ErrorResponse(error.message as string, error.statusCode as number);
 
             return res.status(Err.statusCode).json({ message: Err.message });
