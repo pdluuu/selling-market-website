@@ -15,6 +15,15 @@ declare global {
         category: string;
         brand: string;
         reverse?: boolean;
+        access_token:string|null;
+        refresh_token:string|null;
+        user:{
+            _id: string;
+            email: string;
+            username: string;
+            status: string;
+            role: string;
+        }|null
     }
 }
 

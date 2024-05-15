@@ -13,7 +13,7 @@ config();
 class Product {
     async createProduct(req: Request<any, any, IProduct>, res: Response<ISuccessRes | IFailRes>) {
         try {
-            const { name, brand, discount, version, price, category, images } = req.body;
+            const { name, brand, discount, version, price, category, images,items } = req.body;
 
             if (!name || !brand || !price || !category || !images) {
                 throw new MissingParameter();
@@ -27,6 +27,7 @@ class Product {
                 price,
                 category,
                 images,
+                items,
             );
 
             return res.status(200).json({

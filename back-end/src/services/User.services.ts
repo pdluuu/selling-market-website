@@ -247,19 +247,19 @@ class UserServices {
             };
         }
     }
-    async extractUserRole(user_id: ObjectId): Promise<string> {
-        try {
-            const user = await UserModel.findById(user_id);
+    // async extractUserRole(user_id: ObjectId): Promise<string> {
+    //     try {
+    //         const user = await UserModel.findById(user_id);
     
-            if (!user) {
-                throw new Error('Id is not existed'); // User not found
-            }
+    //         if (!user) {
+    //             throw new Error('Id is not existed'); // User not found
+    //         }
     
-            return user.role; // Return role of user
-        } catch (error) {
-            throw new Error('Error checking user role');
-        }
-    }
+    //         return user.role; // Return role of user
+    //     } catch (error) {
+    //         throw new Error('Error checking user role');
+    //     }
+    // }
     
     tao_nguoi_dung(email: string, password: string): string {
         // ket noi database de tao nguoi dung
