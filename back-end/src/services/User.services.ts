@@ -1,4 +1,4 @@
-import UserModel from '../models/User.model';
+import UserModel, { UserRole } from '../models/User.model';
 import { ErrorResponse, InvalidInput } from '../utils/errorResponse';
 import OrderModel from '../models/Order.model';
 import ProductModel from '../models/Product.model';
@@ -40,16 +40,7 @@ class UserServices {
 
     async getUserById(_id: string) {
         const user = await UserModel.findById({ _id }).select('email name username status role');
-        if (!user) {
-            return {
-                success: false,
-                message: 'User not found',
-            };
-        }
-        return {
-            success: true,
-            user,
-        };
+        return user;
     }
 
     async takeOrder(product_id: string, user_id: string) {
@@ -276,6 +267,17 @@ class UserServices {
             return 'ok';
         }
         return 'no ok';
+    }
+    async extractUserRole(id: string): Promise<string> {
+        try {
+            const role = await UserModel.findOne({ _id: id });
+            if (role) {
+                return role.role;
+            }
+            return 'not found';
+        } catch (error) {
+            return 'not found';
+        }
     }
 }
 
