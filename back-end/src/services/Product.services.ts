@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import ProductModel, { IProduct } from '../models/Product.model';
+import { InvalidInput } from '../utils/errorResponse';
 
 class ProductServices {
     async createProduct(
@@ -17,7 +18,7 @@ class ProductServices {
             return '00';
         } catch (error) {
             console.log(error);
-            return '01';
+            throw new InvalidInput();
         }
     }
     async deleteProduct(id: string): Promise<string> {

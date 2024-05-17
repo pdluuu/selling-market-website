@@ -1,7 +1,7 @@
-openapi: "3.0.2"
+openapi: '3.0.2'
 info:
     title: API Title
-    version: "1.0"
+    version: '1.0'
 servers:
     - url: http://localhost:8080/api/v1
 paths:
@@ -28,18 +28,18 @@ paths:
                                     type: string
 
             responses:
-                "200":
+                '200':
                     description: Update an existent pet in the store
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/JwtToken"
+                                $ref: '#/components/schemas/JwtToken'
                         application/xml:
                             schema:
-                                $ref: "#/components/schemas/JwtToken"
+                                $ref: '#/components/schemas/JwtToken'
                         application/x-www-form-urlencoded:
                             schema:
-                                $ref: "#/components/schemas/JwtToken"
+                                $ref: '#/components/schemas/JwtToken'
     /sign-in:
         post:
             tags:
@@ -61,18 +61,18 @@ paths:
                                     type: string
 
             responses:
-                "200":
+                '200':
                     description: Update an existent pet in the store
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/JwtToken"
+                                $ref: '#/components/schemas/JwtToken'
                         application/xml:
                             schema:
-                                $ref: "#/components/schemas/JwtToken"
+                                $ref: '#/components/schemas/JwtToken'
                         application/x-www-form-urlencoded:
                             schema:
-                                $ref: "#/components/schemas/JwtToken"
+                                $ref: '#/components/schemas/JwtToken'
     /forgot-password/getCode:
         post:
             tags:
@@ -92,7 +92,7 @@ paths:
                                     format: email
 
             responses:
-                "200":
+                '200':
                     description: User verified successfully
                     content:
                         application/json:
@@ -125,12 +125,12 @@ paths:
                                     type: string
 
             responses:
-                "200":
+                '200':
                     description: User verified successfully
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/JwtToken"
+                                $ref: '#/components/schemas/JwtToken'
     /get-access-token:
         post:
             tags:
@@ -147,14 +147,14 @@ paths:
                             properties:
                                 refreshToken:
                                     type: string
-                                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjBlMGVmODgxMzFhODEyOWExZGRhMWYiLCJlbWFpbCI6ImFzZGFkc0BnbWFpbC5jb20iLCJpYXQiOjE3MTIxOTczNjgsImV4cCI6MTcxMjIwMDk2OH0.WCdF_fppVaJblIbRgk22tzGhbrS9Uil8D1-7-BdVKIQ"
+                                    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjBlMGVmODgxMzFhODEyOWExZGRhMWYiLCJlbWFpbCI6ImFzZGFkc0BnbWFpbC5jb20iLCJpYXQiOjE3MTIxOTczNjgsImV4cCI6MTcxMjIwMDk2OH0.WCdF_fppVaJblIbRgk22tzGhbrS9Uil8D1-7-BdVKIQ'
             responses:
-                "200":
+                '200':
                     description: return old refresh token and access token
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/JwtToken"
+                                $ref: '#/components/schemas/JwtToken'
 
     /sendCode:
         post:
@@ -174,7 +174,7 @@ paths:
                                     type: string
                                     format: email
             responses:
-                "200":
+                '200':
                     description: Code sent successfully
                     content:
                         application/json:
@@ -184,7 +184,7 @@ paths:
                                     message:
                                         type: string
                                         example: Verification code sent successfully
-                "400":
+                '400':
                     description: Invalid request
                     content:
                         application/json:
@@ -215,7 +215,7 @@ paths:
                                     type: string
 
             responses:
-                "200":
+                '200':
                     description: User verified successfully
                     content:
                         application/json:
@@ -225,7 +225,7 @@ paths:
                                     message:
                                         type: string
                                         example: User verified successfully
-                "400":
+                '400':
                     description: Invalid request
                     content:
                         application/json:
@@ -235,7 +235,7 @@ paths:
                                     message:
                                         type: string
                                         example: Invalid verification code
-                "404":
+                '404':
                     description: User not found
                     content:
                         application/json:
@@ -252,28 +252,28 @@ paths:
                 - user
                 - Truong Loc
             summary: Get user by id
-            description: ""
+            description: ''
             operationId: getUserByName
             parameters:
                 - name: username
                   in: path
-                  description: "The name that needs to be fetched. Use user1 for testing. "
+                  description: 'The name that needs to be fetched. Use user1 for testing. '
                   required: true
                   schema:
                       type: string
             responses:
-                "200":
+                '200':
                     description: successful operation
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/User"
+                                $ref: '#/components/schemas/User'
                         application/xml:
                             schema:
-                                $ref: "#/components/schemas/User"
-                "400":
+                                $ref: '#/components/schemas/User'
+                '400':
                     description: Invalid username supplied
-                "404":
+                '404':
                     description: User not found
 
     /user/staff-registration:
@@ -296,9 +296,9 @@ paths:
                                 _id:
                                     type: string
             responses:
-                "200":
+                '200':
                     description: successfully
-                "400":
+                '400':
                     description: failed
 
     /user/deliver-registration:
@@ -321,9 +321,9 @@ paths:
                                 _id:
                                     type: string
             responses:
-                "200":
+                '200':
                     description: successfully
-                "400":
+                '400':
                     description: failed
 
     /user/take-order:
@@ -348,16 +348,132 @@ paths:
                                     example: safda22sdf123
 
             responses:
-                "200":
+                '200':
                     description: successful operation
                     content:
                         application/json:
                             schema:
                                 type: array
                                 items:
-                                    $ref: "#/components/schemas/Product"
-                "400":
+                                    $ref: '#/components/schemas/Product'
+                '400':
                     description: fail operation
+
+    /user/view-cart:
+        get:
+            tags:
+                - user
+                - new
+            summary: by using user id, get all products in the carts
+            description: this will help users see all of the products they have put in cart, so they can decide what to purcher, or to remove from cart, change status of order to completed
+            responses:
+                '200':
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/Product'
+
+                '400':
+                    description: fail operation
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: fail
+
+    /user/checkout:
+        post:
+            tags:
+                - user
+                - new
+            summary: using id of that order to check if the purcher is successful
+            description: when user recieve the order that they have purcher, send a message to know if the order is deliver successfully
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            properties:
+                                product:
+                                    type: string
+                                    example: 1nasd2132nss34
+
+            responses:
+                '200':
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: Order placed successfully
+
+    /user/view-all-orders:
+        get:
+            tags:
+                - user
+            summary: by using user id, get all products in the carts
+            description: this will help users see all of the products they have put in cart, so they can decide what to purcher, or to remove from cart
+            responses:
+                '200':
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/order'
+
+                '400':
+                    description: fail operation
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: fail
+
+    /user/purchers-products:
+        post:
+            tags:
+                - user
+                - new
+            summary: purcher products
+            description: by using userId , user will send all of products's id that user want to buy
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                products:
+                                    type: array
+                                    items:
+                                        type: string
+                                        example: 1nasd2132nss34
+
+            responses:
+                '200':
+                    description: successful operation
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message:
+                                        type: string
+                                        example: successfully
 
     /user/updata-infomation:
         put:
@@ -371,17 +487,17 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: "#/components/schemas/User"
+                            $ref: '#/components/schemas/User'
             responses:
-                "200":
+                '200':
                     description: successful operation
                     content:
                         application/json:
                             schema:
-                                $ref: "#/components/schemas/User"
-                "400":
+                                $ref: '#/components/schemas/User'
+                '400':
                     description: fail operation
-                "404":
+                '404':
                     description: User not found
     /product/view-smart-phone:
         get:
@@ -391,14 +507,14 @@ paths:
             description: view all smart phone by dates
 
             responses:
-                "200":
+                '200':
                     description: successful operation
                     content:
                         application/json:
                             schema:
                                 type: array
                                 items:
-                                    $ref: "#/components/schemas/Product"
+                                    $ref: '#/components/schemas/Product'
     /product/view-laptop:
         get:
             tags:
@@ -406,14 +522,14 @@ paths:
             summary: view all smart phone by dates
             description: view all smart phone by dates
             responses:
-                "200":
+                '200':
                     description: successful operation
                     content:
                         application/json:
                             schema:
                                 type: array
                                 items:
-                                    $ref: "#/components/schemas/Product"
+                                    $ref: '#/components/schemas/Product'
     /product/view-table:
         get:
             tags:
@@ -421,14 +537,14 @@ paths:
             summary: view all smart phone by dates
             description: view all smart phone by dates
             responses:
-                "200":
+                '200':
                     description: successful operation
                     content:
                         application/json:
                             schema:
                                 type: array
                                 items:
-                                    $ref: "#/components/schemas/Product"
+                                    $ref: '#/components/schemas/Product'
 
     /product/view-accessoris:
         get:
@@ -437,14 +553,14 @@ paths:
             summary: view all smart phone by dates
             description: view all smart phone by dates
             responses:
-                "200":
+                '200':
                     description: successful operation
                     content:
                         application/json:
                             schema:
                                 type: array
                                 items:
-                                    $ref: "#/components/schemas/Product"
+                                    $ref: '#/components/schemas/Product'
 
     /product/add-smart-phone:
         post:
@@ -457,9 +573,9 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: "#/components/schemas/Product"
+                            $ref: '#/components/schemas/Product'
             responses:
-                "200":
+                '200':
                     description: Successful operation
     /product/add-laptop:
         post:
@@ -472,9 +588,9 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: "#/components/schemas/Product"
+                            $ref: '#/components/schemas/Product'
             responses:
-                "200":
+                '200':
                     description: Successful operation
     /product/add-table:
         post:
@@ -487,9 +603,9 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: "#/components/schemas/Product"
+                            $ref: '#/components/schemas/Product'
             responses:
-                "200":
+                '200':
                     description: Successful operation
 
     /product/add-accessories:
@@ -503,11 +619,65 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: "#/components/schemas/Product"
+                            $ref: '#/components/schemas/Product'
             responses:
-                "200":
+                '200':
                     description: Successful operation
 
+    /admin/view/{type}:
+        get:
+            tags:
+                - 'admin'
+            summary: Retrieve items based on type
+            description: Get a list of items filtered by type all, deliver, or staff.
+
+            parameters:
+                - name: type
+                  in: path
+                  required: true
+                  description: Filter items by type. Allowed values are "all", "deliver", and "staff".
+                  schema:
+                      type: string
+                      enum: [all, deliver, staff]
+                      default: all
+            responses:
+                '200':
+                    description: A list of items filtered by type
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/request'
+
+                '400':
+                    description: Bad request. Invalid type parameter.
+                '500':
+                    description: Internal server error.
+    /admin/accept:
+        post:
+            tags:
+                - 'admin'
+            summary: 'accept add staff request and deliver request'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: 'object'
+                            properties:
+                                id:
+                                    type: string
+                                type:
+                                    type: string
+            responses:
+                '200':
+                    description: 'Successful operation'
+                '400':
+                    description: 'Bad request. Invalid id parameter.'
+                '404':
+                    description: 'User not found.'
+                '500':
+                    description: 'Internal server error.'
 components:
     schemas:
         JwtToken:
@@ -515,10 +685,10 @@ components:
             properties:
                 access_token:
                     type: string
-                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjBlMGVmODgxMzFhODEyOWExZGRhMWYiLCJlbWFpbCI6ImFzZGFkc0BnbWFpbC5jb20iLCJpYXQiOjE3MTIxOTczNjgsImV4cCI6MTcxMjIwMDk2OH0.WCdF_fppVaJblIbRgk22tzGhbrS9Uil8D1-7-BdVKIQ"
+                    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjBlMGVmODgxMzFhODEyOWExZGRhMWYiLCJlbWFpbCI6ImFzZGFkc0BnbWFpbC5jb20iLCJpYXQiOjE3MTIxOTczNjgsImV4cCI6MTcxMjIwMDk2OH0.WCdF_fppVaJblIbRgk22tzGhbrS9Uil8D1-7-BdVKIQ'
                 refresh_token:
                     type: string
-                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjBlMGVmODgxMzFhODEyOWExZGRhMWYiLCJlbWFpbCI6ImFzZGFkc0BnbWFpbC5jb20iLCJpYXQiOjE3MTIxOTczNjh9.4wXJGeslxCsf4Wv9huFj0J4tgfq5Cm9P7VT2zCZTd2M"
+                    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjBlMGVmODgxMzFhODEyOWExZGRhMWYiLCJlbWFpbCI6ImFzZGFkc0BnbWFpbC5jb20iLCJpYXQiOjE3MTIxOTczNjh9.4wXJGeslxCsf4Wv9huFj0J4tgfq5Cm9P7VT2zCZTd2M'
         User:
             type: object
             properties:
@@ -533,9 +703,9 @@ components:
                 username:
                     type: string
                 status:
-                    $ref: "#/components/schemas/UserStatus"
+                    $ref: '#/components/schemas/UserStatus'
                 role:
-                    $ref: "#/components/schemas/UserRole"
+                    $ref: '#/components/schemas/UserRole'
 
         UserRole:
             type: string
@@ -634,3 +804,25 @@ components:
                     type: array
                     items:
                         type: string
+        order:
+            type: object
+            properties:
+                _id:
+                    type: string
+                products:
+                    type: string
+                    items:
+                        $ref: '#/components/schemas/Product'
+
+        request:
+            type: object
+            properties:
+                _id:
+                    type: integer
+                    example: 1
+                name:
+                    type: string
+                    example: 'Sample Item'
+                type:
+                    type: string
+                    example: 'deliver'

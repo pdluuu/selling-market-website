@@ -4,7 +4,13 @@ import jwt from 'jsonwebtoken';
 import auhtService from '../services/auth.service';
 import { Irestaff, IreDeliver, IupDateUser, ItakeOrder } from '../utils/user.interface';
 import { Response, Request } from 'express';
-import { ErrorResponse, ErrorResponseType, InvalidInput, MissingParameter } from '../utils/errorResponse';
+import {
+    ErrorFromServer,
+    ErrorResponse,
+    ErrorResponseType,
+    InvalidInput,
+    MissingParameter,
+} from '../utils/errorResponse';
 import authService from '../services/auth.service';
 import Logger from '../lib/logger';
 import {
@@ -23,6 +29,7 @@ import authRouter from '../router/auth/auth.route';
 import UserModel from '../models/User.model';
 import RefreshTokenModel, { IRefreshToken } from '../models/Token.model';
 import { ObjectId } from 'mongodb';
+import { log } from 'console';
 config();
 
 class User {
@@ -79,7 +86,7 @@ class User {
                 throw new MissingParameter();
             }
             if (!authService.validate('email', email) || !authService.validate('password', password)) {
-                throw new InvalidInput(); // * return
+                throw new InvalidInput();
             }
 
             const user = await authService.signIn(email, password);
@@ -93,6 +100,12 @@ class User {
             const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET || '', {
                 expiresIn: process.env.EXPIRES_TOKEN_TIME,
             });
+            // ma hoa + key -> phien ban chua decode
+
+            // * save refresh Token vao database => lay lai access Token
+            // * luu 1 chuoi cac access token => nhieu ng dung cung dang nhap cung mot luc
+            // * xoa refreshToken tren dien thoai
+            // * xoa luon []
 
             const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET || '');
 
@@ -133,18 +146,19 @@ class User {
     async googleAuth() { }
 
     async password_getcode(req: Request<any, any, IForgotPassEmail>, res: Response<ISuccessRes | IFailRes>) {
+        const { email } = req.body;
         try {
             const { email } = req.body;
 
             if (!email) {
                 throw new MissingParameter();
             }
-            if (!authService.validate('email', email)) {
-                throw new ErrorResponse('Invalid email format', 400);
-            }
 
-            if (!await auhtService.isExistEmail(email)) {
-                throw new ErrorResponse('Email not exist', 400);
+            if (!authService.validate('email', email)) {
+                return res.status(400).json({ message: 'Invalid email format' });
+            }
+            if (!(await authService.isExistEmail(email))) {
+                throw new InvalidInput('Email is not exist');
             }
 
             const sendCode = await authService.sendCodePassword(email);
@@ -160,6 +174,7 @@ class User {
             return res.status(Err.statusCode).json({ message: Err.message });
         }
     }
+
 
     async reset_pass(req: Request<any, any, IResetPass>, res: Response<ISuccessRes | IFailRes>) {
         try {
@@ -226,22 +241,34 @@ class User {
         }
     }
 
-    async get_access_token(req: Request<any, any, IRefreshToken>, res: Response<ISuccessRes | IFailRes>) {
+
+    async get_access_token(
+        req: Request<any, any, { refreshToken: string; email: string }>,
+        res: Response<ISuccessRes | IFailRes>,
+    ) {
         try {
-            const { refreshTokens } = req.body;
+            const { refreshToken, email } = req.body;
+            if (!refreshToken) {
+                throw new MissingParameter('Missing refresh tokens');
+            }
+            const user = await UserModel.findOne({ email: email });
+            if (!user) {
+                throw new InvalidInput('Email is not exist');
+            }
             const token = await RefreshTokenModel.findOne({
-                refreshTokens: refreshTokens,
+                userId: user._id,
             });
-            if (token) {
-                const token_id = token.userId;
-                const id: string = token_id.toString();
-                const user = await UserModel.findOne({ _id: id });
-                if (user) {
+
+            if (!token) {
+                throw new InvalidInput();
+            }
+
+            for (let index = 0; index < token.refreshTokens.length; index++) {
+                if (refreshToken == token.refreshTokens[index]) {
                     const payload = {
                         _id: user._id,
                         email: user.email,
                     };
-                    // phien ban ma hoa
                     const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET || '', {
                         expiresIn: process.env.EXPIRES_TOKEN_TIME,
                     });
@@ -249,7 +276,7 @@ class User {
                         message: 'successful',
                         data: {
                             accessToken,
-                            refreshTokens,
+                            refreshToken,
                         },
                     });
                 }
@@ -265,15 +292,12 @@ class User {
     async sendCode(req: Request<any, any, IForgotPassEmail>, res: Response<ISuccessRes | IFailRes>) {
         try {
             const { email } = req.body;
-            if (!await auhtService.isExistEmail(email)) {
-                throw new ErrorResponse('Email not exit', 400);
-            }
 
             if (!email) {
                 throw new MissingParameter();
             }
             if (!authService.validate('email', email)) {
-                throw new ErrorResponse('Invalid email format', 400);
+                return res.status(400).json({ message: 'Invalid email format' });
             }
 
             const sendCode = await authService.sendCode(email);
@@ -333,11 +357,10 @@ class User {
             console.log(userId);
             console.log('Received data:', userId);
             const result = await userServices.getUserById(userId);
-            if (result.success) {
-                return res.status(200).json({ message: 'successful operation' });
-            } else {
-                return res.status(404).json({ message: 'User not found' });
-            }
+
+            if (result) {
+                return res.status(200).json({ message: 'successful', data: result });
+            } else throw new ErrorFromServer();
         } catch (error) {
             return res.status(400).json({ message: 'Invalid username supplied' });
         }
@@ -443,6 +466,56 @@ class User {
             return res.status(200).json({ message: 'Successful operation' });
         } catch (error: any) {
             console.log(error);
+            const Err = new ErrorResponse(error.message as string, error.statusCode as number);
+            return res.status(Err.statusCode).json({ message: Err.message });
+        }
+    }
+
+    async ViewApply(req: Request<any, any, any>, res: Response<ISuccessRes | IFailRes>) {
+        try {
+            const { type } = req.params;
+            const allowedTypes = ['all', 'deliver', 'staff'];
+            if (!allowedTypes.includes(type)) {
+                throw new InvalidInput();
+            }
+            const listApply = await userServices.getAllApply(type);
+            if (listApply === 500) {
+                throw new ErrorResponse('Internal server error', 500);
+            }
+            return res.status(200).json({
+                message: 'successful',
+                data: {
+                    listApply
+                },
+            });
+
+        } catch (error: any) {
+            const Err = new ErrorResponse(error.message as string, error.statusCode as number);
+            return res.status(Err.statusCode).json({ message: Err.message });
+        }
+    }
+
+    async Accept(req: Request<any, any, any>, res: Response<ISuccessRes | IFailRes>) {
+        try {
+            const{id, type} = req.body;
+            const status  = await userServices.acceptUser(id, type);
+            if(status === 200){
+                return res.status(200).json(
+                    {
+                        message: 'successful'
+                    }
+                )
+            }
+            if(status === 400){
+                throw new ErrorResponse('Bad request. Invalid id parameter', 200);
+            }
+            if(status === 404){
+                throw new ErrorResponse('User not found', 404);
+            }
+            if(status === 500){
+                throw new ErrorResponse('Internal server error', 500);
+            }
+        } catch (error: any) {
             const Err = new ErrorResponse(error.message as string, error.statusCode as number);
             return res.status(Err.statusCode).json({ message: Err.message });
         }
