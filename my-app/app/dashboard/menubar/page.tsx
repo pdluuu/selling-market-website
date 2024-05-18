@@ -1,3 +1,4 @@
+'use client';
 import {
     Menubar,
     MenubarCheckboxItem,
@@ -24,7 +25,7 @@ export default function NewMenubarMenu({
     category: string;
     brands: string[];
 }) {
-    const [openDropdown, setOpenDropdown] = useState(false);
+    const [openDropdown, setOpenDropdown] = useState<boolean>(false);
     let categoryLink = '';
     switch (category) {
         case 'Điện thoại':

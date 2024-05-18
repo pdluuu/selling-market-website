@@ -36,14 +36,8 @@ app.use(
         credentials: true,
     }),
 );
-// * connect to db
-
-connectDB().then((res) => console.log(res));
-
-//app.use('auth', authRouter);
 
 // * api version
-app.use(api_version, appRouter);
 app.use(express.urlencoded({ extended: true })); // support encoded bodies
 
 app.use(
@@ -65,6 +59,7 @@ connectDB().then((res) => console.log(res));
 
 app.use('/auth', authRouter);
 app.use(appRouter);
+
 // * handle Error
 // testConnection();
 // * server running

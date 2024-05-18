@@ -4,7 +4,13 @@ import jwt from 'jsonwebtoken';
 import auhtService from '../services/auth.service';
 import { Irestaff, IreDeliver, IupDateUser, ItakeOrder } from '../utils/user.interface';
 import { Response, Request } from 'express';
-import { ErrorResponse, ErrorResponseType, InvalidInput, MissingParameter } from '../utils/errorResponse';
+import {
+    ErrorFromServer,
+    ErrorResponse,
+    ErrorResponseType,
+    InvalidInput,
+    MissingParameter,
+} from '../utils/errorResponse';
 import authService from '../services/auth.service';
 import Logger from '../lib/logger';
 import {
@@ -80,7 +86,7 @@ class User {
                 throw new MissingParameter();
             }
             if (!authService.validate('email', email) || !authService.validate('password', password)) {
-                throw new InvalidInput(); // * return
+                throw new InvalidInput();
             }
 
             const user = await authService.signIn(email, password);
@@ -89,10 +95,10 @@ class User {
                 _id: user._id,
                 email: user.email,
             };
-
+            console.log(process.env.EXPIRES_TOKEN_TIME);
             // phien ban ma hoa
             const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET || '', {
-                expiresIn: process.env.EXPIRES_TOKEN_TIME,
+                expiresIn: "1h",
             });
             // ma hoa + key -> phien ban chua decode
 
@@ -147,8 +153,12 @@ class User {
             if (!email) {
                 throw new MissingParameter();
             }
+
             if (!authService.validate('email', email)) {
                 return res.status(400).json({ message: 'Invalid email format' });
+            }
+            if (!(await authService.isExistEmail(email))) {
+                throw new InvalidInput('Email is not exist');
             }
 
             const sendCode = await authService.sendCodePassword(email);
@@ -186,8 +196,8 @@ class User {
                     const salt = genSaltSync(10);
                     const hash = hashSync(password, salt);
                     user.password = hash;
+                    delete user.reset_password;
                     await user.save();
-                    console.log(hash);
 
                     const payload = {
                         _id: user._id,
@@ -236,36 +246,41 @@ class User {
         }
     }
 
-    async get_access_token(req: Request<any, any, IRefreshToken>, res: Response<ISuccessRes | IFailRes>) {
+    async get_access_token(
+        req: Request<any, any, { refreshToken: string; email: string }>,
+        res: Response<ISuccessRes | IFailRes>,
+    ) {
         try {
-            const { refreshTokens } = req.body;
+            const { refreshToken, email } = req.body;
+            if (!refreshToken) {
+                throw new MissingParameter('Missing refresh tokens');
+            }
+            const user = await UserModel.findOne({ email: email });
+            if (!user) {
+                throw new InvalidInput('Email is not exist');
+            }
             const token = await RefreshTokenModel.findOne({
-                refreshTokens: refreshTokens,
+                userId: user._id,
             });
-            if (token) {
-                const token_id = token.userId;
-                const id: string = token_id.toString();
-                const user = await UserModel.findOne({ _id: id });
-                if (user) {
+
+            if (!token) {
+                throw new InvalidInput();
+            }
+
+            for (let index = 0; index < token.refreshTokens.length; index++) {
+                if (refreshToken == token.refreshTokens[index]) {
                     const payload = {
                         _id: user._id,
                         email: user.email,
                     };
-                    // phien ban ma hoa
                     const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET || '', {
                         expiresIn: process.env.EXPIRES_TOKEN_TIME,
                     });
-                    // ma hoa + key -> phien ban chua decode
-
-                    // * save refresh Token vao database => lay lai access Token
-                    // * luu 1 chuoi cac access token => nhieu ng dung cung dang nhap cung mot luc
-                    // * xoa refreshToken tren dien thoai
-                    // * xoa luon []
                     return res.status(200).json({
                         message: 'successful',
                         data: {
                             accessToken,
-                            refreshTokens,
+                            refreshToken,
                         },
                     });
                 }
@@ -327,9 +342,7 @@ class User {
             }
 
             if (result === 404) {
-                return res.status(404).json({
-                    message: 'User not found',
-                });
+                throw new ErrorResponse('un verification code', 400);
             }
 
             if (result === 408) {
@@ -352,11 +365,10 @@ class User {
             console.log(userId);
             console.log('Received data:', userId);
             const result = await userServices.getUserById(userId);
-            if (result.success) {
-                return res.status(200).json({ message: 'successful operation' });
-            } else {
-                return res.status(404).json({ message: 'User not found' });
-            }
+
+            if (result) {
+                return res.status(200).json({ message: 'successful', data: result });
+            } else throw new ErrorFromServer();
         } catch (error) {
             return res.status(400).json({ message: 'Invalid username supplied' });
         }
@@ -412,7 +424,9 @@ class User {
     async TakeOrder(req: any, res: Response<ISuccessRes | IFailRes>) {
         try {
             const { userId } = req.body;
+            console.log(userId);
             const { product_id } = req.body;
+            console.log(product_id);
             const result = await userServices.takeOrder(product_id, userId);
             if (result.success) {
                 return res.status(200).json({ message: 'successful operation' });
@@ -466,6 +480,74 @@ class User {
             return res.status(Err.statusCode).json({ message: Err.message });
         }
     }
+    async CheckOut(req: Request<any, any, any>, res: Response<ISuccessRes | IFailRes>) {
+        try {
+            // Sử dụng service để lấy danh sách đăng kí từ cơ sở dữ liệu
+            const { userId } = req.body;
+            const { productId} = req.body;
+            const check_Out =await userServices.checkOut(userId,productId);
+            if (check_Out) {
+                console.log(check_Out.message);
+                return res.status(200).json({ message: 'Order placed successfully' });
+            }else{
+                return res.status(404).json({ message: 'xxxxxx' });
+            }
+            
+        } catch (error: any) {
+            console.log(error);
+            const Err = new ErrorResponse(error.message as string, error.statusCode as number);
+            return res.status(Err.statusCode).json({ message: Err.message });
+        }
+    }
+    async ViewCart(req: Request, res: Response) {
+        try {
+          const { userId } = req.body; 
+            console.log(userId);
+          const cartItems = await userServices.viewCart(userId);
+    
+          if (cartItems.success) {
+            return res.status(200).json({
+              success: true,
+              data: cartItems.data,
+            });
+          } else {
+            return res.status(400).json({
+              success: false,
+              message: cartItems.message,
+            });
+          }
+        } catch (error) {
+          console.error('Error retrieving cart items:', error);
+          return res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+          });
+        }
+      }
+      async PurchersProduct(req: Request, res: Response) {
+        try {
+          const { userId } = req.body; 
+          const {productId} = req.body;
+            console.log(userId);
+          const product_purchers = await userServices.purchersProduct(userId,productId);
+    
+          if (product_purchers?.success) {
+            return res.status(200).json({
+              message: product_purchers.message
+            });
+          } else {
+            return res.status(400).json({
+              message:"no okxx"
+            });
+          }
+        } catch (error) {
+          console.error('Error retrieving cart items:', error);
+          return res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+          });
+        }
+      }
 }
 const user = new User();
 export default user;
