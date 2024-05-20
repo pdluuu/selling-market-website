@@ -6,5 +6,7 @@ import { auth } from 'google-auth-library';
 const adminRouter = Router();
 
 adminRouter.get('/view/:type', authenticateToken, isAdmin, user.ViewApply);
+adminRouter.get('/list/:type', authenticateToken, isAdmin, user.ViewList);
 adminRouter.post('/accept', authenticateToken, isAdmin, user.Accept);
+adminRouter.post('/notAccept', authenticateToken, isAdmin, user.notAccept);
 export default adminRouter;
