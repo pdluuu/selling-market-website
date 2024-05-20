@@ -48,8 +48,8 @@ export default function NewMenubarMenu({
     const router = useRouter();
     const handleClick = (brand: string) => {
         const url = `/view-category-brand`;
-        window.category = category;
-        window.brand = brand;
+        localStorage.setItem("category",category);
+        localStorage.setItem("brand",brand);
         router.push(url);
     };
     return (

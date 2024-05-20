@@ -81,17 +81,19 @@ export default function Login() {
       );
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`HTTP error! message: ${response.status}`);
       }
 
       const result = await response.json();
-      console.log("Success sign-up:", result);
-      window.access_token = result.data.accessToken;
-      window.refresh_token = result.data.refreshToken;
+      console.log("Send code for validation:", result);
+      localStorage.setItem("access_token", result.data.accessToken);
+      localStorage.setItem("refresh_token", result.data.refreshToken);
+      localStorage.setItem('email',email);
+      router.push("/auth/code_for_registration");
     } catch (e) {
       console.log(e);
     }
-    router.push("/dashboard");
+    
   }
   return (
     <div className=" w-4/12">

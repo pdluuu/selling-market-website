@@ -16,13 +16,13 @@ export default function BreadcrumbWithCustomSeparator({
 }: {
     category?: string;
     brand?: string;
-    reverse?: boolean;
+    reverse?: string;
 }) {
     let sectionLink = '';
     let firstt = '';
     let secondd = '';
 
-    if (reverse===true) {
+    if (reverse==="true") {
         if (brand) firstt = brand;
         if (category) secondd = category;
         sectionLink = './view-brand';

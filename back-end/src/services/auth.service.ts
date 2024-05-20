@@ -138,6 +138,18 @@ class AuthService {
         await refreshToken.save();
         return;
     }
+    async addTempTokens(token: string, userId: string) {
+        const tempToken = await RefreshTokenModel.findOne({ userId });
+
+        if (!tempToken) {
+            await RefreshTokenModel.create({ userId, tempTokens: [token] });
+
+            return;
+        }
+        tempToken.tempTokens.push(token);
+        await tempToken.save();
+        return;
+    }
 
     async removeToken(userId: string, refreshToken: string) {
         const Token = await RefreshTokenModel.findOne({ userId });
@@ -174,7 +186,7 @@ class AuthService {
 
     async sendCodePassword(email: string): Promise<string | false> {
         const code = this.generateRandomDigits();
-
+        console.log(code);
         try {
             var nodemailer = require('nodemailer');
             var transporter = nodemailer.createTransport({
@@ -211,7 +223,7 @@ class AuthService {
         }
     }
 
-    async resetPassword(email: string, resetCode: string, password: string) {
+    async checkResetPassCode(email: string, resetCode: string) {
         try {
             // Tìm mã code trong mảng của email
             const user = await UserModel.findOne({ email });

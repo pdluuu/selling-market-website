@@ -1,6 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Dashboard from './dashboard/page';
 export default function Home() {
     const router = useRouter();
 
@@ -42,10 +43,7 @@ export default function Home() {
     useEffect(() => {}, []);
     return (
         <div>
-            <button type="button" onClick={() => router.push('/dashboard')}>
-                <div className=" lg:text-sm text-lg">Dashboard</div>
-            </button>
-            <br />
+            <Dashboard/>
         </div>
     );
 }

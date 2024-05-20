@@ -80,12 +80,40 @@ export default function Login() {
 
       const result = await response.json();
       console.log("Success login:", result);
-      window.access_token = result.data.accessToken;
-      window.refresh_token = result.data.refreshToken;
+      localStorage.setItem("access_token", result.data.accessToken);
+      localStorage.setItem("refresh_token", result.data.refreshToken);
+      try {
+        // const access_token = localStorage.getItem("access_token");
+        // if (!access_token) return;
+        const response = await fetch(
+          "http://localhost:8080/api/v1/user/getUser",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        // setUser(result.data);
+        console.log("Success get info:", result.data);
+        localStorage.setItem("user", JSON.stringify(result.data));
+        router.push("/");
+        // setUser(result.data);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+      
     } catch (e) {
       console.log(e);
     }
-    router.push("/dashboard");
+    // router.push("/dashboard");
 
     // // ✅ This will be type-safe and validated.
   }
