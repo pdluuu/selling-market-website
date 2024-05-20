@@ -14,6 +14,7 @@ import {
 import authService from '../services/auth.service';
 import Logger from '../lib/logger';
 import {
+    ICheckResetPass,
     IFailRes,
     IForgotPassEmail,
     IResetPass,
@@ -22,6 +23,7 @@ import {
     ISuccessRes,
     IToken,
     IVertifyUser,
+    JwtPayLoad,
 } from '../utils/auth.interface';
 import { genSaltSync, hash, hashSync } from 'bcrypt';
 import { config } from 'dotenv';
@@ -175,23 +177,70 @@ class User {
         }
     }
 
-
-    async reset_pass(req: Request<any, any, IResetPass>, res: Response<ISuccessRes | IFailRes>) {
+    async verifyResetCode(req: Request<any, any, ICheckResetPass>, res: Response<ISuccessRes | IFailRes>) {
         try {
-            const { email, resetCode, password } = req.body;
-
-            if (!email || !resetCode || !password) {
+            const { email, resetCode } = req.body;
+            if (!email || !resetCode) {
                 throw new MissingParameter();
             }
             if (!authService.validate('email', email)) {
                 throw new ErrorResponse('Invalid email format', 400);
             }
+            var result = await authService.checkResetPassCode(email, resetCode);
+            if (result === 200) {
+                const user = await UserModel.findOne({ email: email });
+                if (user) {
+                    const tempToken = jwt.sign({ email }, process.env.TEMP_TOKEN_SECRET || "", { expiresIn: '15m' });
+                    await authService.addTempTokens(tempToken, user._id);
+                    return res.status(200).json({
+                        message: 'successful',
+                        data: {
+                            tempToken
+                        },
+                    });
+                }
+            }
+
+            if (result === 400) {
+                throw new ErrorResponse('Invalid verification passcode', 400);
+            }
+
+            if (result === 404) {
+                throw new ErrorResponse('User not found', 404);
+            }
+
+            if (result === 408) {
+                throw new ErrorResponse('Ma het hieu luc', 408);
+            }
+        } catch (error: any) {
+            const Err = new ErrorResponse(error.message as string, error.statusCode as number);
+
+            return res.status(Err.statusCode).json({ message: Err.message });
+        }
+    }
+
+
+    async reset_pass(req: Request<any, any, IResetPass>, res: Response<ISuccessRes | IFailRes>) {
+        try {
+            const { password } = req.body;
+
+            if (!password) {
+                throw new MissingParameter();
+            }
             if (!authService.validate('password', password)) {
                 throw new ErrorResponse('Invalid password format', 400);
             }
+            const authHeader = req.headers['authorization'];
+            const token = authHeader && authHeader.split(' ')[1];
+            if (token == null)
+                return res.status(401).json({
+                    message: 'Un-verified',
+                });
 
-            var result = await authService.resetPassword(email, resetCode, password);
-            if (result === 200) {
+            let payload = jwt.verify(token, process.env.TEMP_TOKEN_SECRET || '');
+            let email;
+            email = (payload as any).email;
+            if (email) {
                 const user = await UserModel.findOne({ email: email });
                 if (user) {
                     const salt = genSaltSync(10);
@@ -219,19 +268,9 @@ class User {
                             refreshToken,
                         },
                     });
+
                 }
-            }
 
-            if (result === 400) {
-                throw new ErrorResponse('Invalid verification passcode', 400);
-            }
-
-            if (result === 404) {
-                throw new ErrorResponse('User not found', 404);
-            }
-
-            if (result === 408) {
-                throw new ErrorResponse('Ma het hieu luc', 408);
             }
         } catch (error: any) {
             console.log(error);
@@ -497,22 +536,22 @@ class User {
 
     async Accept(req: Request<any, any, any>, res: Response<ISuccessRes | IFailRes>) {
         try {
-            const{id, type} = req.body;
-            const status  = await userServices.acceptUser(id, type);
-            if(status === 200){
+            const { id, type } = req.body;
+            const status = await userServices.acceptUser(id, type);
+            if (status === 200) {
                 return res.status(200).json(
                     {
                         message: 'successful'
                     }
                 )
             }
-            if(status === 400){
+            if (status === 400) {
                 throw new ErrorResponse('Bad request. Invalid id parameter', 200);
             }
-            if(status === 404){
+            if (status === 404) {
                 throw new ErrorResponse('User not found', 404);
             }
-            if(status === 500){
+            if (status === 500) {
                 throw new ErrorResponse('Internal server error', 500);
             }
         } catch (error: any) {
