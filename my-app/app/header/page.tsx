@@ -27,7 +27,8 @@ import {
   User,
 } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState, memo } from "react";
+import { useEffect, useState, memo, useContext } from "react";
+import { useRouter } from "next/navigation";
 type User = {
   _id: string;
   email: string;
@@ -36,46 +37,25 @@ type User = {
   role: string;
 };
 function Header() {
-  const [user, setUser] = useState<User | null>(null);
-  useEffect(() => {
-    const getInfo = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:8080/api/v1/user/getUser",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${window.access_token}`,
-            },
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const result = await response.json();
-        console.log("Success get info:", result.data);
-        window.user = result.data;
-        setUser(result.data);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
-    getInfo();
-  }, []);
-
+  // const userr: User | null = JSON.parse(localStorage.getItem("user"||null)||" ");
+  const [user, setUser] = useState<User | null>(() => {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+  const router = useRouter();
+  // console.log(user);
+  
   const logOut = async () => {
     try {
+      setUser(null);
       const reqBody = {
-        refreshToken: window.refresh_token,
+        refreshToken: localStorage.getItem("refresh_token"),
       };
       const response = await fetch("http://localhost:8080/api/v1/log-out", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${window.access_token}`,
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
         body: JSON.stringify(reqBody),
       });
@@ -84,11 +64,13 @@ function Header() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       console.log("Success log out:");
-      window.user = null;
-      setUser(null);
+      localStorage.clear();
+       window.location.replace('/');
+      // setUser(null);
     } catch (error) {
       console.error("Error:", error);
     }
+    
   };
 
   return (
@@ -115,7 +97,7 @@ function Header() {
       </div>
 
       <div className="flex items-center lg:space-x-4 ">
-        {!window.user ? (
+        {!localStorage.getItem('access_token') ? (
           <Link href="/auth/login">
             <Button>
               <LogIn className="mr-2" />
@@ -129,9 +111,9 @@ function Header() {
                 <CircleUserRound size={35} />
                 <div className="flex flex-col">
                   <p className="lg:text-lg text-xs font-bold ">
-                    {window.user.username}
+                    {user?.username}
                   </p>
-                  <p className="lg:text-xs text-[9px] ">{window.user.role}</p>
+                  <p className="lg:text-xs text-[9px] ">{user?.role}</p>
                 </div>
               </div>
             </DropdownMenuTrigger>

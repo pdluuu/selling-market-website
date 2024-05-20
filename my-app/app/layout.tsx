@@ -5,6 +5,8 @@ import { cn } from '@/lib/utils';
 import React, { useState } from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { ModeToggle } from '@/components/theme-button';
+import Footer from './footer/page';
+import Header from './header/page';
 
 const fontSans = FontSans({
     subsets: ['latin'],
@@ -19,7 +21,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
                     <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_CLIENT_ID as string}>
                         <ModeToggle></ModeToggle>
+                        <Header/>
                         {children}
+                        <Footer/>
                     </GoogleOAuthProvider>
                 </ThemeProvider>
             </body>

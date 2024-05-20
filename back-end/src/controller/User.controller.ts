@@ -14,6 +14,7 @@ import {
 import authService from '../services/auth.service';
 import Logger from '../lib/logger';
 import {
+    ICheckResetPass,
     IFailRes,
     IForgotPassEmail,
     IResetPass,
@@ -22,6 +23,7 @@ import {
     ISuccessRes,
     IToken,
     IVertifyUser,
+    JwtPayLoad,
 } from '../utils/auth.interface';
 import { genSaltSync, hash, hashSync } from 'bcrypt';
 import { config } from 'dotenv';
@@ -29,6 +31,7 @@ import authRouter from '../router/auth/auth.route';
 import UserModel from '../models/User.model';
 import RefreshTokenModel, { IRefreshToken } from '../models/Token.model';
 import { ObjectId } from 'mongodb';
+import { log } from 'console';
 config();
 
 class User {
@@ -136,13 +139,13 @@ class User {
             return res.status(204).json({ message: 'logged out!' });
         } catch (error: any) {
             console.log(error);
-            
+
             const Err = new ErrorResponse(error.message as string, error.statusCode as number);
 
             return res.status(Err.statusCode).json({ message: Err.message });
         }
     }
-    async googleAuth() {}
+    async googleAuth() { }
 
     async password_getcode(req: Request<any, any, IForgotPassEmail>, res: Response<ISuccessRes | IFailRes>) {
         const { email } = req.body;
@@ -174,29 +177,77 @@ class User {
         }
     }
 
-    async reset_pass(req: Request<any, any, IResetPass>, res: Response<ISuccessRes | IFailRes>) {
+    async verifyResetCode(req: Request<any, any, ICheckResetPass>, res: Response<ISuccessRes | IFailRes>) {
         try {
-            const { email, resetCode, password } = req.body;
-
-            if (!email || !resetCode || !password) {
+            const { email, resetCode } = req.body;
+            if (!email || !resetCode) {
                 throw new MissingParameter();
             }
             if (!authService.validate('email', email)) {
-                return res.status(400).json({ message: 'Invalid email format' });
+                throw new ErrorResponse('Invalid email format', 400);
             }
-            if (!authService.validate('password', password)) {
-                return res.status(400).json({ message: 'Invalid password format' });
+            var result = await authService.checkResetPassCode(email, resetCode);
+            if (result === 200) {
+                const user = await UserModel.findOne({ email: email });
+                if (user) {
+                    const tempToken = jwt.sign({ email }, process.env.TEMP_TOKEN_SECRET || "", { expiresIn: '15m' });
+                    await authService.addTempTokens(tempToken, user._id);
+                    return res.status(200).json({
+                        message: 'successful',
+                        data: {
+                            tempToken
+                        },
+                    });
+                }
             }
 
-            var result = await authService.resetPassword(email, resetCode, password);
-            if (result === 200) {
+            if (result === 400) {
+                throw new ErrorResponse('Invalid verification passcode', 400);
+            }
+
+            if (result === 404) {
+                throw new ErrorResponse('User not found', 404);
+            }
+
+            if (result === 408) {
+                throw new ErrorResponse('Ma het hieu luc', 408);
+            }
+        } catch (error: any) {
+            const Err = new ErrorResponse(error.message as string, error.statusCode as number);
+
+            return res.status(Err.statusCode).json({ message: Err.message });
+        }
+    }
+
+
+    async reset_pass(req: Request<any, any, IResetPass>, res: Response<ISuccessRes | IFailRes>) {
+        try {
+            const { password } = req.body;
+
+            if (!password) {
+                throw new MissingParameter();
+            }
+            if (!authService.validate('password', password)) {
+                throw new ErrorResponse('Invalid password format', 400);
+            }
+            const authHeader = req.headers['authorization'];
+            const token = authHeader && authHeader.split(' ')[1];
+            if (token == null)
+                return res.status(401).json({
+                    message: 'Un-verified',
+                });
+
+            let payload = jwt.verify(token, process.env.TEMP_TOKEN_SECRET || '');
+            let email;
+            email = (payload as any).email;
+            if (email) {
                 const user = await UserModel.findOne({ email: email });
                 if (user) {
                     const salt = genSaltSync(10);
                     const hash = hashSync(password, salt);
                     user.password = hash;
-                    delete user.reset_password;
                     await user.save();
+                    console.log(hash);
 
                     const payload = {
                         _id: user._id,
@@ -217,25 +268,9 @@ class User {
                             refreshToken,
                         },
                     });
+
                 }
-            }
 
-            if (result === 400) {
-                return res.status(400).json({
-                    message: 'Invalid verification passcode',
-                });
-            }
-
-            if (result === 404) {
-                return res.status(404).json({
-                    message: 'User not found',
-                });
-            }
-
-            if (result === 408) {
-                return res.status(408).json({
-                    message: 'Ma het hieu luc',
-                });
             }
         } catch (error: any) {
             console.log(error);
@@ -244,6 +279,7 @@ class User {
             return res.status(Err.statusCode).json({ message: Err.message });
         }
     }
+
 
     async get_access_token(
         req: Request<any, any, { refreshToken: string; email: string }>,
@@ -325,7 +361,7 @@ class User {
                 throw new MissingParameter();
             }
             if (!authService.validate('email', email)) {
-                return res.status(400).json({ message: 'Invalid email format' });
+                throw new ErrorResponse('Invalid email format', 400);
             }
 
             var result = await authService.vertifyUser(email, code);
@@ -335,19 +371,15 @@ class User {
                 });
             }
             if (result === 400) {
-                return res.status(400).json({
-                    message: 'Invalid verification code',
-                });
+                throw new ErrorResponse('Invalid vertification', 400);
             }
 
             if (result === 404) {
-                throw new ErrorResponse('un verification code', 400);
+                throw new ErrorResponse('User not found', 404);
             }
 
             if (result === 408) {
-                return res.status(408).json({
-                    message: 'Ma het hieu luc',
-                });
+                throw new ErrorResponse('Ma het hieu luc', 400);
             }
         } catch (error: any) {
             console.log(error);
@@ -473,6 +505,56 @@ class User {
             return res.status(200).json({ message: 'Successful operation' });
         } catch (error: any) {
             console.log(error);
+            const Err = new ErrorResponse(error.message as string, error.statusCode as number);
+            return res.status(Err.statusCode).json({ message: Err.message });
+        }
+    }
+
+    async ViewApply(req: Request<any, any, any>, res: Response<ISuccessRes | IFailRes>) {
+        try {
+            const { type } = req.params;
+            const allowedTypes = ['all', 'deliver', 'staff'];
+            if (!allowedTypes.includes(type)) {
+                throw new InvalidInput();
+            }
+            const listApply = await userServices.getAllApply(type);
+            if (listApply === 500) {
+                throw new ErrorResponse('Internal server error', 500);
+            }
+            return res.status(200).json({
+                message: 'successful',
+                data: {
+                    listApply
+                },
+            });
+
+        } catch (error: any) {
+            const Err = new ErrorResponse(error.message as string, error.statusCode as number);
+            return res.status(Err.statusCode).json({ message: Err.message });
+        }
+    }
+
+    async Accept(req: Request<any, any, any>, res: Response<ISuccessRes | IFailRes>) {
+        try {
+            const { id, type } = req.body;
+            const status = await userServices.acceptUser(id, type);
+            if (status === 200) {
+                return res.status(200).json(
+                    {
+                        message: 'successful'
+                    }
+                )
+            }
+            if (status === 400) {
+                throw new ErrorResponse('Bad request. Invalid id parameter', 200);
+            }
+            if (status === 404) {
+                throw new ErrorResponse('User not found', 404);
+            }
+            if (status === 500) {
+                throw new ErrorResponse('Internal server error', 500);
+            }
+        } catch (error: any) {
             const Err = new ErrorResponse(error.message as string, error.statusCode as number);
             return res.status(Err.statusCode).json({ message: Err.message });
         }

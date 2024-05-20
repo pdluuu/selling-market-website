@@ -1,24 +1,22 @@
-import Footer from '../footer/page';
-import { CarouselPlugin } from './carosel/page';
-import { MenubarDemo } from './category/page';
-import DisplayedItem from './displayeditem/page';
-import Header from './header/page';
-import ListBrand from './listbrand/page';
-
+import { useEffect } from "react";
+import { CarouselPlugin } from "./carosel/page";
+import { MenubarDemo } from "./category/page";
+import DisplayedItem from "./displayeditem/page";
+import ListBrand from "./listbrand/page";
 export default function Dashboard() {
-    return (
-        <div className="flex flex-col items-center">
-            <Header />
-            <MenubarDemo />
+  
+  return (
+    <div className="flex flex-col items-center">
+     
+      <MenubarDemo />
+      <CarouselPlugin />
+      <ListBrand />
+      <DisplayedItem category="Laptop" />
+      <DisplayedItem category="Điện thoại" />
+      <DisplayedItem category="Tablet" />
+      <DisplayedItem category="Đồng hồ" />
+      <DisplayedItem category="Phụ kiện" />
 
-            <CarouselPlugin />
-            <ListBrand />
-            <DisplayedItem  category="Laptop" />
-            <DisplayedItem category="Điện thoại" />
-            <DisplayedItem  category="Tablet" />
-            <DisplayedItem category="Đồng hồ" />
-            <DisplayedItem  category="Phụ kiện" />
-            <Footer />
-        </div>
-    );
+    </div>
+  );
 }

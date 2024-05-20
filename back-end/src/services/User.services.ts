@@ -4,7 +4,6 @@ import OrderModel from '../models/Order.model';
 import ProductModel from '../models/Product.model';
 import ListRegisterModelModel from '../models/ListRegister.model';
 import ListRegisterModel from '../models/ListRegister.model';
-import { ObjectId } from 'mongoose';
 
 class UserServices {
     // * tao nguoi dung
@@ -247,20 +246,42 @@ class UserServices {
             };
         }
     }
-    // async extractUserRole(user_id: ObjectId): Promise<string> {
-    //     try {
-    //         const user = await UserModel.findById(user_id);
-    
-    //         if (!user) {
-    //             throw new Error('Id is not existed'); // User not found
-    //         }
-    
-    //         return user.role; // Return role of user
-    //     } catch (error) {
-    //         throw new Error('Error checking user role');
-    //     }
-    // }
-    
+
+    async getAllApply(type : string) {
+        try {
+            const listApply = await ListRegisterModel.find();
+            let list = listApply;
+            if(type !== 'all'){
+                list = listApply.filter(apply => apply.role === type)
+            }
+            return list;
+        } catch (error) {
+            return 500;
+        }
+    }
+
+    async acceptUser(id: string, type: string){
+        try {
+            if(!id || !type){
+                return 400;
+            }
+            const updateRole = await UserModel.findByIdAndUpdate(
+                id, 
+                {role: type},
+                {new: true}
+            );
+            if(!updateRole){
+                return 404;
+            }else{
+                await ListRegisterModel.deleteOne({userId : id});
+                return 200;
+
+            }
+        } catch (error:any) {
+            return 500;
+        }
+    }
+
     tao_nguoi_dung(email: string, password: string): string {
         // ket noi database de tao nguoi dung
         if (1) {

@@ -5,6 +5,7 @@ export interface IRefreshToken extends Document {
     _id: string;
     userId: mongoose.Types.ObjectId | IUser["_id"];
     refreshTokens: string[];
+    tempTokens: string[];
 }
 
 const RefreshTokenSchema: Schema = new Schema({
@@ -15,6 +16,7 @@ const RefreshTokenSchema: Schema = new Schema({
         unique: true,
     },
     refreshTokens: [{ type: String }],
+    tempTokens: [{type: String}],
 });
 
 const RefreshTokenModel = mongoose.model<IRefreshToken>(

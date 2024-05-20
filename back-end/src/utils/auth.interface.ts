@@ -53,11 +53,14 @@ export interface IVertifyUser {
 }
 
 export interface IResetPass {
-    email: string;
-    resetCode: string;
+    tempToken: string;
     password: string;
 }
 
+export interface ICheckResetPass {
+    email: string;
+    resetCode: string;
+}
 export interface IResultResetPass {
     message: "Successful";
     data: any;
