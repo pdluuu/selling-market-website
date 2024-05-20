@@ -53,7 +53,7 @@ export default function NewMenubarMenu({
         router.push(url);
     };
     return (
-        <MenubarMenu open={{openDropdown}} onOpenChange={() => setOpenDropdown(false)}>
+        <MenubarMenu open={openDropdown} onOpenChange={() => setOpenDropdown(false)}>
             
                 <MenubarTrigger
                     onClick={() => router.push(categoryLink)}
