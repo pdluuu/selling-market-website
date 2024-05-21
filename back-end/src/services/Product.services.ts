@@ -57,7 +57,7 @@ class ProductServices {
                 query.category = category;
             }
             const result = ProductModel.find(query);
-
+            
             return result;
         } catch (error) {
             console.log(error);

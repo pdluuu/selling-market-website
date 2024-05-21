@@ -12,6 +12,5 @@ authRouter.post("/forgot-password/reset-password",authenticateTempToken, user.re
 authRouter.post("/get-access-token", user.get_access_token);
 authRouter.post("/sendCode", user.sendCode);
 authRouter.post("/verifyUser", user.verifyUser);
-
 authRouter.use("/google-auth", GoogleAuth);
 export default authRouter;

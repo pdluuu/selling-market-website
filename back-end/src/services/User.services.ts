@@ -247,12 +247,15 @@ class UserServices {
         }
     }
 
-    async getAllApply(type : string) {
+    async getAllApply(type: string) {
         try {
             const listApply = await ListRegisterModel.find();
             let list = listApply;
-            if(type !== 'all'){
-                list = listApply.filter(apply => apply.role === type)
+            if (type !== 'all') {
+                list = listApply.filter(apply => {
+                    apply.role === type;
+                    apply.hide === false;
+                })
             }
             return list;
         } catch (error) {
@@ -260,24 +263,58 @@ class UserServices {
         }
     }
 
-    async acceptUser(id: string, type: string){
+    async getAllList(type: string) {
         try {
-            if(!id || !type){
+            let list = await UserModel.find({
+                role: { $in: ['staff', 'deliver'] }
+            }).exec();
+            if (type !== 'all') {
+                list = list.filter(list => list.role === type);
+            }
+            return list;
+        } catch (error) {
+            return 500;
+        }
+    }
+
+    async notAcceptUser(id: string, type: string) {
+        try {
+            if (!id || !type) {
+                return 400;
+            }
+            await ListRegisterModel.findOneAndUpdate(
+                { userId: id },
+                { hide: true },
+                { new: true }
+            );
+            return 200;
+        } catch (error: any) {
+            return 500;
+        }
+    }
+
+    async acceptUser(id: string, type: string) {
+        try {
+            if (!id || !type) {
                 return 400;
             }
             const updateRole = await UserModel.findByIdAndUpdate(
-                id, 
-                {role: type},
-                {new: true}
+                id,
+                { role: type },
+                { new: true }
             );
-            if(!updateRole){
+            if (!updateRole) {
                 return 404;
-            }else{
-                await ListRegisterModel.deleteOne({userId : id});
+            } else {
+                await ListRegisterModel.findOneAndUpdate(
+                    { userId: id },
+                    { hide: true },
+                    { new: true }
+                );
                 return 200;
 
             }
-        } catch (error:any) {
+        } catch (error: any) {
             return 500;
         }
     }

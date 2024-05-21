@@ -534,6 +534,30 @@ class User {
         }
     }
 
+    async ViewList(req: Request<any, any, any>, res: Response<ISuccessRes | IFailRes>) {
+        try {
+            const { type } = req.params;
+            const allowedTypes = ['all', 'deliver', 'staff'];
+            if (!allowedTypes.includes(type)) {
+                throw new InvalidInput();
+            }
+            const list = await userServices.getAllList(type);
+            if (list === 500) {
+                throw new ErrorResponse('Internal server error', 500);
+            }
+            return res.status(200).json({
+                message: 'successful',
+                data: {
+                    list
+                },
+            });
+
+        } catch (error: any) {
+            const Err = new ErrorResponse(error.message as string, error.statusCode as number);
+            return res.status(Err.statusCode).json({ message: Err.message });
+        }
+    }
+
     async Accept(req: Request<any, any, any>, res: Response<ISuccessRes | IFailRes>) {
         try {
             const { id, type } = req.body;
@@ -550,6 +574,29 @@ class User {
             }
             if (status === 404) {
                 throw new ErrorResponse('User not found', 404);
+            }
+            if (status === 500) {
+                throw new ErrorResponse('Internal server error', 500);
+            }
+        } catch (error: any) {
+            const Err = new ErrorResponse(error.message as string, error.statusCode as number);
+            return res.status(Err.statusCode).json({ message: Err.message });
+        }
+    }
+
+    async notAccept(req: Request<any, any, any>, res: Response<ISuccessRes | IFailRes>) {
+        try {
+            const { id, type } = req.body;
+            const status = await userServices.notAcceptUser(id, type);
+            if (status === 200) {
+                return res.status(200).json(
+                    {
+                        message: 'successful'
+                    }
+                )
+            }
+            if (status === 400) {
+                throw new ErrorResponse('Bad request. Invalid id parameter', 200);
             }
             if (status === 500) {
                 throw new ErrorResponse('Internal server error', 500);
