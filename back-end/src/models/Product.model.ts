@@ -44,6 +44,12 @@ export enum AccessoriesBrand {
     Nokia = 'Nokia',
 }
 
+export interface IViewProduct extends Document{
+    brand: SmartPhoneBrand | TabletBrand | LapTopBrand | AccessoriesBrand;
+    category: ProductCategory;
+    price: number;
+}
+
 export interface IProduct extends Document {
     _id: string | Types.ObjectId;
     name: string;

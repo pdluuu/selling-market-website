@@ -6,7 +6,7 @@ import { ErrorResponse, ErrorResponseType, InvalidInput, MissingParameter } from
 import auhtService from '../services/auth.service';
 import Logger from '../lib/logger';
 import { IFailRes, ISignIn, ISignUp, ISuccessRes, ITokenWithRole } from '../utils/auth.interface';
-import { IProduct } from '../models/Product.model';
+import { IProduct, IViewProduct } from '../models/Product.model';
 import { config } from 'dotenv';
 import { authenticateRole } from '../middlerware/role.authentication';
 config();
@@ -83,12 +83,12 @@ class Product {
             return res.status(Err.statusCode).json({ message: Err.message });
         }
     }
-    async viewProduct(req: Request, res: Response) {
+    async viewProduct(req: Request<any,any,IViewProduct>, res: Response) {
         try {
             const { brand, price, category } = req.body;
 
             const product = await productServices.viewProduct(brand, price, category);
-
+            
             return res.status(200).json(product);
         } catch (error: any) {
             // Logger.error(error);
