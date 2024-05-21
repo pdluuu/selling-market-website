@@ -254,7 +254,7 @@ class UserServices {
             if (type !== 'all') {
                 list = listApply.filter(apply => {
                     apply.role === type;
-                    apply.hide === false;
+                    // apply.hide === false;
                 })
             }
             return list;
