@@ -1,33 +1,39 @@
-'use client';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import image from '../../../Images/asus-vivobook.jpg';
-import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { ChevronLast, Router } from 'lucide-react';
-import Link from 'next/link';
-import { phoneData } from '../sample-data';
-import { useRouter } from 'next/navigation';
-import tag from '../../../Images/tag3.png';
+"use client";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import image from "../../../Images/asus-vivobook.jpg";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { ChevronLast, Router } from "lucide-react";
+import Link from "next/link";
+import { phoneData } from "../sample-data";
+import { useRouter } from "next/navigation";
+import tag from "../../../Images/tag3.png";
+import { useEffect, useState } from "react";
 
-declare global {
-  interface Window {
-    category: string;
-    brand: string;
-    reverse?: boolean;
-    access_token: string | null;
-    refresh_token: string | null;
-    user: {
-      _id: string;
-      email: string;
-      username: string;
-      status: string;
-      role: string;
-    } | null;
-  }
-}
-
+type ProductInfo = {
+  _id: string;
+  name: string;
+  discount: number;
+  price: number;
+  brand: string;
+  version: string[];
+  category: string;
+  images: string[];
+  items: string[];
+};
 export default function DisplayedItem({
   brand,
   category,
@@ -39,21 +45,62 @@ export default function DisplayedItem({
   price?: number;
   reverse?: string;
 }) {
-  let listProduct: {
-    _id: string;
-    name: string;
-    discount: number;
-    price: number;
-    brand: string;
-    version: string[];
-    category: string;
-    images: string[];
-    items: string[];
-  }[] = [];
-  listProduct = phoneData;
+  const [listProduct, setListProduct] = useState<ProductInfo[] | null>([]);
 
   const router = useRouter();
+  let categoyy: string = "";
+  switch (category) {
+    case "Điện thoại":
+      categoyy = "Smart Phone";
+      break;
+    case "Laptop":
+      categoyy = "Laptop";
+      break;
+    case "Đồng hồ":
+      categoyy = "Smart Watch";
+      break;
+    case "Tablet":
+      categoyy = "Tablet";
+      break;
+    case "Phụ kiện":
+      categoyy = "Accessories";
+      break;
+  }
+  const brandd = brand || "";
+  let pricee = -1;
+  if (price) pricee = price;
 
+  const getProduct = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:8080/api/v1/product/view-product",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            category: categoyy,
+            brand: brandd,
+            price: pricee,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      console.log("Success get produts", result.data);
+      if (result.data.length !== 0) setListProduct(result.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  if (listProduct?.length === 0) getProduct();
+
+  console.log(listProduct);
+  // listProduct=phoneData
   const handleViewMore = () => {
     if (reverse === "true") {
       const url = `/view-category-brand`;
@@ -89,7 +136,7 @@ export default function DisplayedItem({
       }
     }
   };
-  if (listProduct.length === 0) return null;
+  if (listProduct?.length === 0) return null;
   return (
     <div className="lg:w-3/4 max-w-sm lg:max-w-full  m-y-2 m-0 md:my-4">
       <div className=" flex justify-between items-center">
@@ -103,11 +150,13 @@ export default function DisplayedItem({
       </div>
       <Carousel className="">
         <CarouselContent className="-ml-1 ">
-          {listProduct.map((product, index) => (
+          {listProduct?.map((product, index) => (
             <CarouselItem key={index} className="pl-1  basis-1/3 lg:basis-1/5 ">
               <div className="p-[3px] md:p-1  ">
                 <Card className="">
-                  {product.discount && (
+                  {product.discount === 0 ? (
+                    <div></div>
+                  ) : (
                     <div className="absolute z-10 -ml-[30px] -mt-10 h-auto w-auto ">
                       <img
                         src={tag.src}
@@ -115,7 +164,7 @@ export default function DisplayedItem({
                         className="transform scale-y-[-1]"
                       />
                       <p className=" absolute ml-8 -mt-[75px] text-white font-bold text-xs">
-                        Giảm giá
+                        Giảm {product.discount}%
                       </p>
                     </div>
                   )}
@@ -131,7 +180,6 @@ export default function DisplayedItem({
                     <CardTitle className="text-[18px]">
                       {product.name}
                     </CardTitle>
-                    <CardDescription>{product.discount}</CardDescription>
                     <p className="text-[16px] relative">
                       {product.price}
                       <span className="underline md:text-xs text-[8px] inline-block align-top">
