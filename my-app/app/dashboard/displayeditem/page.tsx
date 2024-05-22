@@ -21,7 +21,7 @@ import Link from "next/link";
 import { phoneData } from "../sample-data";
 import { useRouter } from "next/navigation";
 import tag from "../../../Images/tag3.png";
-import { useEffect, useState } from "react";
+import { useEffect, useState,memo } from "react";
 
 type ProductInfo = {
   _id: string;
@@ -34,7 +34,7 @@ type ProductInfo = {
   images: string[];
   items: string[];
 };
-export default function DisplayedItem({
+const  DisplayedItem=({
   brand,
   category,
   price,
@@ -44,7 +44,7 @@ export default function DisplayedItem({
   category: string;
   price?: number;
   reverse?: string;
-}) {
+}) =>{
   const [listProduct, setListProduct] = useState<ProductInfo[] | null>([]);
 
   const router = useRouter();
@@ -67,9 +67,16 @@ export default function DisplayedItem({
       break;
   }
   const brandd = brand || "";
-  let pricee = -1;
+  let pricee: number | undefined = -1;
   if (price) pricee = price;
-
+  if (price === 0) pricee = 0;
+  console.log(
+    JSON.stringify({
+      category: categoyy,
+      brand: brandd,
+      price: pricee,
+    })
+  );
   const getProduct = async () => {
     try {
       const response = await fetch(
@@ -93,13 +100,17 @@ export default function DisplayedItem({
       const result = await response.json();
       console.log("Success get produts", result.data);
       if (result.data.length !== 0) setListProduct(result.data);
+      else return null;
     } catch (e) {
       console.log(e);
     }
   };
-  if (listProduct?.length === 0) getProduct();
-
-  console.log(listProduct);
+  useEffect(() => {
+    getProduct();
+  }, [brand,price,listProduct?.length]);
+  
+  if(listProduct?.length===0) getProduct();
+  console.log("after check langth");
   // listProduct=phoneData
   const handleViewMore = () => {
     if (reverse === "true") {
@@ -153,7 +164,12 @@ export default function DisplayedItem({
           {listProduct?.map((product, index) => (
             <CarouselItem key={index} className="pl-1  basis-1/3 lg:basis-1/5 ">
               <div className="p-[3px] md:p-1  ">
-                <Card className="">
+                <Card
+                  className=""
+                  onClick={() => {
+                    router.push("/product/details");
+                  }}
+                >
                   {product.discount === 0 ? (
                     <div></div>
                   ) : (
@@ -198,3 +214,4 @@ export default function DisplayedItem({
     </div>
   );
 }
+export default memo(DisplayedItem);

@@ -86,7 +86,7 @@ const Page: FC = () => {
     useEffect(() => {
         setPrice(item.price);
     }, [item]);
-
+    console.log(item)
     return (
         <>
             <Dialog>

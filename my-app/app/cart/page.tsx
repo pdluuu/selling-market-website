@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState, useEffect } from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -175,15 +175,24 @@ export const columns: ColumnDef<Payment>[] = [
   },
 ];
 
-export default function DataTableDemo() {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
+type Product = {
+  _id: string;
+  name: string;
+  discount: number;
+  price: number;
+  brand: string;
+  version: string[];
+  items: string[];
+  category: string;
+  images: string[];
+};
 
+export default function DataTableDemo() {
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
+  const [listProduct, setListProduct] = useState<Product|null>(null);
   const table = useReactTable({
     data,
     columns,
@@ -202,10 +211,34 @@ export default function DataTableDemo() {
       rowSelection,
     },
   });
+  // useEffect(() => {
+  //   const getCart = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         "http://localhost:8080/api/v1/user/view-cart",
+  //         {
+  //           method: "GET",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+  //           },
+  //         }
+  //       );
 
+  //       if (!response.ok) {
+  //         throw new Error(`HTTP error! status: ${response.status}`);
+  //       }
+  //       const result=response.json();
+  //       console.log("success get cart",result.data);
+  //       setListProduct(result.data)
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   };
+  //   getCart();
+  // }, []);
   return (
     <div>
-      <Header />
       <MenubarDemo />
       <div className="mx-60 my-8">
         <h1 className="flex uppercase font-bold items-center">
@@ -323,7 +356,6 @@ export default function DataTableDemo() {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }
