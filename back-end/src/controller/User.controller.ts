@@ -37,7 +37,7 @@ config();
 class User {
     async sign_up(req: Request<any, any, ISignUp>, res: Response<ISuccessRes | IFailRes>) {
         try {
-            const { email, password, username } = req.body;
+            const { email, password, username, role, phoneNumber } = req.body;
 
             if (!email || !password || !username) {
                 throw new MissingParameter();
@@ -45,8 +45,7 @@ class User {
             if (!authService.validate('email', email) || !authService.validate('password', password)) {
                 throw new InvalidInput();
             }
-
-            const user = await authService.signUp(email, password, username);
+            const user = await authService.signUp(email, password, username, role, phoneNumber);
 
             const payload = {
                 _id: user._id,
@@ -97,10 +96,10 @@ class User {
                 _id: user._id,
                 email: user.email,
             };
-
+            console.log(process.env.EXPIRES_TOKEN_TIME);
             // phien ban ma hoa
             const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET || '', {
-                expiresIn: process.env.EXPIRES_TOKEN_TIME,
+                expiresIn: '1h',
             });
             // ma hoa + key -> phien ban chua decode
 
@@ -145,7 +144,7 @@ class User {
             return res.status(Err.statusCode).json({ message: Err.message });
         }
     }
-    async googleAuth() { }
+    async googleAuth() {}
 
     async password_getcode(req: Request<any, any, IForgotPassEmail>, res: Response<ISuccessRes | IFailRes>) {
         const { email } = req.body;
@@ -190,12 +189,12 @@ class User {
             if (result === 200) {
                 const user = await UserModel.findOne({ email: email });
                 if (user) {
-                    const tempToken = jwt.sign({ email }, process.env.TEMP_TOKEN_SECRET || "", { expiresIn: '15m' });
+                    const tempToken = jwt.sign({ email }, process.env.TEMP_TOKEN_SECRET || '', { expiresIn: '15m' });
                     await authService.addTempTokens(tempToken, user._id);
                     return res.status(200).json({
                         message: 'successful',
                         data: {
-                            tempToken
+                            tempToken,
                         },
                     });
                 }
@@ -218,7 +217,6 @@ class User {
             return res.status(Err.statusCode).json({ message: Err.message });
         }
     }
-
 
     async reset_pass(req: Request<any, any, IResetPass>, res: Response<ISuccessRes | IFailRes>) {
         try {
@@ -268,9 +266,7 @@ class User {
                             refreshToken,
                         },
                     });
-
                 }
-
             }
         } catch (error: any) {
             console.log(error);
@@ -279,7 +275,6 @@ class User {
             return res.status(Err.statusCode).json({ message: Err.message });
         }
     }
-
 
     async get_access_token(
         req: Request<any, any, { refreshToken: string; email: string }>,
@@ -455,7 +450,9 @@ class User {
     async TakeOrder(req: any, res: Response<ISuccessRes | IFailRes>) {
         try {
             const { userId } = req.body;
+            console.log(userId);
             const { product_id } = req.body;
+            console.log(product_id);
             const result = await userServices.takeOrder(product_id, userId);
             if (result.success) {
                 return res.status(200).json({ message: 'successful operation' });
@@ -524,10 +521,9 @@ class User {
             return res.status(200).json({
                 message: 'successful',
                 data: {
-                    listApply
+                    listApply,
                 },
             });
-
         } catch (error: any) {
             const Err = new ErrorResponse(error.message as string, error.statusCode as number);
             return res.status(Err.statusCode).json({ message: Err.message });
@@ -548,10 +544,9 @@ class User {
             return res.status(200).json({
                 message: 'successful',
                 data: {
-                    list
+                    list,
                 },
             });
-
         } catch (error: any) {
             const Err = new ErrorResponse(error.message as string, error.statusCode as number);
             return res.status(Err.statusCode).json({ message: Err.message });
@@ -572,26 +567,24 @@ class User {
             return res.status(200).json({
                 message: 'successful',
                 data: {
-                    list
+                    list,
                 },
             });
-
         } catch (error: any) {
             const Err = new ErrorResponse(error.message as string, error.statusCode as number);
             return res.status(Err.statusCode).json({ message: Err.message });
         }
     }
 
+
     async Accept(req: Request<any, any, any>, res: Response<ISuccessRes | IFailRes>) {
         try {
             const { id, type } = req.body;
             const status = await userServices.acceptUser(id, type);
             if (status === 200) {
-                return res.status(200).json(
-                    {
-                        message: 'successful'
-                    }
-                )
+                return res.status(200).json({
+                    message: 'successful',
+                });
             }
             if (status === 400) {
                 throw new ErrorResponse('Bad request. Invalid id parameter', 200);
@@ -613,11 +606,9 @@ class User {
             const { id, type } = req.body;
             const status = await userServices.notAcceptUser(id, type);
             if (status === 200) {
-                return res.status(200).json(
-                    {
-                        message: 'successful'
-                    }
-                )
+                return res.status(200).json({
+                    message: 'successful',
+                });
             }
             if (status === 400) {
                 throw new ErrorResponse('Bad request. Invalid id parameter', 200);
@@ -628,6 +619,73 @@ class User {
         } catch (error: any) {
             const Err = new ErrorResponse(error.message as string, error.statusCode as number);
             return res.status(Err.statusCode).json({ message: Err.message });
+        }
+    }
+    async CheckOut(req: Request<any, any, any>, res: Response<ISuccessRes | IFailRes>) {
+        try {
+            // Sử dụng service để lấy danh sách đăng kí từ cơ sở dữ liệu
+            const { userId } = req.body;
+            const { productId } = req.body;
+            const check_Out = await userServices.checkOut(userId, productId);
+            if (check_Out) {
+                console.log(check_Out.message);
+                return res.status(200).json({ message: 'Order placed successfully' });
+            } else {
+                return res.status(404).json({ message: 'xxxxxx' });
+            }
+        } catch (error: any) {
+            console.log(error);
+            const Err = new ErrorResponse(error.message as string, error.statusCode as number);
+            return res.status(Err.statusCode).json({ message: Err.message });
+        }
+    }
+    async ViewCart(req: Request, res: Response) {
+        try {
+            const { userId } = req.body;
+            console.log(userId);
+            const cartItems = await userServices.viewCart(userId);
+
+            if (cartItems.success) {
+                return res.status(200).json({
+                    success: true,
+                    data: cartItems.data,
+                });
+            } else {
+                return res.status(400).json({
+                    success: false,
+                    message: cartItems.message,
+                });
+            }
+        } catch (error) {
+            console.error('Error retrieving cart items:', error);
+            return res.status(500).json({
+                success: false,
+                message: 'Internal server error',
+            });
+        }
+    }
+    async PurchersProduct(req: Request, res: Response) {
+        try {
+            const { userId } = req.body;
+            const { productId } = req.body;
+            console.log(userId);
+            const product_purchers = await userServices.purchersProduct(userId, productId);
+
+            if (product_purchers?.success) {
+                return res.status(200).json({
+                    message: product_purchers.message,
+                });
+            } else {
+                return res.status(400).json({
+                    message: 'no okxx',
+                });
+            }
+        } catch (error) {
+            console.error('Error retrieving cart items:', error);
+            return res.status(500).json({
+                success: false,
+                message: 'Internal server error',
+            });
         }
     }
 }

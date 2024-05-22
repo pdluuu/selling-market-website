@@ -22,7 +22,7 @@ passport.use(
             const image = profile.photos?.shift()?.value;
             try {
                 if (email && name && image) {
-                    const user = await auhtService.authGoogle(
+                    const user: any = await auhtService.authGoogle(
                         email,
                         name,
                         image
@@ -71,4 +71,6 @@ passport.deserializeUser((user: any, done) => {
     done(null, user);
 });
 
+
 export default passport;
+
