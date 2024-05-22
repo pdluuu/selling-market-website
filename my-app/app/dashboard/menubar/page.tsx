@@ -58,7 +58,7 @@ export default function NewMenubarMenu({
                 <MenubarTrigger
                     onClick={() => router.push(categoryLink)}
                     onMouseEnter={() => setOpenDropdown(true)}
-                    className="lg:w-48 lg:text-base text-xs hover:bg-accent"
+                    className="lg:w-64 lg:text-base text-xs hover:bg-accent"
                 >
                     {icon}
                     {category}

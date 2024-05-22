@@ -558,6 +558,30 @@ class User {
         }
     }
 
+    async ViewOrder(req: Request<any, any, any>, res: Response<ISuccessRes | IFailRes>) {
+        try {
+            const { status } = req.params;
+            const allowedTypes = ['all', 'confirm', 'package', 'transition', 'delivered'];
+            if (!allowedTypes.includes(status)) {
+                throw new InvalidInput();
+            }
+            const list = await userServices.getAllOrder(status);
+            if (list === 500) {
+                throw new ErrorResponse('Internal server error', 500);
+            }
+            return res.status(200).json({
+                message: 'successful',
+                data: {
+                    list
+                },
+            });
+
+        } catch (error: any) {
+            const Err = new ErrorResponse(error.message as string, error.statusCode as number);
+            return res.status(Err.statusCode).json({ message: Err.message });
+        }
+    }
+
     async Accept(req: Request<any, any, any>, res: Response<ISuccessRes | IFailRes>) {
         try {
             const { id, type } = req.body;

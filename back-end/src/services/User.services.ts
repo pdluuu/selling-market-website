@@ -263,6 +263,20 @@ class UserServices {
         }
     }
 
+    async getAllOrder(status: string) {
+        try {
+            let list = await OrderModel.find({
+                role: { $in: ['confirm', 'package', 'transition', 'delivered'] }
+            }).exec();
+            if (status !== 'all') {
+                list = list.filter(list => list.status === status);
+            }
+            return list;
+        } catch (error) {
+            return 500;
+        }
+    }
+
     async getAllList(type: string) {
         try {
             let list = await UserModel.find({
