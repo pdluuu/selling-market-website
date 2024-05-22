@@ -576,6 +576,7 @@ class User {
         }
     }
 
+
     async Accept(req: Request<any, any, any>, res: Response<ISuccessRes | IFailRes>) {
         try {
             const { id, type } = req.body;

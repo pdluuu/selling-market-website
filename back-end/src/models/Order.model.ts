@@ -18,6 +18,7 @@ export interface IOrder extends Document {
     address: string;
     deliver_id: string | Types.ObjectId;
     phoneNumber: string;
+    status: string;
     orderProduct: IOrderProduct[];
 }
 
@@ -28,6 +29,7 @@ const OrderSchema: Schema = new Schema({
     address: { type: String, required: true },
     deliver_id: { type: String, ref: 'User', required: true },
     phoneNumber: { type: String, required: true },
+    status: { type : String, require: true},
     orderProduct: [
         {
 
