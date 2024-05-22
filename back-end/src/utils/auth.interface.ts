@@ -64,4 +64,5 @@ export interface ICheckResetPass {
 export interface IResultResetPass {
     message: "Successful";
     data: any;
+
 }

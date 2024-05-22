@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -18,36 +18,39 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-const handleForgotPassword = async () => {
-    try{
-        const response = await fetch(
-            "http://localhost:8080/api/v1/forgot-password/getCode",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-              },
-            }
-          );
-  
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-  
-          const result = await response.json();
-          // setUser(result.data);
-          console.log("Success get info:", result.data);
-          localStorage.setItem("user", JSON.stringify(result.data));
-        //   router.push("/");
-        
-    }catch(e){
-        console.log("Error: "+e)
-    }
-};
+import { useRouter } from "next/navigation";
 
 export function ForgotPassword() {
+  const [email, setEmail] = useState(" ");
+  const router = useRouter();
+  const handleForgotPassword = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:8080/api/v1/forgot-password/getCode",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      // setUser(result.data);
+      console.log("Success get email:", result.data);
+      localStorage.setItem("email", email);
+      router.push("/auth/code_for_reset");
+    } catch (e) {
+      console.log("Error: " + e);
+    }
+  };
+
   return (
     <Card className="w-[350px]">
       <CardHeader>
@@ -58,7 +61,13 @@ export function ForgotPassword() {
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="name">Enter your email</Label>
-              <Input id="name" placeholder="Name of your project" />
+              <Input
+                id="name"
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                }}
+                placeholder="Name of your project"
+              />
             </div>
           </div>
         </form>

@@ -44,13 +44,19 @@ export enum AccessoriesBrand {
     Nokia = 'Nokia',
 }
 
+export interface IViewProduct extends Document {
+    brand: SmartPhoneBrand | TabletBrand | LapTopBrand | AccessoriesBrand;
+    category: ProductCategory;
+    price: number;
+}
+
 export interface IProduct extends Document {
     _id: string | Types.ObjectId;
     name: string;
     discount: number;
     price: number;
     brand: SmartPhoneBrand | TabletBrand | LapTopBrand | AccessoriesBrand;
-    version: [string];
+    version: [any];
     category: ProductCategory;
     images: [string];
     items: [string];
@@ -65,10 +71,10 @@ const ProductSchema: Schema = new Schema({
         required: true,
         enum: Object.values({ ...SmartPhoneBrand, ...TabletBrand, ...LapTopBrand, ...AccessoriesBrand }),
     },
-    version: { type: [String] },
+    version: { type: [Schema.Types.Mixed], default: [] },
     category: { type: String, required: true, enum: ProductCategory },
     images: { type: [String], required: false },
-    items: { type: [String], required: true, ref: 'Product' },
+    items: { type: [String], required: true, ref: 'Product', default: '' },
 });
 
 const ProductModel = mongoose.model<IProduct>('Product', ProductSchema);
