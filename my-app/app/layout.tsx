@@ -20,10 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <body className={cn('min-h-screen bg-background font-sans antialiased', fontSans.variable)}>
                 <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
                     <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_CLIENT_ID as string}>
-                        <ModeToggle></ModeToggle>
-                        <Header/>
                         {children}
-                        <Footer/>
                     </GoogleOAuthProvider>
                 </ThemeProvider>
             </body>

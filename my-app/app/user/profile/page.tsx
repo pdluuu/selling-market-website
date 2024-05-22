@@ -53,7 +53,7 @@ export default function Profile() {
     });
 
     return (
-        <div >
+        <div>
             <div className="border-1 shadow-lg h-auto rounded-lg">
                 {/* top content */}
                 <Card className="flex rounded-t-lg bg-top-color sm:px-2 w-full">

@@ -1,4 +1,4 @@
-import { MenubarDemo } from '../dashboard/category/page';
+import { MenubarDemo } from '../home/dashboard/category/page';
 import Header from '../header/page';
 import Footer from '../footer/page';
 import UserMenuBar from '../view-order/user-bar/page';
