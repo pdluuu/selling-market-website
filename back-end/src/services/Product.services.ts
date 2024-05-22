@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 import ProductModel, { IProduct } from '../models/Product.model';
 import { InvalidInput } from '../utils/errorResponse';
+import { crossOriginResourcePolicy } from 'helmet';
 
 class ProductServices {
     async createProduct(
@@ -43,6 +44,7 @@ class ProductServices {
     }
     async viewProduct(brand: string, price: number, category: string) {
         try {
+            console.log(brand,price,category)
             let query: { category?: string; brand?: string; price?: any } = {};
 
             if (brand) {
@@ -56,8 +58,9 @@ class ProductServices {
             if (category) {
                 query.category = category;
             }
+            console.log(query)
             const result = ProductModel.find(query);
-
+            
             return result;
         } catch (error) {
             console.log(error);

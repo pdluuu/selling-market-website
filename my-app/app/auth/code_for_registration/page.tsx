@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,12 +19,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 import { useRouter } from "next/navigation";
 
 export default function CodeForRegistration() {
   const router = useRouter();
   const [code, setCode] = useState(" ");
-
+  const email = localStorage.getItem("email");
   useEffect(() => {
     const handle = async () => {
       try {
@@ -38,7 +43,7 @@ export default function CodeForRegistration() {
               "Content-Type": "application/json",
               Authorization: `Bearer ${localStorage.getItem("access_token")}`,
             },
-            body: JSON.stringify({ email: localStorage.getItem("email") }),
+            body: JSON.stringify({ email }),
           }
         );
 
@@ -54,6 +59,7 @@ export default function CodeForRegistration() {
   }, []);
 
   const handleSendCode = async () => {
+    console.log(JSON.stringify({ email, code }))
     const response = await fetch(
       "http://localhost:8080/api/v1/auth/verifyUser",
       {
@@ -62,10 +68,7 @@ export default function CodeForRegistration() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        body: JSON.stringify({
-          email: localStorage.getItem("email"),
-          code: code,
-        }),
+        body: JSON.stringify({ email, code }),
       }
     );
 
@@ -76,9 +79,35 @@ export default function CodeForRegistration() {
     const result = await response.json();
     // setUser(result.data);
     console.log("Success verifiy user:", result.data);
-    localStorage.setItem("user", JSON.stringify(result.data));
-    localStorage.remove("email");
-    router.push("/");
+    // localStorage.setItem("user", JSON.stringify(result.data));
+    localStorage.removeItem("email");
+    try {
+      // const access_token = localStorage.getItem("access_token");
+      // if (!access_token) return;
+      const response = await fetch(
+        "http://localhost:8080/api/v1/user/getUser",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      // setUser(result.data);
+      console.log("Success get info:", result.data);
+      localStorage.setItem("user", JSON.stringify(result.data));
+      window.location.replace("/");
+      // setUser(result.data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -87,21 +116,22 @@ export default function CodeForRegistration() {
         <CardTitle>Validate User</CardTitle>
       </CardHeader>
       <CardContent>
-        <form>
-          <div className="grid w-full items-center gap-4">
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Enter code for validation</Label>
-              <Input
-                id="name"
-                placeholder="Name of your project"
-                value={code}
-                onChange={(event) => {
-                  setCode(event.target.value);
-                }}
-              />
-            </div>
-          </div>
-        </form>
+        <InputOTP
+          maxLength={6}
+          value={code}
+          onChange={(value: SetStateAction<string>) => {
+            setCode(value);
+          }}
+        >
+          <InputOTPGroup>
+            <InputOTPSlot index={0} />
+            <InputOTPSlot index={1} />
+            <InputOTPSlot index={2} />
+            <InputOTPSlot index={3} />
+            <InputOTPSlot index={4} />
+            <InputOTPSlot index={5} />
+          </InputOTPGroup>
+        </InputOTP>
       </CardContent>
       <CardFooter className="flex justify-between">
         <Button variant="outline">Cancel</Button>

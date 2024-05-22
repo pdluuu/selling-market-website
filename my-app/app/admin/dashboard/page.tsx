@@ -1,16 +1,15 @@
-import Header from "@/app/dashboard/header/page";
 import Sidebar from "../sidebar/page";
+import ManageProduct from "../manageproduct/page";
 
 export default function DashboardAd() {
     return (
         <div>
-            <Header />
-            <div className="w-5/6 mx-auto">
+            <div className="w-5/6 mx-auto mt-8">
                 <Sidebar />
             </div>
-            <div className="flex justify-center text-5xl items-center">
-                Xin chao Vu Thi Mai Linh
-            </div>
+
+            <ManageProduct />
+
         </div>
 
     );
