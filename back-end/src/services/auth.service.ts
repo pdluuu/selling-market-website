@@ -43,24 +43,24 @@ class AuthService {
         return newUser;
     }
 
-    async authGoogle(email: string, username: string, image: string) {
-        const user = await UserModel.findOne({ email: email });
+    // async authGoogle(email: string, username: string, image: string) {
+    //     const user = await UserModel.findOne({ email: email });
 
-        if (user) {
-            return user;
-        }
-        const password: string = this.generateRandomString(10);
-        const salt = genSaltSync(10);
-        const hash = hashSync(password, salt);
-        const newUser = await UserModel.create({
-            email,
-            username,
-            image,
-            password: hash,
-        });
+    //     if (user) {
+    //         return user;
+    //     }
+    //     const password: string = this.generateRandomString(10);
+    //     const salt = genSaltSync(10);
+    //     const hash = hashSync(password, salt);
+    //     const newUser = await UserModel.create({
+    //         email,
+    //         username,
+    //         image,
+    //         password: hash,
+    //     });
 
-        return newUser;
-    }
+    //     return newUser;
+    // }
     async signIn(email: string, password: string) {
         const user = await UserModel.findOne({ email: email });
 
@@ -296,7 +296,13 @@ class AuthService {
             console.log(error);
         }
     }
+    async authGoogle( email : string, 
+        
+        name : string,
+        image : string) {}
 }
 
 const authService = new AuthService();
+
 export default authService;
+

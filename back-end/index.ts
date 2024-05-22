@@ -10,19 +10,24 @@ import appRouter from './src/router/index.router';
 import { connectDB } from './src/database/mongodb/connect.mongo';
 import cors from 'cors';
 const cookieSession = require('cookie-session');
+
+import authRouter from './src/router/auth/auth.route';
+
 import session from 'express-session';
+
+dotenv.config();
 const passportSetup = require('./src/lib/passport');
 // * innitialization
+
 const app: Application = express();
 const PORT = process.env.PORT || 5000;
-
+const api_version = process.env.API_VERSION || '/api/v1';
 // * middleware
 app.use(morganMiddleware);
 app.use(helmet());
 app.use(compression());
 app.use(json());
 app.use(express.urlencoded({ extended: true })); // support encoded bodies
-// app.use(cors());
 app.use(
     cors({
         origin: 'http://localhost:3000',
@@ -42,17 +47,17 @@ app.use(
     }),
 );
 
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 // * connect to db
 connectDB().then((res) => console.log(res));
 
 // * router
 
-const api_version = process.env.API_VERSION || '/api/v1';
-
+// app.use('/auth', authRouter);
 app.use(api_version, appRouter);
+
 // * handle Error
 // testConnection();
 // * server running
