@@ -61,7 +61,7 @@ function Navbar() {
             });
 
             localStorage.clear();
-            window.location.replace('/');
+            window.location.replace('/home/dashboard');
             // setUser(null);
         } catch (error) {
             console.error('Error:', error);
@@ -70,8 +70,8 @@ function Navbar() {
 
     return (
         <div className="flex items-center w-full justify-between  p-2 lg:pl-8 lg:pr-7 h-86 ">
-            <Link href="/dashboard">
-                <Button className=" p-0 lg:text-2xl text-base font-bold p-4">
+            <Link href="/home/dashboard">
+                <Button className="  lg:text-2xl text-base font-bold p-4">
                     <MonitorCheck className="lg:mr-2" size={30} />
                     <span>Brand</span>
                 </Button>

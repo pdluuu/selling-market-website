@@ -15,7 +15,7 @@ export default function Footer() {
         <div className="w-full border border-t-[1px] flex lg:py-10 py-5 flex-col items-center space-y-4">
             <div className="flex lg:w-3/4 justify-between  ">
                 <div className='w-1/2 pl-5 lg:w-2/3'>
-                    <Link href="/dashboard">
+                    <Link href="/home/dashboard">
                         <Button className="lg:text-2xl text-xl font-bold  ">
                             <MonitorCheck size={30} className="mr-2" />
                             <span>Brand</span>

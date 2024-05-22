@@ -126,7 +126,6 @@ class Product {
       const { brand, price, category } = req.body;
 
       const product = await productServices.viewProduct(brand, price, category);
-      console.log("in controller");
       console.log(product);
       return res.status(200).json({ message: "successfull", data: product });
     } catch (error: any) {
