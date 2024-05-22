@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import tag from "../../Images/tag3.png";
+import { Router } from "lucide-react";
 
 type ProductInfo = {
   _id: string;
@@ -27,6 +28,7 @@ type ProductInfo = {
 };
 
 export default function ViewCategoryBrand() {
+  const router = useRouter();
   const [listProduct, setListProduct] = useState<ProductInfo[] | null>([]);
   const category = localStorage.getItem("category") || " ";
   const brand = localStorage.getItem("brand") || " ";
@@ -82,7 +84,6 @@ export default function ViewCategoryBrand() {
   };
   if (listProduct?.length === 0) getProduct();
 
-  console.log(listProduct);
   return (
     <div className="flex flex-col items-center">
       <MenubarDemo />
@@ -94,7 +95,11 @@ export default function ViewCategoryBrand() {
       <div className="grid grid-cols-5 lg:w-3/4 max-w-sm lg:max-w-full my-6">
         {listProduct?.map((product, index) => (
           <div key={index} className="p-[3px] md:p-1 ">
-            <Card>
+            <Card
+              onClick={() => {
+                router.push("/product/details");
+              }}
+            >
               {product.discount === 0 ? (
                 <div></div>
               ) : (
