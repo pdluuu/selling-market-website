@@ -20,7 +20,11 @@ export interface IUser extends Document {
     username: string;
     status: UserStatus;
     role: UserRole;
-    reset_password?: {
+    vetify_user: {
+        code: string;
+        expiresAt: number;
+    };
+    reset_password: {
         code: string;
         expiresAt: number;
     };
@@ -48,6 +52,7 @@ const UserSchema: Schema = new Schema(
             required: true,
             default: 'user',
         },
+        vetify_user: { type: Schema.Types.Mixed },
         reset_password: { type: Schema.Types.Mixed },
         store_id: { type: String },
         image: { type: String },

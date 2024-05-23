@@ -389,12 +389,9 @@ class UserServices {
     async getAllApply(type: string) {
         try {
             const listApply = await ListRegisterModel.find();
-            let list = listApply;
+            let list = listApply.filter((apply) => apply.hide === false);
             if (type !== 'all') {
-                list = listApply.filter((apply) => {
-                    apply.role === type;
-                    // apply.hide === false;
-                });
+                list = list.filter((apply) => apply.role === type)
             }
             return list;
         } catch (error) {

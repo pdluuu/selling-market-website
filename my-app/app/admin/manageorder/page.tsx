@@ -6,15 +6,31 @@ import { FolderClosed, Gift, Star, Truck } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import OrderItem from './order/page';
 import { IOrder } from '../../../../back-end/src/models/Order.model';
+import axios from 'axios';
 
 export default function ManageOrder() {
     const [orders, setOrders] = useState<IOrder[]>([]);
     const [statusFilter, setStatusFilter] = useState('all');
 
+    const axiosInstance = axios.create({
+        baseURL: process.env.NEXT_PUBLIC_API_URL,
+        headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjQ2Y2QwYjU1NDczMDljMDAxMGNkYTQiLCJlbWFpbCI6ImFkbWluMUBnbWFpbC5jb20iLCJpYXQiOjE3MTY0NjM0MTh9.XhuNIpk29x7wri9RccoholUm3WVUXOGwqCOV9clRorw` }
+    });
+
     const fetchOrders = async (status: string): Promise<IOrder[]> => {
-        const response = await fetch(`/admin/order/${status}`);
-        const data = await response.json();
-        return data;
+        try {
+            const response = await axiosInstance.get(`/admin//order/${status}`);
+            console.log(response.data.data.listApply);
+
+            return response.data.data.list as IOrder[];
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
+                console.error(`Error fetching staff data: ${error.response.status} - ${error.response.statusText}`);
+            } else {
+                console.error('Error fetching staff data:', error);
+            }
+            throw error; // Re-throw the error to be handled by the caller
+        }
     };
 
     useEffect(() => {
@@ -62,7 +78,7 @@ export default function ManageOrder() {
                     </div>
                 </MenubarMenu>
             </Menubar>
-            <div>
+            <div className="flex flex-row gap-16 content-center">
                 {orders.map((order) => (
                     <OrderItem key={order._id} order={order} />
                 ))}

@@ -10,16 +10,6 @@ import { IResultResetPass } from '../utils/auth.interface';
 
 config();
 
-const sentCodes: {
-    [email: string]: { code: string | false; expiresAt: number };
-} = {};
-const sentCodePass: {
-    [email: string]: {
-        resetCode: string | false;
-        expiresAt: number;
-    };
-} = {};
-
 class AuthService {
     async signUp(email: string, password: string, username: string, role?: string, phoneNumber?: string) {
         if (await this.isExistEmail(email)) {
@@ -214,8 +204,6 @@ class AuthService {
                 user.reset_password = { code: code, expiresAt: expiresAt };
                 await user.save();
             }
-            console.log(code);
-
             return code;
         } catch (error: any) {
             console.error(error);
@@ -269,7 +257,11 @@ class AuthService {
             console.log(code);
             const expiresAt = Date.now() + 3 * 60 * 1000;
 
-            sentCodes[email] = { code: code, expiresAt: expiresAt };
+            const user = await UserModel.findOne({ email });
+            if (user) {
+                user.vetify_user = { code: code, expiresAt: expiresAt };
+                await user.save();
+            }
             return code;
         } catch (error: any) {
             console.error(error);
@@ -279,27 +271,30 @@ class AuthService {
 
     async vertifyUser(email: string, code: string) {
         try {
-            if (email in sentCodes) {
-                // Tìm mã code trong mảng của email
-                const userCodes = sentCodes[email];
-                if (userCodes.code !== code) {
-                    return 400;
-                }
-                if (userCodes.expiresAt < Date.now()) {
-                    return 408;
-                }
-                return 200;
-            } else {
+            // Tìm mã code trong mảng của email
+            const user = await UserModel.findOne({ email });
+
+            if (!user) {
                 return 404;
             }
+            const passcode = user.vetify_user;
+            if (!passcode || passcode.code !== code) {
+                return 400;
+            }
+            if (passcode.expiresAt < Date.now()) {
+                return 408;
+            }
+
+            return 200;
         } catch (error: any) {
             console.log(error);
         }
     }
-    async authGoogle( email : string, 
-        
-        name : string,
-        image : string) {}
+
+    async authGoogle(email: string,
+
+        name: string,
+        image: string) { }
 }
 
 const authService = new AuthService();

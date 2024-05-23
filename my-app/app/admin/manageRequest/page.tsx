@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import RequestItem from "./request/page";
 import { IListRegister } from "../../../../back-end/src/models/ListRegister.model";
 import { ISuccessRes, IFailRes } from "../../../../back-end/src/utils/auth.interface";
+import axios from "axios";
 
 
 export default function ManageOrder() {
@@ -21,20 +22,26 @@ export default function ManageOrder() {
     const [requests, setRequest] = useState<IListRegister[]>([]);
     const [roleFilter, setRoleFilter] = useState('all');
 
-    const fetchRequests = async (type: string) => {
-       try {
-        const response = await fetch(`http://localhost:8080/api/v1/admin/view/${type}`);
-        const data: ISuccessRes | IFailRes = await response.json();
-        if (isSuccessRes(data)) {
-            return data.data;
-        } else if (isFailRes(data)) {
-            console.error('Error:', data.message);
-            return [];
-        };
-       } catch (error) {
-        return [];
-       }
-    }
+    const axiosInstance = axios.create({
+        baseURL: process.env.NEXT_PUBLIC_API_URL,
+        headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjQ2Y2QwYjU1NDczMDljMDAxMGNkYTQiLCJlbWFpbCI6ImFkbWluMUBnbWFpbC5jb20iLCJpYXQiOjE3MTY0NjM0MTh9.XhuNIpk29x7wri9RccoholUm3WVUXOGwqCOV9clRorw` }
+    });
+
+    const fetchRequests = async (type: string): Promise<IListRegister[]> => {
+        try {
+            const response = await axiosInstance.get(`/admin/view/${type}`);
+            console.log(response.data.data.listApply);
+
+            return response.data.data.listApply as IListRegister[];
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
+                console.error(`Error fetching staff data: ${error.response.status} - ${error.response.statusText}`);
+            } else {
+                console.error('Error fetching staff data:', error);
+            }
+            throw error; // Re-throw the error to be handled by the caller
+        }
+    };
 
     useEffect(() => {
         const getRequests = async () => {
@@ -63,12 +70,10 @@ export default function ManageOrder() {
                     </div>
                 </MenubarMenu>
             </Menubar>
-            <div>
-                {requests.length > 0 ? (requests.map(request => (
+            <div className="flex flex-row gap-16 content-center">
+                {requests.map((request) => (
                     <RequestItem key={request._id} request={request} />
-                ))):(
-                    <p>No data</p>
-                )}
+                ))}
             </div>
         </div>
     );
