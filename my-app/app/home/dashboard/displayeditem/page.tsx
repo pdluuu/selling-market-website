@@ -56,16 +56,12 @@ export default function DisplayedItem({
             break;
     }
     const brandd = brand || '';
+    let pricey = -1;
+    if (price) pricey = price;
+    if (price == 0) pricey = 0;
 
     const getProduct = async () => {
         try {
-            console.log(
-                JSON.stringify({
-                    category: categoyy,
-                    brand: brandd,
-                    price: price,
-                }),
-            );
             const response = await fetch('http://localhost:8080/api/v1/product/view-product', {
                 method: 'POST',
                 headers: {
@@ -74,11 +70,10 @@ export default function DisplayedItem({
                 body: JSON.stringify({
                     category: categoyy,
                     brand: brandd,
-                    price: price,
+                    price: pricey,
                 }),
             });
             const result = await response.json();
-            console.log('Success get produts', result.data);
             setListProduct(result.data);
         } catch (e) {
             console.log(e);
@@ -86,12 +81,11 @@ export default function DisplayedItem({
     };
     useEffect(() => {
         getProduct();
-    }, [brand,price]); 
+    }, [brand, price]);
 
-    console.log(listProduct);
     const handleViewMore = () => {
         if (reverse === 'true') {
-            const url = `/view-category-brand`;
+            const url = `/home/view-category-brand`;
             if (category) localStorage.setItem('category', category);
             if (brand) localStorage.setItem('brand', brand);
             localStorage.setItem('reverse', reverse);
@@ -100,24 +94,24 @@ export default function DisplayedItem({
             if (!brand) {
                 switch (category) {
                     case 'Điện thoại':
-                        router.push('/view-smartphone');
+                        router.push('/home/view-smartphone');
                         break;
                     case 'Laptop':
-                        router.push('/view-laptop');
+                        router.push('/home/view-laptop');
                         break;
                     case 'Đồng hồ':
-                        router.push('/view-watch');
+                        router.push('/home/view-watch');
                         break;
                     case 'Tablet':
-                        router.push('/view-tablet');
+                        router.push('/home/view-tablet');
                         break;
                     case 'Phụ kiện':
-                        router.push('/view-accessory');
+                        router.push('/home/view-accessory');
                         break;
                 }
                 localStorage.setItem('category', category);
             } else {
-                const url = `/view-category-brand`;
+                const url = `/home/view-category-brand`;
                 localStorage.setItem('category', category);
                 localStorage.setItem('brand', brand);
                 router.push(url);
