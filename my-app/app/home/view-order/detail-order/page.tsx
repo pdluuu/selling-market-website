@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import asus from '../../../Images/ASUS vivobook/den.jpg';
+import asus from '../../../../Images/ASUS vivobook/den.jpg';
 import { deliveringData, notExaminedData, completedData, deleteData, returnData, allData } from '../sample-data';
 import { Pen } from 'lucide-react';
 
