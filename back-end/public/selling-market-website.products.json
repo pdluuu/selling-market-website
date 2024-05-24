@@ -7,7 +7,7 @@
   "price": 21990000,
   "category": "Smart Phone",
   "discount": 12,
-  "versions": [
+  "version": [
     {
       "color": "Xanh rêu",
       "memory": "8GB-256GB",
@@ -97,7 +97,7 @@
   "price": 8290000,
   "category": "Smart Phone",
   "discount": 0,
-  "versions": [
+  "version": [
     {
       "color": "Kem",
       "memory": "A35(8-128)",
@@ -198,7 +198,7 @@
   "price": 26890000,
   "category": "Smart Phone",
   "discount": 20,
-  "versions": [
+  "version": [
     {
       "color": "Xám",
       "memory": "256GB",
@@ -315,7 +315,7 @@
   "price": 18990000,
   "category": "Smart Phone",
   "discount": 26,
-  "versions": [
+  "version": [
     {
       "color": "Xanh mint",
       "memory": "256GB",
@@ -416,7 +416,7 @@
   "price": 33990000,
   "category": "Smart Phone",
   "discount": 17,
-  "versions": [
+  "version": [
     {
       "color": "Xanh da trời",
       "memory": "256GB",
@@ -517,7 +517,7 @@
   "price": 8990000,
   "category": "Smart Phone",
   "discount": 0,
-  "versions": [
+  "version": [
     {
       "color": "Xanh",
       "memory": "256GB",
@@ -604,7 +604,7 @@
   "price": 16990000,
   "category": "Smart Phone",
   "discount": 0,
-  "versions": [
+  "version": [
     {
       "color": "Xám",
       "memory": "512GB",
@@ -685,7 +685,7 @@
   "price": 41990000,
   "category": "Smart Phone",
   "discount": 6,
-  "versions": [
+  "version": [
     {
       "color": "Vàng đồng",
       "memory": "512GB",
@@ -767,7 +767,7 @@
   "price": 22990000,
   "category": "Smart Phone",
   "discount": 0,
-  "versions": [
+  "version": [
     {
       "color": "Hồng",
       "memory": "256GB",
@@ -854,7 +854,7 @@
   "price": 7990000,
   "category": "Smart Phone",
   "discount": 11,
-  "versions": [
+  "version": [
     {
       "color": "Xanh dương",
       "memory": "256GB",
@@ -937,7 +937,7 @@
   "price": 29590000,
   "discount": 15,
   "category": "Smart Phone",
-  "versions": [
+  "version": [
     {
       "color": "Titan xanh",
       "memory": "256GB",
@@ -1054,7 +1054,7 @@
   "price": 13750000,
   "category": "Smart Phone",
   "discount": 22,
-  "versions": [
+  "version": [
     {
       "color": "Xanh lá",
       "memory": "128GB",
@@ -1189,7 +1189,7 @@
   "price": 27390000,
   "category": "Smart Phone",
   "discount": 7,
-  "versions": [
+  "version": [
     {
       "color": "Tím",
       "memory": "128GB",
@@ -1291,7 +1291,7 @@
   "price": 16490000,
   "category": "Smart Phone",
   "discount": 19,
-  "versions": [
+  "version": [
     {
       "color": "Tím nhạt",
       "memory": "128GB",
@@ -1414,7 +1414,7 @@
   "price": 13490000,
   "category": "Smart Phone",
   "discount": 19,
-  "versions": [
+  "version": [
     {
       "color": "Trắng",
       "memory": "128GB",
@@ -1526,7 +1526,7 @@
   "price": 4990000,
   "category": "Smart Phone",
   "discount": 5,
-  "versions": [
+  "version": [
     {
       "color": "Vàng",
       "memory": "8GB-128GB",
@@ -1628,7 +1628,7 @@
   "price": 3490000,
   "category": "Smart Phone",
   "discount": 0,
-  "versions": [
+  "version": [
     {
       "color": "Bạc",
       "memory": "4GB",
@@ -1729,7 +1729,7 @@
   "price": 8990000,
   "category": "Smart Phone",
   "discount": 5,
-  "versions": [
+  "version": [
     {
       "color": "Tím",
       "memory": "256GB",
@@ -1816,7 +1816,7 @@
   "price": 21490000,
   "category": "Smart Phone",
   "discount": 12,
-  "versions": [
+  "version": [
     {
       "color": "Xanh lá",
       "memory": "512GB",
@@ -1903,7 +1903,7 @@
   "price": 10990000,
   "category": "Smart Phone",
   "discount": 0,
-  "versions": [
+  "version": [
     {
       "color": "Xanh dương",
       "memory": "8GB",
@@ -2004,7 +2004,7 @@
   "price": 1590000,
   "category": "Smart Phone",
   "discount": 0,
-  "versions": [
+  "version": [
     {
       "color": "Đỏ",
       "memory": "32GB",
@@ -2101,7 +2101,7 @@
   "price": 2390000,
   "category": "Smart Phone",
   "discount": 0,
-  "versions": [
+  "version": [
     {
       "color": "Xanh lá",
       "memory": "4GB",
@@ -2201,7 +2201,7 @@
   "price": 990000,
   "category": "Smart Phone",
   "discount": 0,
-  "versions": [
+  "version": [
     {
       "color": "Xanh ngọc",
       "memory": "32GB",
@@ -2292,7 +2292,7 @@
   "price": 3190000,
   "category": "Smart Phone",
   "discount": 0,
-  "versions": [
+  "version": [
     {
       "color": "Xanh ngọc",
       "memory": "3GB-32GB",
@@ -2382,7 +2382,7 @@
   "price": 3990000,
   "category": "Smart Phone",
   "discount": 0,
-  "versions": [
+  "version": [
     {
       "color": "Xanh lá",
       "memory": "32GB",
@@ -2472,7 +2472,7 @@
   "price": 1039000,
   "category": "Smart Phone",
   "discount": 9,
-  "versions": [
+  "version": [
     {
       "color": "Tím nhạt",
       "memory": "256GB",
@@ -2578,7 +2578,7 @@
   "price": 21250000,
   "category": "Smart Phone",
   "discount": 8,
-  "versions": [
+  "version": [
     {
       "color": "Xanh lá",
       "memory": "256GB",
@@ -2678,7 +2678,7 @@
   "price": 1230000,
   "category": "Smart Phone",
   "discount": 10,
-  "versions": [
+  "version": [
     {
       "color": "Đen",
       "memory": "128GB",
@@ -2762,7 +2762,7 @@
   "price": 10990000,
   "category": "Smart Phone",
   "discount": 6,
-  "versions": [
+  "version": [
     {
       "color": "Xanh lá",
       "memory": "128GB",
@@ -2850,7 +2850,7 @@
   "price": 9990000,
   "category": "Smart Phone",
   "discount": 0,
-  "versions": [
+  "version": [
     {
       "color": "Xám",
       "memory": "128GB",

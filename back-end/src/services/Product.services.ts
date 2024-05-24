@@ -23,19 +23,20 @@ class ProductServices {
             throw new InvalidInput();
         }
     }
-    async deleteProduct(id: string): Promise<string> {
+    async deleteProduct(_id: string): Promise<string> {
         try {
-            const deleted_product = await ProductModel.deleteOne({ _id: new ObjectId(id) });
+            const deleted_product = await ProductModel.deleteOne({ _id: _id });
             return '00';
         } catch (error) {
             console.log(error);
             return '01';
         }
     }
-    async updateProduct(obj: IProduct): Promise<string> {
+    async updateProduct(obj: any): Promise<string> {
         // ket noi database de tao san pham
         try {
-            const new_product = await ProductModel.updateOne({ _id: new ObjectId(obj._id) }, { $set: obj });
+            const new_product = await ProductModel.updateOne({ _id: obj._id }, { $set: obj });
+            console.log(new_product)
             return '00';
         } catch (error) {
             console.log(error);
