@@ -14,8 +14,8 @@ export default function Footer() {
     return (
         <div className="w-full border border-t-[1px] flex lg:py-10 py-5 flex-col items-center space-y-4">
             <div className="flex lg:w-3/4 justify-between  ">
-                <div className='w-1/2 pl-5 lg:w-2/3'>
-                    <Link href="/dashboard">
+                <div className="w-1/2 pl-5 lg:w-2/3">
+                    <Link href="/home/dashboard">
                         <Button className="lg:text-2xl text-xl font-bold  ">
                             <MonitorCheck size={30} className="mr-2" />
                             <span>Brand</span>
@@ -31,19 +31,23 @@ export default function Footer() {
                         <img src={youtube.src} width={40} />
                     </div>
                 </div>
-                <div className='w-1/2 lg:w-1/3'>
+                <div className="w-1/2 lg:w-1/3">
                     <Card className="bg-transparent border-none  ">
-                        <CardContent className='space-y-1 lg:p-6 p-3'>
-                            <CardTitle className=' lg:text-2xl text-base'>Liên hệ</CardTitle>
-                            <CardDescription className=" w-auto lg:text-base text-[11px]">Số điện thoại: 0395235125</CardDescription>
-                            <CardDescription className="lg:text-base text-[11px]">Địa chỉ: Số 1 Đại Cồ Việt</CardDescription>
+                        <CardContent className="space-y-1 lg:p-6 p-3">
+                            <CardTitle className=" lg:text-2xl text-base">Liên hệ</CardTitle>
+                            <CardDescription className=" w-auto lg:text-base text-[11px]">
+                                Số điện thoại: 0395235125
+                            </CardDescription>
+                            <CardDescription className="lg:text-base text-[11px]">
+                                Địa chỉ: Số 1 Đại Cồ Việt
+                            </CardDescription>
                         </CardContent>
                     </Card>
                 </div>
             </div>
-            <div className='w-3/4 border border-w-1 h-[1px]' />
+            <div className="w-3/4 border border-w-1 h-[1px]" />
             <div>
-                <p className='lg:text-base text-xs'>Bản quyền thuộc sở hữu của Nhóm 22 - IT4409</p>
+                <p className="lg:text-base text-xs">Bản quyền thuộc sở hữu của Nhóm 22 - IT4409</p>
             </div>
         </div>
     );

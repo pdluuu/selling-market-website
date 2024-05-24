@@ -4,6 +4,6 @@ import { useEffect, useState } from 'react';
 import Dashboard from './home/dashboard/page';
 export default function Home() {
     const router = useRouter();
-    router.push('/home');
+    router.push('/home/dashbroad');
     return <></>;
 }

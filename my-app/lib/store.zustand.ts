@@ -1,8 +1,20 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
-// const useStore = create((set) => ({
-//     bears: 0,
-//     increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
-//     removeAllBears: () => set({ bears: 0 }),
-//     updateBears: (newBears) => set({ bears: newBears }),
-// }));
+interface UserInfo {
+    email: string;
+    username: string;
+    role: string;
+    phoneNumber: string;
+    image?: string;
+    status: string;
+}
+
+interface UserState {
+    user: UserInfo | null;
+    setUser: (user: UserInfo) => void;
+}
+
+const useUserInfoStore = create<UserState>((set) => ({
+    user: null,
+    setUser: (newUser) => set((state) => ({ user: newUser })),
+}));

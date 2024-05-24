@@ -89,7 +89,7 @@ export default function DisplayedItem({
     // listProduct=phoneData
     const handleViewMore = () => {
         if (reverse === 'true') {
-            const url = `/view-category-brand`;
+            const url = `/home/view-category-brand`;
             if (category) localStorage.setItem('category', category);
             if (brand) localStorage.setItem('brand', brand);
             localStorage.setItem('reverse', reverse);
@@ -115,7 +115,7 @@ export default function DisplayedItem({
                 }
                 localStorage.setItem('category', category);
             } else {
-                const url = `/view-category-brand`;
+                const url = `/home/view-category-brand`;
                 localStorage.setItem('category', category);
                 localStorage.setItem('brand', brand);
                 router.push(url);

@@ -22,7 +22,7 @@ export default function BreadcrumbWithCustomSeparator({
     let firstt = '';
     let secondd = '';
 
-    if (reverse==="true") {
+    if (reverse === 'true') {
         if (brand) firstt = brand;
         if (category) secondd = category;
         sectionLink = './view-brand';
@@ -51,7 +51,7 @@ export default function BreadcrumbWithCustomSeparator({
         <Breadcrumb className="ml-0 mt-6 -mb-3 w-full lg:w-3/4 flex">
             <BreadcrumbList>
                 <BreadcrumbItem>
-                    <Link href="/dashboard">
+                    <Link href="/home/dashboard">
                         <BreadcrumbPage>Home</BreadcrumbPage>
                     </Link>
                 </BreadcrumbItem>

@@ -49,9 +49,21 @@ export default function Login() {
             const response = api.post('/auth/sign-up', { username, email, password }).then((data) => {
                 console.log(data.data);
 
+                const access_token = data?.data?.data?.accessToken;
                 localStorage.setItem('access_token', data?.data?.data?.accessToken);
                 localStorage.setItem('refresh_token', data?.data?.data?.refreshToken);
                 localStorage.setItem('email', email);
+
+                if (access_token) {
+                    api.get('/user/getUser', {
+                        headers: {
+                            Authorization: `Bearer ${access_token}`,
+                        },
+                    }).then((data) => {
+                        localStorage.setItem('user', JSON.stringify(data.data.data));
+                        router.push('/home/dashboard');
+                    });
+                }
             });
 
             // console.log('Send code for validation:', result);

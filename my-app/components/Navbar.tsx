@@ -29,6 +29,7 @@ import {
 import Link from 'next/link';
 import { useEffect, useState, memo, useContext } from 'react';
 import { useRouter } from 'next/navigation';
+import { useStore } from 'zustand';
 type User = {
     _id: string;
     email: string;
@@ -59,9 +60,8 @@ function Navbar() {
                 },
                 body: JSON.stringify(reqBody),
             });
-
-            localStorage.clear();
-            window.location.replace('/');
+            localStorage.removeItem('user');
+            localStorage.removeItem('access_token');
             // setUser(null);
         } catch (error) {
             console.error('Error:', error);
@@ -70,7 +70,7 @@ function Navbar() {
 
     return (
         <div className="flex items-center w-full justify-between  p-2 lg:pl-8 lg:pr-7 h-86 ">
-            <Link href="/dashboard">
+            <Link href="/home/dashboard">
                 <Button className=" p-0 lg:text-2xl text-base font-bold p-4">
                     <MonitorCheck className="lg:mr-2" size={30} />
                     <span>Brand</span>
@@ -89,7 +89,7 @@ function Navbar() {
             </div>
 
             <div className="flex items-center lg:space-x-4 ">
-                {!localStorage.getItem('access_token') ? (
+                {!localStorage.getItem('user') ? (
                     <Link href="/auth/login">
                         <Button>
                             <LogIn className="mr-2" />

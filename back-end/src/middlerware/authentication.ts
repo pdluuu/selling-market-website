@@ -15,7 +15,7 @@ export function authenticateToken(req: Request<any, any, any>, res: Response, ne
             message: 'Un-verified',
         });
 
-    jwt.verify(token, "kkk", (err: any, payload: JwtPayLoad | any) => {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET || '', (err: any, payload: JwtPayLoad | any) => {
         if (err) {
             console.log(err);
             return res.status(403).json({
@@ -77,5 +77,4 @@ export async function isAdmin(req: Request<any, any, any>, res: Response, next: 
             mes: 'Internal server error',
         });
     }
-
 }
