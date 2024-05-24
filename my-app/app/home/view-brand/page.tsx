@@ -14,8 +14,9 @@ export default function ViewBrand() {
 
     return (
         <div className="flex flex-col items-center">
+            <MenubarDemo/>
             <BreadcrumbWithCustomSeparator brand={brand} reverse={'true'} />
-            <DisplayedItem brand={brand} category="Laptop" reverse={'true'} />
+            <DisplayedItem brand={brand} category="Máy tính" reverse={'true'} />
             <DisplayedItem brand={brand} category="Tablet" reverse={'true'} />
             <DisplayedItem brand={brand} category="Điện thoại" reverse={'true'} />
             <DisplayedItem brand={brand} category="Đồng hồ" reverse={'true'} />

@@ -11,7 +11,7 @@ export default function Dashboard() {
       <MenubarDemo />
       <CarouselPlugin />
       <ListBrand />
-      <DisplayedItem category="Laptop" />
+      <DisplayedItem category="Máy tính" />
       <DisplayedItem category="Điện thoại" />
       <DisplayedItem category="Tablet" />
       <DisplayedItem category="Đồng hồ" />

@@ -8,7 +8,7 @@ export default function ManageProduct() {
         <div className="flex flex-col items-center mt-8">
             <MenubarDemo />
             <ListBrand />
-            <DisplayedItem category="Laptop" />
+            <DisplayedItem category="Máy tính" />
             <DisplayedItem category="Điện thoại" />
             <DisplayedItem category="Tablet" />
             <DisplayedItem category="Đồng hồ" />

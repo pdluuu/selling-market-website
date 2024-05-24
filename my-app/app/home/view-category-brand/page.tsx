@@ -31,7 +31,7 @@ export default function ViewCategoryBrand() {
         case 'Điện thoại':
             categoyy = 'Smart Phone';
             break;
-        case 'Laptop':
+        case 'Máy tính':
             categoyy = 'Laptop';
             break;
         case 'Đồng hồ':

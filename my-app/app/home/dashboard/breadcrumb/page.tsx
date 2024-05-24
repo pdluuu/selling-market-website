@@ -31,19 +31,19 @@ export default function BreadcrumbWithCustomSeparator({
         if (category) firstt = category;
         switch (category) {
             case 'Điện thoại':
-                sectionLink = './view-smartphone';
+                sectionLink = '/home/view-smartphone';
                 break;
-            case 'Laptop':
-                sectionLink = './view-laptop';
+            case 'Máy tính':
+                sectionLink = '/home/view-laptop';
                 break;
             case 'Đồng hồ':
-                sectionLink = './view-watch';
+                sectionLink = '/home/view-watch';
                 break;
             case 'Tablet':
-                sectionLink = './view-tablet';
+                sectionLink = '/home/view-tablet';
                 break;
             case 'Phụ kiện':
-                sectionLink = './view-accessory';
+                sectionLink = '/home/view-accessory';
                 break;
         }
     }
@@ -51,13 +51,13 @@ export default function BreadcrumbWithCustomSeparator({
         <Breadcrumb className="ml-0 mt-6 -mb-3 w-full lg:w-3/4 flex">
             <BreadcrumbList>
                 <BreadcrumbItem>
-                    <Link href="/dashboard">
+                    <Link href="/home/dashboard">
                         <BreadcrumbPage>Home</BreadcrumbPage>
                     </Link>
                 </BreadcrumbItem>
 
                 <BreadcrumbSeparator />
-                <BreadcrumbItem>
+                <BreadcrumbItem onClick={()=>{console.log(sectionLink)}}>
                     <Link href={sectionLink}>
                         <BreadcrumbPage>{firstt}</BreadcrumbPage>
                     </Link>

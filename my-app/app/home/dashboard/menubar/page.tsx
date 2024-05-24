@@ -30,24 +30,24 @@ export default function NewMenubarMenu({
     let categoryLink = '';
     switch (category) {
         case 'Điện thoại':
-            categoryLink = './view-smartphone';
+            categoryLink = '/home/view-smartphone';
             break;
         case 'Máy tính':
-            categoryLink = './view-laptop';
+            categoryLink = '/home/view-laptop';
             break;
         case 'Đồng hồ':
-            categoryLink = './view-watch';
+            categoryLink = '/home/view-watch';
             break;
         case 'Tablet':
-            categoryLink = './view-tablet';
+            categoryLink = '/home/view-tablet';
             break;
         case 'Phụ kiện':
-            categoryLink = './view-accessory';
+            categoryLink = '/home/view-accessory';
             break;
     }
     const router = useRouter();
     const handleClick = (brand: string) => {
-        const url = `/view-category-brand`;
+        const url = `/home/view-category-brand`;
         localStorage.setItem("category",category);
         localStorage.setItem("brand",brand);
         router.push(url);

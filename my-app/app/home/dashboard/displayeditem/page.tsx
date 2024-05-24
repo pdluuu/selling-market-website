@@ -42,7 +42,7 @@ export default function DisplayedItem({
         case 'Điện thoại':
             categoyy = 'Smart Phone';
             break;
-        case 'Laptop':
+        case 'Máy tính':
             categoyy = 'Laptop';
             break;
         case 'Đồng hồ':
@@ -96,7 +96,7 @@ export default function DisplayedItem({
                     case 'Điện thoại':
                         router.push('/home/view-smartphone');
                         break;
-                    case 'Laptop':
+                    case 'Máy tính':
                         router.push('/home/view-laptop');
                         break;
                     case 'Đồng hồ':
