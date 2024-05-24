@@ -245,7 +245,7 @@ class User {
                     const hash = hashSync(password, salt);
                     user.password = hash;
                     await user.save();
-                    console.log(hash);
+                    //console.log(hash);
 
                     const payload = {
                         _id: user._id,
@@ -277,14 +277,18 @@ class User {
     }
 
     async get_access_token(
-        req: Request<any, any, { refreshToken: string; email: string }>,
+        req: Request<any, any, { refreshToken: string}>,
         res: Response<ISuccessRes | IFailRes>,
     ) {
         try {
-            const { refreshToken, email } = req.body;
+            const { refreshToken} = req.body;
+            console.log(refreshToken);
+            
             if (!refreshToken) {
                 throw new MissingParameter('Missing refresh tokens');
             }
+            const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET || "");
+            const email = (payload as any).email;
             const user = await UserModel.findOne({ email: email });
             if (!user) {
                 throw new InvalidInput('Email is not exist');

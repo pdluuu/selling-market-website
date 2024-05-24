@@ -64,6 +64,9 @@ export default function Login() {
                         router.push('/home/dashboard');
                     });
                 }
+                localStorage.setItem('access_token', data?.data?.data?.accessToken);
+                localStorage.setItem('refresh_token', data?.data?.data?.refreshToken);
+                localStorage.setItem('email', email);
             });
 
             // console.log('Send code for validation:', result);

@@ -1,7 +1,7 @@
-/*import { CarouselPlugin} from "@/app/dashboard/carosel/page";
-import { MenubarDemo } from "@/app/dashboard/category/page";
-import DisplayedItem from "@/app/dashboard/displayeditem/page";
-import ListBrand from "@/app/dashboard/listbrand/page";
+import { CarouselPlugin } from '@/app/home/dashboard/carosel/page';
+import { MenubarDemo } from '@/app/home/dashboard/category/page';
+import DisplayedItem from '@/app/home/dashboard/displayeditem/page';
+import ListBrand from '@/app/home/dashboard/listbrand/page';
 
 export default function ManageProduct() {
     return (
@@ -14,5 +14,5 @@ export default function ManageProduct() {
             <DisplayedItem category="Đồng hồ" />
             <DisplayedItem category="Phụ kiện" />
         </div>
-    )
-}*/
+    );
+}
