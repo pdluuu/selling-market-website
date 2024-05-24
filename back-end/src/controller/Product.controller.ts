@@ -21,34 +21,42 @@ import { IProduct, IViewProduct } from "../models/Product.model";
 import { config } from "dotenv";
 import { authenticateRole } from "../middlerware/role.authentication";
 import { crossOriginResourcePolicy } from "helmet";
+import userServices from "../services/User.services";
 config();
 class Product {
   async createProduct(
-    req: Request<any, any, IProduct>,
+    req: any,
     res: Response<ISuccessRes | IFailRes>
   ) {
     try {
-      const { name, brand, discount, version, price, category, images, items } =
-        req.body;
-
-      if (!name || !brand || !price || !category || !images) {
-        throw new MissingParameter();
+      const { userId } = req.body;
+      const result = await userServices.getUserById(userId);
+      if(result?.role==='admin'||result?.role==='staff'){
+        const { name, brand, discount, version, price, category, images, items } =
+          req.body;
+        if (!name || !brand || !price || !category || !images) {
+          throw new MissingParameter();
+        }
+  
+        const product = await productServices.createProduct(
+          name,
+          brand,
+          discount,
+          version,
+          price,
+          category,
+          images,
+          items
+        );
+  
+        return res.status(200).json({
+          message: "Create successfully",
+        });
+      } else{
+        return res.status(403).json({
+          message: "Access denied",
+        });
       }
-
-      const product = await productServices.createProduct(
-        name,
-        brand,
-        discount,
-        version,
-        price,
-        category,
-        images,
-        items
-      );
-
-      return res.status(200).json({
-        message: "Create successfully",
-      });
     } catch (error: any) {
       console.log(error);
 
@@ -62,13 +70,20 @@ class Product {
   }
   async deleteProduct(req: Request, res: Response<ISuccessRes | IFailRes>) {
     try {
-      authenticateRole(req, res, async () => {
-        const { id } = req.body;
-        const product = productServices.deleteProduct(id);
+        const {userId} = req.body;
+        const result = await userServices.getUserById(userId);
+        if(result?.role==='admin'||result?.role==='staff'){
+        const { _id } = req.body;
+        const product = productServices.deleteProduct(_id);
         return res.status(200).json({
           message: "Delete successfully",
         });
-      });
+      }else{
+        return res.status(403).json({
+          message: "Access denied",
+        });
+      }
+      
     } catch (error: any) {
       // Logger.error(error);
       console.log(error);
@@ -82,13 +97,15 @@ class Product {
     }
   }
   async updateProduct(
-    req: Request<any, any, IProduct>,
+    req: Request,
     res: Response<ISuccessRes | IFailRes>
   ) {
     try {
-      authenticateRole(req, res, async () => {
+      const {userId} = req.body;
+        const result = await userServices.getUserById(userId);
+        if(result?.role==='admin'||result?.role==='staff'){
         const {
-          id,
+          _id,
           name,
           brand,
           discount,
@@ -103,12 +120,27 @@ class Product {
           throw new MissingParameter();
         }
 
-        const product = await productServices.updateProduct(req.body);
+        const product = await productServices.updateProduct({
+          _id,
+          name,
+          brand,
+          discount,
+          version,
+          price,
+          category,
+          images,
+          items,
+        });
 
         return res.status(200).json({
           message: "Update successfully",
         });
-      });
+      } else{
+        return res.status(403).json({
+          message: "Access denied",
+        });
+      }
+      
     } catch (error: any) {
       // Logger.error(error);
       console.log(error);
