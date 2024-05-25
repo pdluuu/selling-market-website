@@ -16,7 +16,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Image from 'next/image';
 import tag from '../../../Images/tag3.png';
-import { BellRing, CircleDollarSign } from 'lucide-react';
+import { BellRing, CircleDollarSign, Minus, Plus } from 'lucide-react';
 import { Item } from '@radix-ui/react-dropdown-menu';
 interface IItem {
     _id: string;
@@ -78,6 +78,7 @@ export default function Page({ item }: { item: IItem }) {
     // });
 
     const [price, setPrice] = useState<number>();
+    const [quantity, setQuantity] = useState<number>(1);
 
     useEffect(() => {
         setPrice(item?.price);
@@ -143,7 +144,7 @@ export default function Page({ item }: { item: IItem }) {
                             <CarouselNext className=" relative" />
                         </Carousel>
                         <div className="">
-                            <DialogTitle>Product : {item?.name}</DialogTitle>
+                            <DialogTitle>Sản phẩm : {item?.name}</DialogTitle>
                             <div className=" grid grid-cols-3 gap-3 mt-4 mb-4">
                                 {item?.version.map((version, index) => (
                                     <Button
@@ -157,11 +158,11 @@ export default function Page({ item }: { item: IItem }) {
                                 ))}
                             </div>
                             <Card>
-                                <CardHeader className="">
+                                <CardHeader className=" space-y-3">
                                     <div className="flex items-center">
                                         <CircleDollarSign />
                                         <div className="ml-4">
-                                            <p className="text-sm font-medium leading-none">Total price:</p>
+                                            <p className="text-sm font-medium leading-none">Tổng tiền:</p>
                                             <div className="flex items-baseline">
                                                 <p className="text-sm text-muted-foreground line-through">
                                                     {item?.price + 400000} VND
@@ -173,13 +174,35 @@ export default function Page({ item }: { item: IItem }) {
                                             </div>
                                         </div>
                                     </div>
+                                    <div className='h-[1px] border'></div>
+                                    <div className='ml-10'>
+                                        <p className="text-sm font-medium leading-none">Số lượng:</p>
+                                        <div className=" mt-2 h-8 flex border items-center w-24 justify-between">
+                                            <Button className='p-1 rounded-none w-8 h-8 border' variant={"outline"}
+                                                disabled={quantity === 1}
+                                                onClick={() => {
+                                                    setQuantity(quantity - 1);
+                                                }}
+                                            >
+                                                <Minus size={10}/>
+                                            </Button>
+                                            <p >{quantity}</p>
+                                            <Button className='p-1 rounded-none w-8 h-8 border' variant={"outline"}
+                                                onClick={() => {
+                                                    setQuantity(quantity + 1);
+                                                }}
+                                            >
+                                                <Plus size={10} />
+                                            </Button>
+                                        </div>
+                                    </div>
                                 </CardHeader>
                                 <CardContent className="flex gap-3">
                                     <Button type="submit" className=" flex-1">
-                                        Buy now
+                                        Mua ngay
                                     </Button>
                                     <Button type="submit" className="flex-1">
-                                        Add to cart
+                                        Thêm vào giỏ hàng 
                                     </Button>
                                 </CardContent>
                             </Card>
