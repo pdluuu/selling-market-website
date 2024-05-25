@@ -14,8 +14,10 @@ export default function RequestItem({ request }: { request: IListRegister }) {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
-                }
+                },
             );
+            console.log(response);
+            
             setShowDialog(false);
         } catch (error) {
             console.error('Error accepting request:', error);
@@ -40,9 +42,9 @@ export default function RequestItem({ request }: { request: IListRegister }) {
         }
     }
     return (
-        <Dialog>
+        <Dialog open={showDialog} onOpenChange={setShowDialog}>
             <DialogTrigger asChild>
-                <div className="border p-4 mt-8">
+                <div className="border p-4 mt-8" onClick={() => setShowDialog(true)}>
                     <p>UserId: {request.userId}</p>
                     <p>Email: {request.email}</p>
                     <p>Role: {request.role}</p>

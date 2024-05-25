@@ -494,10 +494,12 @@ class UserServices {
             if (!updateRole) {
                 return 404;
             } else {
-                await ListRegisterModel.findOneAndUpdate({ userId: id }, { hide: true }, { new: true });
                 try {
-                    const user = await ListRegisterModel.findById({ userId: id });
+                    //const user = await ListRegisterModel.findById({ userId: id });
+                    const user = await ListRegisterModel.findOneAndUpdate({ userId: id, role: type }, { hide: true }, { new: true });
                     if (user) {
+                        console.log(user);
+
                         const email = user.email;
                         var nodemailer = require('nodemailer');
                         var transporter = nodemailer.createTransport({
@@ -516,13 +518,14 @@ class UserServices {
                             subject: 'Sending Email accept request',
                             text: 'Congratulations',
                         };
+                        await transporter.sendMail(mailOptions);
                         return 200;
                     }
 
                 } catch (error) {
                     return 500;
                 }
-               
+
             }
         } catch (error: any) {
             return 500;
