@@ -11,6 +11,7 @@ import { phoneData } from '../sample-data';
 import { useRouter } from 'next/navigation';
 import tag from '../../../../Images/tag3.png';
 import { useEffect, useState } from 'react';
+import Page from '@/app/product/details/page';
 
 type ProductInfo = {
     _id: string;
@@ -18,7 +19,7 @@ type ProductInfo = {
     discount: number;
     price: number;
     brand: string;
-    version: string[];
+    version: any[];
     category: string;
     images: string[];
     items: string[];
@@ -135,7 +136,7 @@ export default function DisplayedItem({
                     {listProduct?.length !== 0 ? (
                         listProduct?.map((product, index) => (
                             <CarouselItem key={index} className="pl-1  basis-1/3 lg:basis-1/5 ">
-                                <div className="p-[3px] md:p-1  ">
+                                {/* <div className="p-[3px] md:p-1  ">
                                     <Card className="">
                                         {product.discount === 0 ? (
                                             <div></div>
@@ -165,7 +166,8 @@ export default function DisplayedItem({
                                             </p>
                                         </CardContent>
                                     </Card>
-                                </div>
+                                </div> */}
+                                <Page item={product}/>
                             </CarouselItem>
                         ))
                     ) : (

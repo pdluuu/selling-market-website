@@ -1,300 +1,155 @@
-'use client';
-
-import * as React from 'react';
+"use client"
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
-    ColumnDef,
-    ColumnFiltersState,
-    SortingState,
-    VisibilityState,
-    flexRender,
-    getCoreRowModel,
-    getFilteredRowModel,
-    getPaginationRowModel,
-    getSortedRowModel,
-    useReactTable,
-} from '@tanstack/react-table';
-import { ArrowUpDown, ChevronDown, MoreHorizontal, ShoppingCart } from 'lucide-react';
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
+import React, { useState } from "react"
+import Link from "next/link";
 
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import {
-    DropdownMenu,
-    DropdownMenuCheckboxItem,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import Header from '../header/page';
-import { MenubarDemo } from '../home/dashboard/category/page';
-import Footer from '../footer/page';
-
-const data: Payment[] = [
-    {
-        id: 'm5gr84i9',
-        amount: 316,
-        status: 'success',
-        email: 'ken99@yahoo.com',
-    },
-    {
-        id: '3u1reuv4',
-        amount: 242,
-        status: 'success',
-        email: 'Abe45@gmail.com',
-    },
-    {
-        id: 'derv1ws0',
-        amount: 837,
-        status: 'processing',
-        email: 'Monserrat44@gmail.com',
-    },
-    {
-        id: '5kma53ae',
-        amount: 874,
-        status: 'success',
-        email: 'Silas22@gmail.com',
-    },
-    {
-        id: 'bhqecj4p',
-        amount: 721,
-        status: 'failed',
-        email: 'carmella@hotmail.com',
-    },
-];
-
-export type Payment = {
+interface CartItem {
     id: string;
-    amount: number;
-    status: 'pending' | 'processing' | 'success' | 'failed';
-    email: string;
-};
+    price: number;
+    name: string;
+    class: string[];
+    number: number;
+    imageLink: string;
+    checked: boolean;
+}
 
-export const columns: ColumnDef<Payment>[] = [
+const carts = [
     {
-        id: 'select',
-        header: ({ table }) => (
-            <Checkbox
-                checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
-                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                aria-label="Select all"
-            />
-        ),
-        cell: ({ row }) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Select row"
-            />
-        ),
-        enableSorting: false,
-        enableHiding: false,
+        id: "728ed52f",
+        price: 100,
+        name: "pending",
+        class: ["black"],
+        number: 1,
+        imageLink: "https://cdn.tgdd.vn/Products/Images/42/323002/realme-c65-thumb-1-600x600.jpg",
+        checked: false,
     },
     {
-        accessorKey: 'status',
-        header: 'Status',
-        cell: ({ row }) => <div className="capitalize">{row.getValue('status')}</div>,
+        id: "728ed52f",
+        price: 10,
+        name: "pending",
+        class: ["black"],
+        number: 1,
+        imageLink: "https://cdn.tgdd.vn/Products/Images/42/323002/realme-c65-thumb-1-600x600.jpg",
     },
     {
-        accessorKey: 'email',
-        header: ({ column }) => {
-            return (
-                <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-                    Email
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            );
-        },
-        cell: ({ row }) => <div className="lowercase">{row.getValue('email')}</div>,
+        id: "728ed22f",
+        price: 10,
+        name: "pending",
+        class: ["black"],
+        number: 1,
+        imageLink: "https://cdn.tgdd.vn/Products/Images/42/323002/realme-c65-thumb-1-600x600.jpg",
+        checked: false,
     },
-    {
-        accessorKey: 'amount',
-        header: () => <div className="text-right">Amount</div>,
-        cell: ({ row }) => {
-            const amount = parseFloat(row.getValue('amount'));
+]
 
-            // Format the amount as a dollar amount
-            const formatted = new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-            }).format(amount);
+export default function Cart() {
+    const [cartItems, setCartItems] = useState(carts);
 
-            return <div className="text-right font-medium">{formatted}</div>;
-        },
-    },
-    {
-        id: 'actions',
-        enableHiding: false,
-        cell: ({ row }) => {
-            const payment = row.original;
+    const increaseNumber = (id: string) => {
+        setCartItems(prevItems =>
+            prevItems.map(item =>
+                item.id === id ? { ...item, number: item.number + 1 } : item
+            )
+        );
+    };
 
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>
-                            Copy payment ID
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>View customer</DropdownMenuItem>
-                        <DropdownMenuItem>View payment details</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            );
-        },
-    },
-];
+    // const decreaseNumber = (id: string) => {
+    //     setCartItems((prevItems: CartItem[]) =>
+    //         prevItems.map(item => {
+    //             if (item.id === id) {
+    //                 const updatedItem = { ...item, number: item.number - 1 };
+    //                 if (updatedItem.number === 0) {
+    //                     return null;
+    //                 }
+    //                 return updatedItem;
+    //             }
+    //             return item;
+    //         }).filter(Boolean) as CartItem[]
+    //     );
+    // };
 
-type Product = {
-  _id: string;
-  name: string;
-  discount: number;
-  price: number;
-  brand: string;
-  version: string[];
-  items: string[];
-  category: string;
-  images: string[];
-};
+    const [selectAll, setSelectAll] = useState(false);
+    const clickCheckbox = (id: string) => {
+        setCartItems(prevItems =>
+            prevItems.map(item =>
+                item.id === id ? { ...item, checked: !item.checked } : item
+            )
+        );
+    };
 
-export default function DataTableDemo() {
-    const [sorting, setSorting] = React.useState<SortingState>([]);
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-    const [rowSelection, setRowSelection] = React.useState({});
+    const handleSelectAll = () => {
+        setSelectAll(!selectAll);
+        setCartItems(prevItems =>
+            prevItems.map(item => ({ ...item, checked: !selectAll }))
+        );
+    };
 
-    const table = useReactTable({
-        data,
-        columns,
-        onSortingChange: setSorting,
-        onColumnFiltersChange: setColumnFilters,
-        getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        getSortedRowModel: getSortedRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
-        onColumnVisibilityChange: setColumnVisibility,
-        onRowSelectionChange: setRowSelection,
-        state: {
-            sorting,
-            columnFilters,
-            columnVisibility,
-            rowSelection,
-        },
-    });
+    const handleDeleteSelected = () => {
+        setCartItems(prevItems =>
+            prevItems.filter(item => !item.checked)
+        );
+    };
 
+    const calculateTotal = () => {
+        return cartItems.reduce((total, item) => {
+            if (selectAll || item.checked) {
+                return total + item.price * item.number;
+            }
+            return total;
+        }, 0);
+    };
+
+    const handlePayment = () => {
+        const selectedItems = cartItems.filter(item => item.checked);
+        const queryString = selectedItems.map(item => `selectedItems[]=${encodeURIComponent(item.id)}`).join('&');
+        window.location.href = `/payment?${queryString}`;
+    };
     return (
-        <div>
-            <Header />
-            <MenubarDemo />
-            <div className="mx-60 my-8">
-                <h1 className="flex uppercase font-bold items-center">
-                    <ShoppingCart size={30} className="mr-1" />
-                    Giỏ hàng
-                </h1>
-                <div className="flex items-center py-4">
-                    <Input
-                        placeholder="Filter emails..."
-                        value={(table.getColumn('email')?.getFilterValue() as string) ?? ''}
-                        onChange={(event) => table.getColumn('email')?.setFilterValue(event.target.value)}
-                        className="max-w-sm"
-                    />
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="ml-auto">
-                                Columns <ChevronDown className="ml-2 h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            {table
-                                .getAllColumns()
-                                .filter((column) => column.getCanHide())
-                                .map((column) => {
-                                    return (
-                                        <DropdownMenuCheckboxItem
-                                            key={column.id}
-                                            className="capitalize"
-                                            checked={column.getIsVisible()}
-                                            onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                                        >
-                                            {column.id}
-                                        </DropdownMenuCheckboxItem>
-                                    );
-                                })}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
-                <div className="rounded-md border">
-                    <Table>
-                        <TableHeader>
-                            {table.getHeaderGroups().map((headerGroup) => (
-                                <TableRow key={headerGroup.id}>
-                                    {headerGroup.headers.map((header) => {
-                                        return (
-                                            <TableHead key={header.id}>
-                                                {header.isPlaceholder
-                                                    ? null
-                                                    : flexRender(header.column.columnDef.header, header.getContext())}
-                                            </TableHead>
-                                        );
-                                    })}
-                                </TableRow>
-                            ))}
-                        </TableHeader>
-                        <TableBody>
-                            {table.getRowModel().rows?.length ? (
-                                table.getRowModel().rows.map((row) => (
-                                    <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                                        {row.getVisibleCells().map((cell) => (
-                                            <TableCell key={cell.id}>
-                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                ))
-                            ) : (
-                                <TableRow>
-                                    <TableCell colSpan={columns.length} className="h-24 text-center">
-                                        No results.
-                                    </TableCell>
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
-                </div>
-                <div className="flex items-center justify-end space-x-2 py-4">
-                    <div className="flex-1 text-sm text-muted-foreground">
-                        {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length}{' '}
-                        row(s) selected.
-                    </div>
-                    <div className="space-x-2">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => table.previousPage()}
-                            disabled={!table.getCanPreviousPage()}
-                        >
-                            Previous
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => table.nextPage()}
-                            disabled={!table.getCanNextPage()}
-                        >
-                            Next
-                        </Button>
-                    </div>
+        <div className="w-5/6 mt-20 mx-auto">
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead><Checkbox checked={selectAll} onClick={handleSelectAll} /></TableHead>
+                        <TableHead>Image</TableHead>
+                        <TableHead className="w-[100px]">Name</TableHead>
+                        <TableHead>Phan loai</TableHead>
+                        <TableHead>So luong</TableHead>
+                        <TableHead className="text-right">Gia</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {cartItems.map((cart) => (
+                        <TableRow key={cart.id}>
+                            <TableCell><Checkbox checked={cart.checked} onClick={() => clickCheckbox(cart.id)} /></TableCell>
+                            <TableCell className="w-1/6 h-1/6"><img src={cart.imageLink} alt="Anh san pham" /></TableCell>
+                            <TableCell className="font-medium">{cart.name}</TableCell>
+                            <TableCell>{cart.class}</TableCell>
+                            <TableCell><div className="flex gap-2 items-center">
+                                <Button onClick={() => decreaseNumber(cart.id)}>-</Button>
+                                {cart.number}
+                                <Button onClick={() => increaseNumber(cart.id)}>+</Button>
+                            </div></TableCell>
+                            <TableCell className="text-right">{cart.price}</TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+            <div className="flex justify-between">
+                <Button onClick={handleDeleteSelected}>Xoa</Button>
+                <div className="flex gap-10 items-center">
+                    Total: {calculateTotal()}
+                    <Button onClick={handlePayment}>Thanh Toan</Button>
                 </div>
             </div>
-            <Footer />
         </div>
-    );
+    )
 }
