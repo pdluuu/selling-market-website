@@ -254,7 +254,7 @@ class UserServices {
             const cart = await ShoppingCartModel.findOne({ user_id: userId });
             if (cart) {
                 const cartProduct = cart.cartProduct.find(item => item.product_id.toString() === productId);
-                if(cartProduct){
+                if (cartProduct) {
                     cartProduct.quantity = quantity;
                 }
                 await cart.save();
@@ -269,12 +269,14 @@ class UserServices {
         try {
             const cart = await ShoppingCartModel.findOneAndUpdate(
                 { user_id: userId },
-                {$pull: {
-                    cartProduct: {product_id: productId}
-                }},
-                {new: true}
+                {
+                    $pull: {
+                        cartProduct: { product_id: productId }
+                    }
+                },
+                { new: true }
             );
-            if(cart){
+            if (cart) {
                 return cart.cartProduct;
             }
         } catch (error) {
@@ -302,7 +304,7 @@ class UserServices {
                     message: 'Order not found',
                 };
             }
-          } catch (error) {
+        } catch (error) {
             return {
                 success: false,
                 message: 'error',
@@ -493,7 +495,34 @@ class UserServices {
                 return 404;
             } else {
                 await ListRegisterModel.findOneAndUpdate({ userId: id }, { hide: true }, { new: true });
-                return 200;
+                try {
+                    const user = await ListRegisterModel.findById({ userId: id });
+                    if (user) {
+                        const email = user.email;
+                        var nodemailer = require('nodemailer');
+                        var transporter = nodemailer.createTransport({
+                            service: 'gmail',
+                            host: 'smtp.gmail.com',
+                            port: 587,
+                            auth: {
+                                user: 'mailinhv534@gmail.com',
+                                pass: 'nrydytummnqecfpn',
+                            },
+                        });
+
+                        var mailOptions = {
+                            from: 'mailinhv534@gmail.com',
+                            to: email,
+                            subject: 'Sending Email accept request',
+                            text: 'Congratulations',
+                        };
+                        return 200;
+                    }
+
+                } catch (error) {
+                    return 500;
+                }
+               
             }
         } catch (error: any) {
             return 500;

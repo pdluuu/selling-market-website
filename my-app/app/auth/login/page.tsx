@@ -103,14 +103,15 @@ export default function Login() {
         const result = await response.json();
         // setUser(result.data);
         console.log("Success get info:", result.data);
-        localStorage.setItem("user", JSON.stringify(result.data));
-        router.push("/");
+        if (result.data.role === 'admin') {
+          router.push('/admin/dashboard');
+        } else router.push('/home/dashboard');
         // setUser(result.data);
       } catch (error) {
         console.error("Error:", error);
       }
 
-      
+
 
     } catch (e) {
       console.log(e);

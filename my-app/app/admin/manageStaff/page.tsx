@@ -8,6 +8,8 @@ import StaffItem from './staff/page';
 import { IUser } from '../../../../back-end/src/models/User.model';
 import axios from 'axios';
 import { headers } from 'next/headers';
+import Header from '../header/page';
+import Sidebar from '../sidebar/page';
 
 export default function ManageOrder() {
     //localStorage.setItem('access_token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjQ2Y2QwYjU1NDczMDljMDAxMGNkYTQiLCJlbWFpbCI6ImFkbWluMUBnbWFpbC5jb20iLCJpYXQiOjE3MTY0NjAzNzR9.WlzBBJ4yovP01iVOe-R_ZefzfEXaFPLVXUxHBJpvXrk');
@@ -46,35 +48,43 @@ export default function ManageOrder() {
 
 
     return (
-        <div className="flex h-12 justify-start items-center border border-y w-full">
-            <div className="flex">
-                <Menubar className="border-none">
-                    <MenubarMenu>
-                        <div className="flex gap-16 ml-56">
-                            <MenubarTrigger onClick={() => setRoleFilter('all')}>Tất cả</MenubarTrigger>
-
-                            <MenubarTrigger onClick={() => setRoleFilter('staff')}>
-                                <MenubarShortcut>
-                                    <SquareUser />
-                                </MenubarShortcut>{' '}
-                                Staff
-                            </MenubarTrigger>
-
-                            <MenubarTrigger onClick={() => setRoleFilter('deliver')}>
-                                <MenubarShortcut>
-                                    <Truck />
-                                </MenubarShortcut>{' '}
-                                Deliver
-                            </MenubarTrigger>
-                        </div>
-                    </MenubarMenu>
-                </Menubar>
+        <div className='w-full'>
+            <div className="w-full">
+                <Header />
             </div>
-            <div className="flex flex-row gap-16 content-center">
-                {staffs.map((staff) => (
-                    <StaffItem key={staff._id} staff={staff} />
-                ))}
+            <div className="w-5/6 mx-auto mt-4">
+                <Sidebar />
             </div>
+            <div className="flex h-12 justify-start items-center border border-y w-full mt-8">
+                <div className="flex">
+                    <Menubar className="border-none">
+                        <MenubarMenu>
+                            <div className="flex gap-16 ml-56">
+                                <MenubarTrigger onClick={() => setRoleFilter('all')}>Tất cả</MenubarTrigger>
+
+                                <MenubarTrigger onClick={() => setRoleFilter('staff')}>
+                                    <MenubarShortcut>
+                                        <SquareUser />
+                                    </MenubarShortcut>{' '}
+                                    Staff
+                                </MenubarTrigger>
+
+                                <MenubarTrigger onClick={() => setRoleFilter('deliver')}>
+                                    <MenubarShortcut>
+                                        <Truck />
+                                    </MenubarShortcut>{' '}
+                                    Deliver
+                                </MenubarTrigger>
+                            </div>
+                        </MenubarMenu>
+                    </Menubar>
+                </div>
+            </div>
+            <div className="flex flex-row gap-16 content-center ml-8 mx-auto">
+                    {staffs.map((staff) => (
+                        <StaffItem key={staff._id} staff={staff} />
+                    ))}
+                </div>
         </div>
     );
 }

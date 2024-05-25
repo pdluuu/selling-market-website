@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react';
 import OrderItem from './order/page';
 import { IOrder } from '../../../../back-end/src/models/Order.model';
 import axios from 'axios';
+import Header from '../header/page';
+import Sidebar from '../sidebar/page';
 
 export default function ManageOrder() {
     const [orders, setOrders] = useState<IOrder[]>([]);
@@ -42,46 +44,54 @@ export default function ManageOrder() {
     }, [statusFilter]);
 
     return (
-        <div className="flex h-12 justify-center items-center border border-y w-full">
-            <Menubar className="border-none">
-                <MenubarMenu>
-                    <div className="flex gap-16">
-                        <MenubarTrigger onClick={() => setStatusFilter('all')}>Tất cả</MenubarTrigger>
+        <div>
+            <div className="w-full">
+                <Header />
+            </div>
+            <div className="w-5/6 mx-auto mt-8">
+                <Sidebar />
+            </div>
+            <div className="flex h-12 justify-center items-center border border-y w-full mt-8">
+                <Menubar className="border-none">
+                    <MenubarMenu>
+                        <div className="flex gap-16">
+                            <MenubarTrigger onClick={() => setStatusFilter('all')}>Tất cả</MenubarTrigger>
 
-                        <MenubarTrigger onClick={() => setStatusFilter('confirm')}>
-                            <MenubarShortcut>
-                                <FolderClosed />
-                            </MenubarShortcut>{' '}
-                            Đang chờ xác thực
-                        </MenubarTrigger>
+                            <MenubarTrigger onClick={() => setStatusFilter('confirm')}>
+                                <MenubarShortcut>
+                                    <FolderClosed />
+                                </MenubarShortcut>{' '}
+                                Đang chờ xác thực
+                            </MenubarTrigger>
 
-                        <MenubarTrigger onClick={() => setStatusFilter('package')}>
-                            <MenubarShortcut>
-                                <Gift />
-                            </MenubarShortcut>{' '}
-                            Đang chuẩn bị hàng
-                        </MenubarTrigger>
+                            <MenubarTrigger onClick={() => setStatusFilter('package')}>
+                                <MenubarShortcut>
+                                    <Gift />
+                                </MenubarShortcut>{' '}
+                                Đang chuẩn bị hàng
+                            </MenubarTrigger>
 
-                        <MenubarTrigger onClick={() => setStatusFilter('transition')}>
-                            <MenubarShortcut>
-                                <Truck />
-                            </MenubarShortcut>{' '}
-                            Đang giao hàng
-                        </MenubarTrigger>
+                            <MenubarTrigger onClick={() => setStatusFilter('transition')}>
+                                <MenubarShortcut>
+                                    <Truck />
+                                </MenubarShortcut>{' '}
+                                Đang giao hàng
+                            </MenubarTrigger>
 
-                        <MenubarTrigger onClick={() => setStatusFilter('delivered')}>
-                            <MenubarShortcut>
-                                <Star />
-                            </MenubarShortcut>{' '}
-                            Giao hàng thành công
-                        </MenubarTrigger>
-                    </div>
-                </MenubarMenu>
-            </Menubar>
-            <div className="flex flex-row gap-16 content-center">
-                {orders.map((order) => (
-                    <OrderItem key={order._id} order={order} />
-                ))}
+                            <MenubarTrigger onClick={() => setStatusFilter('delivered')}>
+                                <MenubarShortcut>
+                                    <Star />
+                                </MenubarShortcut>{' '}
+                                Giao hàng thành công
+                            </MenubarTrigger>
+                        </div>
+                    </MenubarMenu>
+                </Menubar>
+                <div className="flex flex-row gap-16 content-center">
+                    {orders.map((order) => (
+                        <OrderItem key={order._id} order={order} />
+                    ))}
+                </div>
             </div>
         </div>
     );
