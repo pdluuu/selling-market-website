@@ -2,6 +2,9 @@ import mongoose, { Schema, Document } from "mongoose";
 
 export interface IShoppingCartProduct {
     product_id: string;
+    name: string;
+    image: string;
+    version: [string];
     quantity: number;
 }
 
@@ -17,6 +20,10 @@ const ShoppingCartSchema: Schema = new Schema(
         cartProduct: [
             {
                 product_id: { type: String, ref: "Product", require: true },
+                image: {type: String, require: true },
+                name: {type: String, require: true},
+                version: {type: [String], require: true },
+                price: { type: Number, require: true},
                 quantity: { type: Number, require: true, default: 1 },
             },
         ],

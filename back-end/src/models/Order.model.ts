@@ -29,7 +29,7 @@ const OrderSchema: Schema = new Schema({
     address: { type: String, required: true },
     deliver_id: { type: String, ref: 'User', required: true },
     phoneNumber: { type: String, required: true },
-    status: {type: String, requires: true},
+    status: { type : String, require: true},
     orderProduct: [
         {
 

@@ -14,6 +14,8 @@ userRouter.post('/agreeRegis', authenticateToken, isAdmin, user.AgreeRegister);
 userRouter.post('/deleteRegis', authenticateToken, isAdmin, user.DeleteRegister);
 userRouter.post('/list-register', authenticateToken, user.ListRegister);
 userRouter.get('/view-cart', authenticateToken, user.ViewCart);
+userRouter.get('/view-cart-of-user', authenticateToken, user.ViewCartOfUser);
+userRouter.put('/update-quantity',authenticateToken, user.UpdateQuantity);
 userRouter.get('/checkout', authenticateToken, user.CheckOut);
 userRouter.post('/purchers-products', authenticateToken, user.PurchersProduct);
 export default userRouter;

@@ -144,7 +144,7 @@ class User {
             return res.status(Err.statusCode).json({ message: Err.message });
         }
     }
-    async googleAuth() {}
+    async googleAuth() { }
 
     async password_getcode(req: Request<any, any, IForgotPassEmail>, res: Response<ISuccessRes | IFailRes>) {
         const { email } = req.body;
@@ -277,13 +277,13 @@ class User {
     }
 
     async get_access_token(
-        req: Request<any, any, { refreshToken: string}>,
+        req: Request<any, any, { refreshToken: string }>,
         res: Response<ISuccessRes | IFailRes>,
     ) {
         try {
-            const { refreshToken} = req.body;
+            const { refreshToken } = req.body;
             console.log(refreshToken);
-            
+
             if (!refreshToken) {
                 throw new MissingParameter('Missing refresh tokens');
             }
@@ -668,22 +668,17 @@ class User {
             });
         }
     }
-    async PurchersProduct(req: Request, res: Response) {
+
+    async ViewCartOfUser(req: Request, res: Response) {
         try {
             const { userId } = req.body;
-            const { productId } = req.body;
             console.log(userId);
-            const product_purchers = await userServices.purchersProduct(userId, productId);
+            const cartItems = await userServices.viewCartOfUser(userId);
+            return res.status(200).json({
+                success: true,
+                data: cartItems,
+            });
 
-            if (product_purchers?.success) {
-                return res.status(200).json({
-                    message: product_purchers.message,
-                });
-            } else {
-                return res.status(400).json({
-                    message: 'no okxx',
-                });
-            }
         } catch (error) {
             console.error('Error retrieving cart items:', error);
             return res.status(500).json({
@@ -692,6 +687,48 @@ class User {
             });
         }
     }
+
+    async UpdateQuantity(req: Request, res: Response) {
+        try {
+            const {userId, productId, quantity} = req.body;
+            const cartItems = await userServices.updateQuantity(userId, productId, quantity);
+            return res.status(200).json({
+                success: true,
+                data: cartItems,
+            });
+        } catch (error) {
+            console.error('Error retrieving cart items:', error);
+            return res.status(500).json({
+                success: false,
+                message: 'Internal server error',
+            });
+        }
+    }
+
+    async PurchersProduct(req: Request, res: Response) {
+    try {
+        const { userId } = req.body;
+        const { productId } = req.body;
+        console.log(userId);
+        const product_purchers = await userServices.purchersProduct(userId, productId);
+
+        if (product_purchers?.success) {
+            return res.status(200).json({
+                message: product_purchers.message,
+            });
+        } else {
+            return res.status(400).json({
+                message: 'no okxx',
+            });
+        }
+    } catch (error) {
+        console.error('Error retrieving cart items:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+        });
+    }
+}
 }
 const user = new User();
 export default user;

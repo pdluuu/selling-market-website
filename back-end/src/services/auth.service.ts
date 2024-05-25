@@ -290,11 +290,10 @@ class AuthService {
             console.log(error);
         }
     }
-
-    async authGoogle(email: string,
-
-        name: string,
-        image: string) { }
+    async authGoogle( email : string, 
+        
+        name : string,
+        image : string) {}
 }
 
 const authService = new AuthService();
