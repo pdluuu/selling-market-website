@@ -144,7 +144,7 @@ class User {
             return res.status(Err.statusCode).json({ message: Err.message });
         }
     }
-    async googleAuth() { }
+    async googleAuth() {}
 
     async password_getcode(req: Request<any, any, IForgotPassEmail>, res: Response<ISuccessRes | IFailRes>) {
         const { email } = req.body;
@@ -692,6 +692,23 @@ class User {
         try {
             const {userId, productId, quantity} = req.body;
             const cartItems = await userServices.updateQuantity(userId, productId, quantity);
+            return res.status(200).json({
+                success: true,
+                data: cartItems,
+            });
+        } catch (error) {
+            console.error('Error retrieving cart items:', error);
+            return res.status(500).json({
+                success: false,
+                message: 'Internal server error',
+            });
+        }
+    }
+    
+    async RemoveProduct(req: Request, res: Response) {
+        try {
+            const {userId, productId} = req.body;
+            const cartItems = await userServices.removeProduct(userId, productId);
             return res.status(200).json({
                 success: true,
                 data: cartItems,

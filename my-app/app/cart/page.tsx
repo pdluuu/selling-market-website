@@ -88,7 +88,7 @@ export default function Cart() {
             updateQuantity(_id, item.quantity - 1);
         } else if (item && item.quantity === 1) {
             // Handle removing the item from the cart if the quantity is 0
-            updateQuantity(_id, 0);
+            removeProduct(item.product_id);
         }
     };
 
@@ -107,10 +107,32 @@ export default function Cart() {
         );
     };
 
+    const removeProduct = async (_id: string) => {
+        const token = localStorage.getItem('refresh_token');
+        try {
+            const response = await axios.delete(
+                'http://localhost:8080/api/v1/user/remove-product',
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    data: {
+                        productId: _id
+                    }
+                }
+            );
+            setCartItems(response.data.data);
+        } catch (error) {
+            console.error('Error removing the product:', error);
+        }
+    };
+
     const handleDeleteSelected = () => {
-        setCartItems(prevItems =>
-            prevItems.filter(item => !item.checked)
-        );
+        cartItems.forEach(item => {
+            if (item.checked) {
+                removeProduct(item.product_id);
+            }
+        });
     };
 
     const calculateTotal = () => {

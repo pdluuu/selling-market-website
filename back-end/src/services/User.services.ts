@@ -265,6 +265,23 @@ class UserServices {
             throw error;
         }
     }
+    async removeProduct(userId: string, productId: string) {
+        try {
+            const cart = await ShoppingCartModel.findOneAndUpdate(
+                { user_id: userId },
+                {$pull: {
+                    cartProduct: {product_id: productId}
+                }},
+                {new: true}
+            );
+            if(cart){
+                return cart.cartProduct;
+            }
+        } catch (error) {
+            console.error('Error retrieving cart items:', error);
+            throw error;
+        }
+    }
 
     async checkOut(userId: string, productId: string) {
         try {
@@ -279,14 +296,13 @@ class UserServices {
                         };
                     }
                 }
-
             } else {
                 return {
                     success: false,
                     message: 'Order not found',
                 };
             }
-        } catch (error) {
+          } catch (error) {
             return {
                 success: false,
                 message: 'error',
@@ -308,7 +324,6 @@ class UserServices {
     //                     };
     //                 }
     //             }
-
     //         } else {
     //             return {
     //                 success: false,
@@ -337,7 +352,6 @@ class UserServices {
                         break;
                     }
                 }
-
                 if (productUpdated) {
                     await order.save();
                     console.log('Order saved:', order);  // Log việc lưu lại đơn hàng
