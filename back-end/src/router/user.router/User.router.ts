@@ -15,5 +15,7 @@ userRouter.post('/deleteRegis', authenticateToken, isAdmin, user.DeleteRegister)
 userRouter.post('/list-register', authenticateToken, user.ListRegister);
 userRouter.get('/view-cart', authenticateToken, user.ViewCart);
 userRouter.get('/checkout', authenticateToken, user.CheckOut);
-userRouter.post('/purchers-products', authenticateToken, user.PurchersProduct);
+userRouter.post('/deleteRegis', authenticateToken, isAdmin, user.DeleteRegister);
+userRouter.post('/add-to-cart', authenticateToken, user.AddToCart);
+userRouter.get('/view-all-orders', authenticateToken, user.ViewAllOrder);
 export default userRouter;

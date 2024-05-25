@@ -5,6 +5,7 @@ import ProductModel from '../models/Product.model';
 import ListRegisterModelModel from '../models/ListRegister.model';
 import ListRegisterModel from '../models/ListRegister.model';
 import ShoppingCartModel from '../models/ShoppingCart.model';
+import { compare, compareSync, genSaltSync, hash, hashSync } from 'bcrypt';
 
 class UserServices {
     // * tao nguoi dung
@@ -39,11 +40,11 @@ class UserServices {
     }
 
     async getUserById(_id: string) {
-        const user = await UserModel.findById({ _id }).select('email name username status role');
+        const user = await UserModel.findById({ _id });
         return user;
     }
 
-    async takeOrder(product_id: string, user_id: string) {
+    async takeOrder(product_id: string, user_id: string, quantity: number) {
         try {
             const product = await ProductModel.findOne({ _id: product_id });
             if (!product) {
@@ -52,7 +53,7 @@ class UserServices {
                     message: 'Product not found',
                 };
             }
-
+    
             const user = await UserModel.findById(user_id);
             if (!user) {
                 return {
@@ -60,11 +61,11 @@ class UserServices {
                     message: 'User not found',
                 };
             }
-
+    
             let order = await OrderModel.findOne({ user_id: user_id });
             if (!order) {
                 const orderData = {
-                    totalprice: product.price || '0',
+                    totalprice: '0',
                     date: new Date().toISOString(),
                     user_id: user_id,
                     address: 'xxxx',
@@ -74,23 +75,29 @@ class UserServices {
                 };
                 order = await OrderModel.create(orderData);
             }
-
-            order.orderProduct.push({
-            product_id: product_id,
-            store_id: 'store ID',
-            quantity: '1', // Sửa lại nếu bạn có thông tin về số lượng
-            status: 'chua_duoc_chuyen_di',
-            price: product.price || 0,
-            discount: (product.discount || '0').toString(),
-        });
-
+    
+            let existingProduct = order.orderProduct.find(item => item.product_id === product_id);
+    
+            if (existingProduct) {
+                existingProduct.quantity += quantity;
+            } else {
+                order.orderProduct.push({
+                    product_id: product_id,
+                    store_id: 'store ID',
+                    quantity: quantity,
+                    status: 'chua_duoc_chuyen_di',
+                    price: product.price || 0,
+                    discount: (product.discount || 0).toString(),
+                });
+            }
+    
             let totalPrice = 0;
             for (const item of order.orderProduct) {
-                totalPrice += parseFloat(item.price.toString()) * parseFloat(item.discount);
+                totalPrice += parseFloat(item.price.toString()) * (1 - parseFloat(item.discount) / 100) * item.quantity;
             }
-
-            order.totalprice = totalPrice.toString();
-
+    
+            order.totalprice = totalPrice.toFixed(2);
+    
             await order.save();
             return {
                 success: true,
@@ -105,14 +112,16 @@ class UserServices {
         }
     }
 
-    async updateUser(_id: string, name: string, username: string, password: string, email: string, mobile: string) {
+    async updateUser(_id: string,username: string, password: string, email: string, mobile: string) {
         if ((await this.isExistEmail(email)) || (await this.isExistUsername(username))) {
             throw new InvalidInput('Email already exists');
         }
-        const data: { name: string; username: string; password: string; email: string; mobile: string } = {
-            name,
+        const salt = genSaltSync(10);
+        const hash = hashSync(password, salt);
+        const data: { username: string; password: string; email: string; mobile: string } = {
+
             username,
-            password,
+            password: hash,
             email,
             mobile,
         };
@@ -200,6 +209,87 @@ class UserServices {
             };
         }
     }
+    async addToCart(userId: string, productId: string, quantity: number) {
+        try {
+            const product = await ProductModel.findById(productId);
+            if (!product) {
+                return {
+                    success: false,
+                    message: 'Product not found',
+                };
+            }
+            const user = await UserModel.findById(userId);
+            if (!user) {
+                return {
+                    success: false,
+                    message: 'User not found',
+                };
+            }
+
+            let cart = await ShoppingCartModel.findOne({ user_id: userId });
+            if (!cart) {
+                cart = new ShoppingCartModel({
+                    user_id: userId,
+                    cartProduct: [{
+                        product_id: productId,
+                        quantity: quantity
+                    }]
+                });
+            } else {
+                const productIndex = cart.cartProduct.findIndex(item => item.product_id === productId);
+                if (productIndex >= 0) {
+                    cart.cartProduct[productIndex].quantity += quantity;
+                } else {
+                    cart.cartProduct.push({
+                        product_id: productId,
+                        quantity: quantity
+                    });
+                }
+            }
+            await cart.save();
+            return {
+                success: true,
+                message: 'Product added to cart',
+            };
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+            return {
+                success: false,
+                message: 'Failed to add product to cart',
+            };
+        }
+    }
+    async viewAllOrder(userId: string) {
+        try {
+            const order = await OrderModel.findOne({ user_id: userId }).populate('orderProduct.product_id');
+    
+            if (order) {
+                const orderProducts = order.orderProduct.map(product => ({
+                        productId: product.product_id,
+                        storeId: product.store_id,
+                        quantity: product.quantity,
+                        price: product.price,
+                        discount: product.discount,
+                        status: product.status
+                    }))
+                ;
+    
+                return {
+                    success: true,
+                    orderProducts: orderProducts,
+                };
+            } else {
+                return {
+                    success: false,
+                    message: "Không có đơn hàng nào",
+                };
+            }
+        } catch (error) {
+            console.error('Error retrieving orders:', error);
+            throw error;
+        }
+    }
+    
     async viewCart(userId: string) {
         try {
             const cart = await ShoppingCartModel.findOne({ user_id: userId });
@@ -238,6 +328,7 @@ class UserServices {
             throw error;
           }
     }
+
     async checkOut(userId: string,productId: string) {
         try {
             const order = await OrderModel.findOne({user_id:userId});
@@ -265,35 +356,7 @@ class UserServices {
             };
           }
     }
-    // async purchersProduct(userId: string, productId: string) {
-    //     try {
-    //         const order = await OrderModel.findOne({user_id:userId});
-    //         const product_x = await ProductModel.findById(productId);
-    //         if (order && product_x) {
-    //             for (const product of order.orderProduct) {
-    //                 if (productId==product.product_id ) {
-    //                     product.status = 'da_nhan_hang';
-    //                     await order.save();
-    //                     return {
-    //                         success: true,
-    //                         message: 'san pham ' + productId + 'da duoc mua',
-    //                     };
-    //                 }
-    //             }
-                
-    //         } else {
-    //             return {
-    //                 success: false,
-    //                 message: 'Order not found',
-    //             };
-    //         }
-    //       } catch (error) {
-    //         return {
-    //             success: false,
-    //             message: 'error',
-    //         };
-    //       }
-    // }
+    
     async  purchersProduct(userId: string, productId: string) {
         try {
             const order = await OrderModel.findOne({ user_id: userId });

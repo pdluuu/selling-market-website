@@ -32,7 +32,8 @@ type User = {
     email: string;
     phone: string;
     role: string;
-    address: string
+    address: string;
+    password: string
 };
 
 const initialUser: User = {
@@ -41,6 +42,7 @@ const initialUser: User = {
     email: "ken99@yahoo.com",
     phone: "0123456789",
     role: "user",
+    password:"*********",
     address:"Số 4, Đường Bến, Xóm 3 Đồng Nhân Xã Đông La, Huyện Hoài Đức, Hà Nội"
 };
 
@@ -52,6 +54,7 @@ export default function Profile() {
             email: z.string().email(),
             phone: z.string(),
             role: z.string(),
+            password: z.string(),
         })),
         defaultValues: initialUser, // Sử dụng giá trị mặc định cho form từ initialUser
     });
@@ -156,16 +159,8 @@ export default function Profile() {
         
                                 <div className="flex flex-col">
         
-                                    <div className="flex flex-col">
-                                        <p className="text-lg font-bold text-gray-700">Tên đăng nhập</p>
-                                        <Input
-                                        value={initialUser.name}
-                                        className="max-w-sm"
-                                        />
-                                    </div>
-        
                                     <div className="flex flex-col mt-8">
-                                        <p className="text-lg font-bold text-gray-700">Tên</p>
+                                        <p className="text-lg font-bold text-gray-700">UserName</p>
                                         <Input
                                         value={initialUser.name}
                                         className="max-w-sm"
@@ -179,7 +174,14 @@ export default function Profile() {
                                         />
                                     </div>
                                     <div className="flex flex-col mt-8">
-                                        <p className="text-lg font-bold text-gray-700">Số điện thoại</p>
+                                        <p className="text-lg font-bold text-gray-700">Password</p>
+                                        <Input
+                                        value={initialUser.password}
+                                        className="max-w-sm"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col mt-8">
+                                        <p className="text-lg font-bold text-gray-700">PhoneNumber</p>
                                         <Input
                                         value={initialUser.phone}
                                         className="max-w-sm"
@@ -226,7 +228,7 @@ export default function Profile() {
                                 
                                         <Label htmlFor="dob">Ngày sinh:</Label>
                                         <Input type="date" id="dob" name="dob"/>
-                                        <Input type="submit" value="Submit"/>
+                                        <Input className ="w-28 bg-white shadow rounded" type="submit" value="Submit"/>
                                     
                                 </div>
                             </div>

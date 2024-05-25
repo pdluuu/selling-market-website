@@ -5,7 +5,7 @@ export interface IOrderProduct {
 
     product_id: string;
     store_id: string;
-    quantity: string;
+    quantity: number;
     price: string | number;
     discount: string;
     status: string;
@@ -33,7 +33,7 @@ const OrderSchema: Schema = new Schema({
 
             product_id: { type: String, ref: 'Product', required: true },
             store_id: { type: String, ref: 'Store', required: true },
-            quantity: { type: String, required: true },
+            quantity: { type: Number, required: true },
             price: { type: Schema.Types.Mixed, required: true },
             discount: { type: String, required: true },
             status: { type: String, required: true },

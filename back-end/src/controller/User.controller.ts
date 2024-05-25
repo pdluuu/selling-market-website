@@ -54,7 +54,7 @@ class User {
             // * accesstoken la dang ma hoa cua { id, email } can co khoa
 
             const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET || '', {
-                expiresIn: process.env.EXPIRES_TOKEN_TIME,
+                expiresIn: "1d",
             });
 
             const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET || '');
@@ -246,6 +246,8 @@ class User {
         }
     }
 
+    
+
     async get_access_token(
         req: Request<any, any, { refreshToken: string; email: string }>,
         res: Response<ISuccessRes | IFailRes>,
@@ -410,8 +412,8 @@ class User {
         try {
             const { userId } = req.body;
             console.log(userId);
-            const { name, username, password, email, phone } = req.body;
-            const result = await userServices.updateUser(userId, name, username, password, email, phone);
+            const { username, password, email, phone } = req.body;
+            const result = await userServices.updateUser(userId, username, password, email, phone);
             if (result.success) {
                 return res.status(200).json({ message: 'successful operation' });
             } else {
@@ -421,13 +423,40 @@ class User {
             return res.status(400).json({ message: 'fail operation' });
         }
     }
+
+    async ViewAllOrder(req: Request, res: Response) {
+        try {
+            const userId: string | undefined = req.body.userId;
+    
+            if (!userId) {
+                return res.status(400).json({ message: 'userId is required' });
+            }
+    
+            const listOrders = await userServices.viewAllOrder(userId);
+            
+            if (!listOrders.success) {
+                return res.status(404).json({ message: listOrders.message });
+            
+            } else {
+                return res.status(200).json({message:listOrders.orderProducts}); 
+            }
+        } catch (error: any) {
+            console.log(error);
+            const Err = new ErrorResponse(error.message as string, error.statusCode as number);
+            return res.status(Err.statusCode).json({ message: Err.message });
+        }
+    }
+    
+    
+
     async TakeOrder(req: any, res: Response<ISuccessRes | IFailRes>) {
         try {
             const { userId } = req.body;
             console.log(userId);
             const { product_id } = req.body;
+            const {quantity} = req.body;
             console.log(product_id);
-            const result = await userServices.takeOrder(product_id, userId);
+            const result = await userServices.takeOrder(product_id, userId,quantity);
             if (result.success) {
                 return res.status(200).json({ message: 'successful operation' });
             }
@@ -435,7 +464,20 @@ class User {
             return res.status(400).json({ message: 'fail operation' });
         }
     }
-
+    async AddToCart(req: any, res: Response<ISuccessRes | IFailRes>) {
+        try {
+            const { userId } = req.body;
+            console.log(userId);
+            const { productId } = req.body;
+            const {quantity} = req.body;
+            const result = await userServices.addToCart(userId,productId, quantity);
+            if (result.success) {
+                return res.status(200).json({ message: 'successful operation' });
+            }
+        } catch (error) {
+            return res.status(400).json({ message: 'fail operation' });
+        }
+    }
     // đồng ý đăng kí của user
     async AgreeRegister(req: any, res: Response<ISuccessRes | IFailRes>) {
         try {
