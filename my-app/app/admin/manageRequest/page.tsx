@@ -7,26 +7,15 @@ import RequestItem from "./request/page";
 import { IListRegister } from "../../../../back-end/src/models/ListRegister.model";
 import { ISuccessRes, IFailRes } from "../../../../back-end/src/utils/auth.interface";
 import axios from "axios";
-import Header from "../header/page";
-import Sidebar from "../sidebar/page";
 
 
 export default function ManageOrder() {
-    function isSuccessRes(response: ISuccessRes | IFailRes): response is ISuccessRes {
-        return (response as ISuccessRes).message === "successful";
-    }
-
-    function isFailRes(response: ISuccessRes | IFailRes): response is IFailRes {
-        return (response as IFailRes).message === "error";
-    }
-
-
     const [requests, setRequest] = useState<IListRegister[]>([]);
     const [roleFilter, setRoleFilter] = useState('all');
 
     const axiosInstance = axios.create({
         baseURL: process.env.NEXT_PUBLIC_API_URL,
-        headers: { Authorization: `Bearer ${localStorage.getItem("refresh_token")}` }
+        headers: { Authorization: `Bearer ${localStorage.getItem('refresh_token')}` }
     });
 
     const fetchRequests = async (type: string): Promise<IListRegister[]> => {
@@ -55,12 +44,6 @@ export default function ManageOrder() {
 
     return (
         <div>
-            <div className="w-full">
-                <Header />
-            </div>
-            <div className="w-5/6 mx-auto mt-8">
-                <Sidebar />
-            </div>
             <div className="flex h-12 justify-start items-center border border-y w-full mt-8">
                 <Menubar className="border-none">
                     <MenubarMenu>

@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button';
 import { deliveringData } from '../sample-data';
 import { ChevronLeft } from 'lucide-react';
-import asus from '../../../Images/ASUS vivobook/den.jpg';
+import asus from '../../../../Images/ASUS vivobook/den.jpg';
 import { Table, TableHeader, TableCell, TableRow, TableHead, TableBody, TableCaption } from '@/components/ui/table';
 
 export default function MoreDetailOrder({

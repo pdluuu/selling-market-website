@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import asus from '../../../Images/ASUS vivobook/den.jpg';
+import asus from '../../../../Images/ASUS vivobook/den.jpg';
 import { deliveringData, notExaminedData, completedData, deleteData, returnData, allData } from '../sample-data';
 import { Pen } from 'lucide-react';
 
@@ -8,7 +8,7 @@ export default function DetailOrder({
     handleShowMoreDetailOrder,
 }: {
     statusOrder: string;
-    handleShowMoreDetailOrder: (order:{
+    handleShowMoreDetailOrder: (order: {
         totalprice: string;
         status: string;
         date: string;
@@ -95,7 +95,7 @@ export default function DetailOrder({
                         <div className="border border-w-1 h-[1px] mt-[12px]"></div>
                         <div className="flex mt-4 justify-end items-center">
                             <Button onClick={() => handleShowMoreDetailOrder(items)}>
-                                <Pen className="mr-1" size={20}/>
+                                <Pen className="mr-1" size={20} />
                                 Chi tiết
                             </Button>
                             <h3 className="text-[14px] pr-[10px] ml-[10px]">Thành tiền: </h3>

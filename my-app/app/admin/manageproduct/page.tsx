@@ -8,12 +8,6 @@ import Sidebar from '../sidebar/page';
 export default function ManageProduct() {
     return (
         <div>
-            <div className="w-full">
-                <Header />
-            </div>
-            <div className="w-5/6 mx-auto mt-4">
-                <Sidebar />
-            </div>
             <div className="flex flex-col items-center mt-8">
                 <MenubarDemo />
                 <ListBrand />

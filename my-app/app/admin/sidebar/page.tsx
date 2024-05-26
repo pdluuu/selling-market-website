@@ -1,7 +1,12 @@
 'use client'
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { DialogTrigger } from "@radix-ui/react-dialog";
+import axios from "axios";
 import { Sign } from "crypto";
-import { ArrowDownRight } from "lucide-react";
+import { ArrowDownRight, Plus } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -23,14 +28,58 @@ export default function Sidebar() {
                 setActiveButton("manageStaff");
             } else if (path.includes("/admin/manageRequest")) {
                 setActiveButton("manageRequest");
+            } else if (path.includes("/admin/addProduct")) {
+                setActiveButton("addProduct");
             }
         }
     }, []);
 
-    const handleButtonClick = (button:string) => {
+    const handleButtonClick = (button: string) => {
         setActiveButton(button);
         localStorage.setItem("activeButton", button);
     };
+
+    const [name, setName] = useState('');
+    const [category, setCategory] = useState('');
+    const [brand, setBrand] = useState('');
+    const [discount, setDiscount] = useState('');
+    const [version, setVersion] = useState('');
+    const [price, setPrice] = useState('');
+    const [images, setImage] = useState('');
+    const [items, setItems] = useState('');
+    const [open, setOpen] = useState(false);
+
+    const handleSubmit = async (event: any) => {
+        event.preventDefault();
+
+        const productData = {
+            name,
+            brand,
+            discount,
+            version,
+            price,
+            category,
+            images,
+            items
+        };
+       // console.log(productData);
+        
+        try {
+            const token = localStorage.getItem('refresh_token');
+            const response = await axios.post(
+                'http://localhost:8080/api/v1/product/create-product',
+               productData,
+               {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+               }
+            )
+            setOpen(false);
+        } catch (error) {
+
+        }
+    }
     return (
         <div className="flex gap-2">
             <Link
@@ -84,7 +133,118 @@ export default function Sidebar() {
                     Quan ly yeu cau
                 </Button>
             </Link>
+            <Dialog open={open}>
+                <DialogTrigger asChild>
+                    <Button variant="ghost"
+                        className={activeButton === "addProduct" ? "bg-blue-500 text-white" : ""}
+                        onClick={() => setOpen(true)}
+                    >
+                        <Plus />
+                        Thêm sản phẩm
+                    </Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <form>
+                        <DialogHeader>
+                            <DialogTitle onClick={() => setOpen(false)}>Thêm sản phẩm</DialogTitle>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="name" className="text-right">
+                                    Name
+                                </Label>
+                                <Input
+                                    id="name"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    className="col-span-3"
+                                />
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="category" className="text-right">
+                                    Category
+                                </Label>
+                                <Input
+                                    id="category"
+                                    value={category}
+                                    onChange={(e) => setCategory(e.target.value)}
+                                    className="col-span-3"
+                                />
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="brand" className="text-right">
+                                    Brand
+                                </Label>
+                                <Input
+                                    id="brand"
+                                    value={brand}
+                                    onChange={(e) => setBrand(e.target.value)}
+                                    className="col-span-3"
+                                />
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="discount" className="text-right">
+                                    Discount
+                                </Label>
+                                <Input
+                                    id="discount"
+                                    type="number"
+                                    value={discount}
+                                    onChange={(e) => setDiscount(e.target.value)}
+                                    className="col-span-3"
+                                />
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="version" className="text-right">
+                                    Version
+                                </Label>
+                                <Input
+                                    id="version"
+                                    value={version}
+                                    onChange={(e) => setVersion(e.target.value)}
+                                    className="col-span-3"
+                                />
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="price" className="text-right">
+                                    Price
+                                </Label>
+                                <Input
+                                    id="price"
+                                    type="number"
+                                    value={price}
+                                    onChange={(e) => setPrice(e.target.value)}
+                                    className="col-span-3"
+                                />
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="images" className="text-right">
+                                    Image
+                                </Label>
+                                <Input
+                                    id="images"
+                                    value={images}
+                                    onChange={(e) => setImage(e.target.value)}
+                                    className="col-span-3"
+                                />
+                            </div><div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="items" className="text-right">
+                                    Items
+                                </Label>
+                                <Input
+                                    id="items"
+                                    value={items}
+                                    onChange={(e) => setItems(e.target.value)}
+                                    className="col-span-3"
+                                />
+                            </div>
+                        </div>
+                        <DialogFooter>
+                            <Button type="submit" onClick={handleSubmit}>Save</Button>
+                        </DialogFooter>
+                    </form>
+                </DialogContent>
+            </Dialog>
         </div>
-
     )
 }

@@ -1,11 +1,11 @@
 import { Router } from "express";
 import product from "../../controller/Product.controller";
-import { authenticateToken } from "../../middlerware/authentication";
+import { authenticateToken, isAdmin } from "../../middlerware/authentication";
 
 const productRouter = Router();
 
-productRouter.post("/create-product", authenticateToken, product.createProduct);
-productRouter.post("/update-product", authenticateToken, product.updateProduct);
+productRouter.post("/create-product", authenticateToken, isAdmin, product.createProduct);
+productRouter.post("/update-product", authenticateToken, isAdmin,  product.updateProduct);
 //red: IProduct, res: {message: "Update successfully//Error"}
 productRouter.post("/view-detail-product", product.viewDetailProduct);
 productRouter.post("/view-product", product.viewProduct);

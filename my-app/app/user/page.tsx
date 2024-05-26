@@ -1,7 +1,7 @@
 import { MenubarDemo } from '../home/dashboard/category/page';
 import Header from '../header/page';
 import Footer from '../footer/page';
-import UserMenuBar from '../view-order/user-bar/page';
+import UserMenuBar from '../home/view-order/user-bar/page';
 import Profile from './profile/page';
 
 export default function User() {

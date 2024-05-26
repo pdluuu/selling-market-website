@@ -77,7 +77,7 @@ export default function DisplayedItem({
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const result = await response.json();
-            console.log('Success get produts', result.data);
+            //console.log('Success get produts', result.data);
             if (result.data.length !== 0) setListProduct(result.data);
         } catch (e) {
             console.log(e);
@@ -85,7 +85,7 @@ export default function DisplayedItem({
     };
     if (listProduct?.length === 0) getProduct();
 
-    console.log(listProduct);
+    //console.log(listProduct);
     // listProduct=phoneData
     const handleViewMore = () => {
         if (reverse === 'true') {

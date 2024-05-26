@@ -45,12 +45,6 @@ export default function ManageOrder() {
 
     return (
         <div>
-            <div className="w-full">
-                <Header />
-            </div>
-            <div className="w-5/6 mx-auto mt-8">
-                <Sidebar />
-            </div>
             <div className="flex h-12 justify-center items-center border border-y w-full mt-8">
                 <Menubar className="border-none">
                     <MenubarMenu>

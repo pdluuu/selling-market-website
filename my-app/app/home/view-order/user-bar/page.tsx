@@ -17,7 +17,7 @@ export default function UserMenuBar() {
     username: string;
     status: string;
     role: string;
-  } | null = JSON.parse(localStorage.getItem("user")||" ");
+  } | null = JSON.parse(localStorage.getItem("user")||"{}");
 
   const router = useRouter();
   return (
@@ -35,7 +35,7 @@ export default function UserMenuBar() {
       </Button>
       <Button
         className="w-full mb-[2px] justify-start "
-        onClick={() => router.push("/view-order")}
+        onClick={() => router.push("/home/view-order")}
       >
         <CreditCard className="mr-2 h-4 w-4 ml-3" />
         <span>Đơn hàng</span>
