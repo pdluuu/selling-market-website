@@ -26,11 +26,11 @@ export default function UserMenuBar() {
                 <CircleUserRound size={35} />
                 <p className="text-xl">{user?.username}</p>
             </div>
-            <Button className="w-full mb-[2px] justify-start" onClick={() => router.push('/home/user')}>
+            <Button className="w-full mb-[2px] justify-start" onClick={() => router.push('/user')}>
                 <User className="mr-2  h-4 w-4 ml-3" />
                 <span>Tài khoản của tôi</span>
             </Button>
-            <Button className="w-full mb-[2px] justify-start " onClick={() => router.push('/view-order')}>
+            <Button className="w-full mb-[2px] justify-start " onClick={() => router.push('/home/view-order')}>
                 <CreditCard className="mr-2 h-4 w-4 ml-3" />
                 <span>Đơn hàng</span>
             </Button>

@@ -1,3 +1,4 @@
+'use client'
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -19,31 +20,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
+import api from "@/config/axios.config";
 
-export function ForgotPassword() {
+export default function ForgotPassword() {
   const [email, setEmail] = useState(" ");
   const router = useRouter();
   const handleForgotPassword = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:8080/api/v1/forgot-password/getCode",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
-          body: JSON.stringify({ email }),
-        }
-      );
+      console.log(email);
+      const response = await api.post('/auth/forgot-password/getCode', { email }).then((data) => {
+        console.log(data.data);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+    });
 
-      const result = await response.json();
-      // setUser(result.data);
-      console.log("Success get email:", result.data);
+      console.log("Success get email:");
       localStorage.setItem("email", email);
       router.push("/auth/code_for_reset");
     } catch (e) {

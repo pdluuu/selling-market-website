@@ -1,8 +1,8 @@
 'use client';
-import { MenubarDemo } from '../../home/dashboard/category/page';
-import DisplayedItem from '../../home/dashboard/displayeditem/page';
-import BreadcrumbWithCustomSeparator from '../../home/dashboard/breadcrumb/page';
-import Filter from '../../home/dashboard/filter/page';
+import { MenubarDemo } from '../dashboard/category/page';
+import DisplayedItem from '../dashboard/displayeditem/page';
+import BreadcrumbWithCustomSeparator from '../dashboard/breadcrumb/page';
+import Filter from '../dashboard/filter/page';
 import { useState } from 'react';
 
 export default function ViewWatch() {

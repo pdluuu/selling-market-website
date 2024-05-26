@@ -115,7 +115,7 @@ function Navbar() {
                                         <span>Tài khoản của tôi</span>
                                     </DropdownMenuItem>
                                 </Link>
-                                <Link href="/view-order">
+                                <Link href="/home/view-order">
                                     <DropdownMenuItem>
                                         <CreditCard className="mr-2 h-4 w-4" />
                                         <span>Đơn hàng</span>

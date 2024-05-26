@@ -19,7 +19,14 @@ import api from '@/config/axios.config';
 const SignUpSchema = z
     .object({
         email: z.string().email(),
-        password: z.string().min(8, { message: 'Password is too short' }).max(20, { message: 'Password is too long' }),
+        password: z
+            .string()
+            .min(8, { message: 'Password is too short' })
+            .max(20, { message: 'Password is too long' })
+            .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/, {
+                message:
+                    'Password must include at least one uppercase letter, one lowercase letter, one number, and one special character',
+            }),
         username: z.string(),
         confirmPassword: z.string(),
     })
@@ -46,7 +53,7 @@ export default function Login() {
         try {
             const { username, email, password } = values;
             console.log(JSON.stringify({ username, email, password }));
-            const response = api.post('/auth/sign-up', { username, email, password }).then((data) => {
+            const response = await api.post('/auth/sign-up', { username, email, password }).then((data) => {
                 console.log(data.data);
 
                 const access_token = data?.data?.data?.accessToken;
@@ -66,12 +73,15 @@ export default function Login() {
                 }
                 localStorage.setItem('access_token', data?.data?.data?.accessToken);
                 localStorage.setItem('refresh_token', data?.data?.data?.refreshToken);
-                localStorage.setItem('email', email);
             });
-
-            // console.log('Send code for validation:', result);
-
-            // router.push('/auth/code_for_registration');
+            const response1 = api
+                .get('http://localhost:8080/api/v1/user/getUser', {
+                    headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
+                })
+                .then((data) => {
+                    localStorage.setItem('user', JSON.stringify(data?.data?.data));
+                });
+            window.location.replace('/home/dashboard');
         } catch (e) {
             console.log(e);
         }
@@ -162,7 +172,7 @@ export default function Login() {
                                         Remember me
                                     </label>
                                 </div>
-                                <Link href={'/forgot-password'} className="font-medium underline underline-offset-4">
+                                <Link href={"/auth/forgot_password"} className="font-medium underline underline-offset-4">
                                     Forgot password
                                 </Link>
                             </div>

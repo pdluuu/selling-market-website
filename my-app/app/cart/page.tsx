@@ -153,6 +153,18 @@ export const columns: ColumnDef<Payment>[] = [
     },
 ];
 
+type Product = {
+    _id: string;
+    name: string;
+    discount: number;
+    price: number;
+    brand: string;
+    version: string[];
+    items: string[];
+    category: string;
+    images: string[];
+};
+
 export default function DataTableDemo() {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
