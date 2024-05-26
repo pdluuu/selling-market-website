@@ -426,7 +426,7 @@ class User {
 
     async ViewAllOrder(req: Request, res: Response) {
         try {
-            const userId: string | undefined = req.body.userId;
+            const userId = req.body.userId;
     
             if (!userId) {
                 return res.status(400).json({ message: 'userId is required' });
@@ -438,7 +438,7 @@ class User {
                 return res.status(404).json({ message: listOrders.message });
             
             } else {
-                return res.status(200).json({message:listOrders.orderProducts}); 
+                return res.status(200).json({message:listOrders.data}); 
             }
         } catch (error: any) {
             console.log(error);
@@ -447,7 +447,19 @@ class User {
         }
     }
     
-    
+    async ViewDetailOrder(req: any, res: any) {
+        try {
+            const { userId } = req.body;
+            console.log(userId);
+            const { orderId } = req.body;
+            const result = await userServices.viewDetailOrder(userId,orderId);
+            if (result.success) {
+                return res.status(200).json({ message:result.data });
+            }
+        } catch (error) {
+            return res.status(400).json({ message: 'fail operation' });
+        }
+    }
 
     async TakeOrder(req: any, res: Response<ISuccessRes | IFailRes>) {
         try {
@@ -471,6 +483,18 @@ class User {
             const { productId } = req.body;
             const {quantity} = req.body;
             const result = await userServices.addToCart(userId,productId, quantity);
+            if (result.success) {
+                return res.status(200).json({ message: 'successful operation' });
+            }
+        } catch (error) {
+            return res.status(400).json({ message: 'fail operation' });
+        }
+    }
+    async ReceiveOrder(req: any, res: Response<ISuccessRes | IFailRes>) {
+        try {
+            const { userId } = req.body;
+            const { orderId } = req.body;
+            const result = await userServices.receiveOrder(userId,orderId);
             if (result.success) {
                 return res.status(200).json({ message: 'successful operation' });
             }
@@ -526,8 +550,8 @@ class User {
         try {
             // Sử dụng service để lấy danh sách đăng kí từ cơ sở dữ liệu
             const { userId } = req.body;
-            const { productId} = req.body;
-            const check_Out =await userServices.checkOut(userId,productId);
+            const { orderId} = req.body;
+            const check_Out =await userServices.checkOut(userId,orderId);
             if (check_Out) {
                 console.log(check_Out.message);
                 return res.status(200).json({ message: 'Order placed successfully' });
@@ -566,12 +590,12 @@ class User {
           });
         }
       }
-      async PurchersProduct(req: Request, res: Response) {
+      async PurchersOrder(req: Request, res: Response) {
         try {
           const { userId } = req.body; 
-          const {productId} = req.body;
+          const {orderId} = req.body;
             console.log(userId);
-          const product_purchers = await userServices.purchersProduct(userId,productId);
+          const product_purchers = await userServices.purchersOrder(userId,orderId);
     
           if (product_purchers?.success) {
             return res.status(200).json({

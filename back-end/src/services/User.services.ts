@@ -43,8 +43,7 @@ class UserServices {
         const user = await UserModel.findById({ _id });
         return user;
     }
-
-    async takeOrder(product_id: string, user_id: string, quantity: number) {
+    async takeOrder(product_id: string, userId: string, quantity: number) {
         try {
             const product = await ProductModel.findOne({ _id: product_id });
             if (!product) {
@@ -54,7 +53,7 @@ class UserServices {
                 };
             }
     
-            const user = await UserModel.findById(user_id);
+            const user = await UserModel.findById(userId);
             if (!user) {
                 return {
                     success: false,
@@ -62,55 +61,92 @@ class UserServices {
                 };
             }
     
-            let order = await OrderModel.findOne({ user_id: user_id });
-            if (!order) {
+            let orders = await OrderModel.find({ user_id: userId });
+            if (!orders || orders.length === 0 ) {
                 const orderData = {
                     totalprice: '0',
                     date: new Date().toISOString(),
-                    user_id: user_id,
+                    user_id: userId,
                     address: 'xxxx',
                     deliver_id: 'xxxxx',
                     phoneNumber: user.phoneNumber,
+                    status: 'da_tao_order',
                     orderProduct: [],
                 };
-                order = await OrderModel.create(orderData);
+                const newOrder = await OrderModel.create(orderData);
+                orders = [newOrder];
             }
+            let n = 0;
+            for (const order of orders) {
+                if (order.status !== "da_tao_order" ) {
+                    console.log("xxxx");
+                    n=n+1;
+                }else if(order.status == "da_tao_order" ){
     
-            let existingProduct = order.orderProduct.find(item => item.product_id === product_id);
-    
-            if (existingProduct) {
-                existingProduct.quantity += quantity;
-            } else {
-                order.orderProduct.push({
+                    let existingProduct = order.orderProduct.find(item => item.product_id === product_id);
+                    if (existingProduct) {
+                        existingProduct.quantity += quantity;
+                    } else {
+                        order.orderProduct.push({
+                            product_id: product_id,
+                            store_id: 'store ID',
+                            quantity: quantity,
+                            price: product.price,
+                            discount: product.discount.toString(),
+                        });
+                    }
+        
+                    let totalPrice = 0;
+                    for (const item of order.orderProduct) {
+                        totalPrice += (parseFloat(item.price.toString()) * (1 - parseFloat(item.discount.toString()) / 100) * item.quantity);
+                    }
+                    order.totalprice = totalPrice.toFixed(2);
+        
+                    await order.save();
+                }
+            }
+            if(n===orders.length){
+                const orderData = {
+                    totalprice: '0',
+                    date: new Date().toISOString(),
+                    user_id: userId,
+                    address: 'xxxx',
+                    deliver_id: 'xxxxx',
+                    phoneNumber: user.phoneNumber,
+                    status: 'da_tao_order',
+                    orderProduct: [],
+                };
+                const newOrder = await OrderModel.create(orderData);
+                orders = [newOrder];
+                newOrder.orderProduct.push({
                     product_id: product_id,
                     store_id: 'store ID',
                     quantity: quantity,
-                    status: 'chua_duoc_chuyen_di',
-                    price: product.price || 0,
-                    discount: (product.discount || 0).toString(),
+                    price: product.price,
+                    discount: product.discount.toString(),
                 });
+                let totalPrice = 0;
+                    for (const item of newOrder.orderProduct) {
+                        totalPrice += (parseFloat(item.price.toString()) * (1 - parseFloat(item.discount.toString()) / 100) * item.quantity);
+                    }
+                    newOrder.totalprice = totalPrice.toFixed(2);
+        
+                    await newOrder.save();
             }
     
-            let totalPrice = 0;
-            for (const item of order.orderProduct) {
-                totalPrice += parseFloat(item.price.toString()) * (1 - parseFloat(item.discount) / 100) * item.quantity;
-            }
-    
-            order.totalprice = totalPrice.toFixed(2);
-    
-            await order.save();
             return {
                 success: true,
-                message: 'takeOrder successfully',
+                message: 'Orders processed successfully',
             };
         } catch (error) {
             console.error('Error in takeOrder:', error);
             return {
                 success: false,
-                message: 'Failed to take order',
+                message: 'Failed to take orders',
             };
         }
     }
+    
 
     async updateUser(_id: string,username: string, password: string, email: string, mobile: string) {
         if ((await this.isExistEmail(email)) || (await this.isExistUsername(username))) {
@@ -260,34 +296,24 @@ class UserServices {
         }
     }
     async viewAllOrder(userId: string) {
-        try {
-            const order = await OrderModel.findOne({ user_id: userId }).populate('orderProduct.product_id');
-    
-            if (order) {
-                const orderProducts = order.orderProduct.map(product => ({
-                        productId: product.product_id,
-                        storeId: product.store_id,
-                        quantity: product.quantity,
-                        price: product.price,
-                        discount: product.discount,
-                        status: product.status
-                    }))
-                ;
-    
-                return {
-                    success: true,
-                    orderProducts: orderProducts,
-                };
-            } else {
-                return {
-                    success: false,
-                    message: "Không có đơn hàng nào",
-                };
+    try {
+        const orders= await OrderModel.find({ user_id: userId });
+
+        if(orders){
+            return{
+                success: true,
+                data: orders,
             }
-        } catch (error) {
-            console.error('Error retrieving orders:', error);
-            throw error;
+        }else{
+            return{
+                success: false,
+                message: 'false',
+            }
         }
+    } catch (error) {
+        console.error('Error fetching orders:', error);
+        throw error;
+    }
     }
     
     async viewCart(userId: string) {
@@ -329,19 +355,18 @@ class UserServices {
           }
     }
 
-    async checkOut(userId: string,productId: string) {
+    async checkOut(userId: string,orderId: string) {
         try {
-            const order = await OrderModel.findOne({user_id:userId});
-            const product_x = await ProductModel.findById(productId);
-            if (order && product_x) {
-                for (const product of order.orderProduct) {
-                    if (productId==product.product_id && product.status === 'da_nhan_hang') {
-                        return {
-                            success: true,
-                            message: 'san pham ' + productId + 'da duoc nhan',
-                        };
-                    }
+            const order = await OrderModel.findById(orderId);
+            if (order ) {
+                
+                if (order.status === 'da_nhan_hang') {
+                    return {
+                        success: true,
+                        message: 'san pham ' + orderId + 'da duoc nhan',
+                    };
                 }
+                
                 
             } else {
                 return {
@@ -357,51 +382,74 @@ class UserServices {
           }
     }
     
-    async  purchersProduct(userId: string, productId: string) {
+    async purchersOrder(userId: string, orderId: string) {
         try {
-            const order = await OrderModel.findOne({ user_id: userId });
-            const product_x = await ProductModel.findById(productId);
+            const order = await OrderModel.findById(orderId);
     
-            if (order && product_x) {
-                let productUpdated = false;
-                for (const product of order.orderProduct) {
-                    if (productId === product.product_id) {
-                        product.status = 'da_nhan_hang';
-                        productUpdated = true;
-                        console.log('Product status updated:', product);  // Log cập nhật trạng thái sản phẩm
-                        break;
-                    }
-                }
-    
-                if (productUpdated) {
-                    await order.save();
-                    console.log('Order saved:', order);  // Log việc lưu lại đơn hàng
-                    return {
-                        success: true,
-                        message: 'Sản phẩm ' + productId + ' đã được mua',
-                    };
-                } else {
-                    console.log('Product not found in order');  // Log khi sản phẩm không có trong đơn hàng
-                    return {
-                        success: false,
-                        message: 'Sản phẩm không có trong đơn hàng',
-                    };
-                }
-            } else {
-                console.log('Order or product not found');  // Log khi không tìm thấy đơn hàng hoặc sản phẩm
+            if (order && order.status === "da_tao_order") {
+                order.status = "order_dang_duoc_van_chuyen";
+                await order.save(); 
                 return {
-                    success: false,
-                    message: 'Đơn hàng hoặc sản phẩm không tồn tại',
+                    success: true,
+                    message: 'Đơn hàng đang được chuyển đi',
                 };
+            } else {
+                throw new Error('Đơn hàng không tồn tại hoặc không thể cập nhật trạng thái');
             }
         } catch (error) {
-            console.error('Error occurred:', error);  // Log lỗi nếu có
+            console.error('Error occurred:', error);  
             return {
                 success: false,
                 message: 'Lỗi: ' ,
             };
         }
     }
+
+    async receiveOrder(userId: string, orderId: string) {
+        try {
+            const order = await OrderModel.findById(orderId);
+    
+            if (order && order.status === "order_dang_duoc_van_chuyen") {
+                order.status = "order_da_duoc_nhan";
+                await order.save(); 
+                return {
+                    success: true,
+                    message: 'Đơn hàng đã đến tay người dùng',
+                };
+            } else {
+                throw new Error('Đơn hàng không tồn tại hoặc không thể cập nhật trạng thái');
+            }
+        } catch (error) {
+            console.error('Error occurred:', error);  
+            return {
+                success: false,
+                message: 'Lỗi: ' ,
+            };
+        }
+    }
+    
+    async viewDetailOrder(userId: string, orderId: string) {
+        try {
+            const order = await OrderModel.findById(orderId);
+    
+            if (order) {
+
+                return {
+                    success: true,
+                    data: order,
+                };
+            } else {
+                throw new Error('Đơn hàng không tồn tại hoặc không thể cập nhật trạng thái');
+            }
+        } catch (error) {
+            console.error('Error occurred:', error);  
+            return {
+                success: false,
+                message: 'Lỗi: ' ,
+            };
+        }
+    }
+
     // xóa một bản ghi trong danh sách register
     async deleteRegister(userId: string) {
         try {

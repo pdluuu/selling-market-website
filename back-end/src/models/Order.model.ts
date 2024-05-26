@@ -8,7 +8,7 @@ export interface IOrderProduct {
     quantity: number;
     price: string | number;
     discount: string;
-    status: string;
+    
 }
 export interface IOrder extends Document {
     _id: string;
@@ -18,6 +18,7 @@ export interface IOrder extends Document {
     address: string;
     deliver_id: string | Types.ObjectId;
     phoneNumber: string;
+    status: string;
     orderProduct: IOrderProduct[];
 }
 
@@ -28,6 +29,7 @@ const OrderSchema: Schema = new Schema({
     address: { type: String, required: true },
     deliver_id: { type: String, ref: 'User', required: true },
     phoneNumber: { type: String, required: true },
+    status: {type:String, required:true},
     orderProduct: [
         {
 
@@ -36,7 +38,7 @@ const OrderSchema: Schema = new Schema({
             quantity: { type: Number, required: true },
             price: { type: Schema.Types.Mixed, required: true },
             discount: { type: String, required: true },
-            status: { type: String, required: true },
+            
         },
     ],
 });
