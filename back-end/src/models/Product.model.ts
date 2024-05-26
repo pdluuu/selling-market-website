@@ -44,8 +44,15 @@ export enum AccessoriesBrand {
     Nokia = 'Nokia',
 }
 
+export enum SmartWatchBrand {
+    Apple = 'Apple',
+    Garmin = 'Garmin',
+    Samsung = 'Samsung',
+}
+
+
 export interface IViewProduct extends Document {
-    brand: SmartPhoneBrand | TabletBrand | LapTopBrand | AccessoriesBrand;
+    brand: SmartPhoneBrand | TabletBrand | LapTopBrand | AccessoriesBrand | SmartWatchBrand;
     category: ProductCategory;
     price: number;
 }
@@ -55,7 +62,7 @@ export interface IProduct extends Document {
     name: string;
     discount: number;
     price: number;
-    brand: SmartPhoneBrand | TabletBrand | LapTopBrand | AccessoriesBrand;
+    brand: SmartPhoneBrand | TabletBrand | LapTopBrand | AccessoriesBrand | SmartWatchBrand;
     version: [any];
     category: ProductCategory;
     images: [string];
@@ -69,7 +76,7 @@ const ProductSchema: Schema = new Schema({
     brand: {
         type: String,
         required: true,
-        enum: Object.values({ ...SmartPhoneBrand, ...TabletBrand, ...LapTopBrand, ...AccessoriesBrand }),
+        enum: Object.values({ ...SmartPhoneBrand, ...TabletBrand, ...LapTopBrand, ...AccessoriesBrand, ...SmartWatchBrand }),
     },
     version: { type: [Schema.Types.Mixed], default: [] },
     category: { type: String, required: true, enum: ProductCategory },
