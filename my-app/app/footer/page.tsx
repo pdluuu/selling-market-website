@@ -18,7 +18,7 @@ export default function Footer() {
                 <div className='w-1/2 pl-5 lg:w-2/3'>
                     <Link href="/home/dashboard">
                         <Button variant={"custom"} className="lg:text-2xl text-xl font-bold  ">
-                            <img src={logo.src} width={200}/>
+                                <img src={logo.src} width={200}/>
                         </Button>
                     </Link>
                     <blockquote className="lg:mt-6 mt-4 lg:text-base text-xs border-l-2 pl-3 italic ">
