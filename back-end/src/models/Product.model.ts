@@ -6,6 +6,10 @@ export enum ProductCategory {
     Tablet = 'Tablet',
     SmartWatch = 'Smart Watch',
     Accessories = 'Accessories',
+    Earphone = 'Earphone',
+    Backpack = 'Backpack',
+    Mouse = 'Mouse',
+    Keyboard = 'Keyboard',
 }
 
 export enum SmartPhoneBrand {
