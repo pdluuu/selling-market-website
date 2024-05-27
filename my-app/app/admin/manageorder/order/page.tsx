@@ -8,6 +8,16 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
+
+interface OrderProduct {
+    product_id: string;
+    store_id?: string;
+    quantity: string;
+    price: number;
+    discount: string;
+    status: string;
+}
+
 export default function OrderItem({ order }: { order: IOrder }) {
 
     const statuses = [
@@ -59,43 +69,51 @@ export default function OrderItem({ order }: { order: IOrder }) {
     async function fetchProductDetails(productId: string) {
         try {
             const response = await axiosInstance.post(`/product/view-detail-product`, { _id: productId });
+            //console.log(response.data);
             return response.data;
+
+
         } catch (error) {
             console.error('Error updating order status:', error);
         }
     }
 
-    const OrderDetails = ({ order }: { order: IOrder }) => {
-        const [products, setProducts] = useState<IProduct[]>([]);
+    const [products, setProducts] = useState<any[]>([]);
 
-        useEffect(() => {
-            // Hàm để lấy thông tin sản phẩm cho từng sản phẩm trong đơn hàng
-            const fetchAllProducts = async () => {
-                const productsWithDetails = await Promise.all(
-                    order.orderProduct.map(async (product) => {
-                        const productDetails = await fetchProductDetails(product.product_id);
-                        return {
-                            ...product,
+    useEffect(() => {
+        // Hàm để lấy thông tin sản phẩm cho từng sản phẩm trong đơn hàng
+        const fetchAllProducts = async () => {
+            const productsWithDetails = await Promise.all(
+                order.orderProduct.map(async (product) => {
+                    const productDetails = await fetchProductDetails(product.product_id);
+                    if (productDetails) {
+                        const mergedProduct = {
                             ...productDetails,
+                            ...product,
                         };
-                    })
-                );
-                setProducts(productsWithDetails);
-            };
+                        //console.log('Merged product:', mergedProduct); // Debugging line
+                        return mergedProduct;
+                    } else {
+                        return null;
+                    }
+                })
+            );
+            //console.log('Products with details:', productsWithDetails); // Debugging line
+            setProducts(productsWithDetails.filter(product => product !== null));
+        };
 
-            fetchAllProducts();
-        }, [order]);
-    }
+        fetchAllProducts();
+    }, [order]);
     return (
         <div className="border p-4 mb-4 mt-8">
             <p>User_Id: {order.user_id}</p>
             <p>Status: {order.status}</p>
             <p>Date: {order.date}</p>
             <div>
-                {order.orderProduct.map(
+                {products.map(
                     (product) => (
-                        <div key={product.product_id}>
-                            <p>Ten san pham: {product.name}</p>
+                        <div key={product._id}>
+                            <p>Ten san pham: {product[0].name || 'Unknown'}</p>
                             <p>So luong: {product.quantity}</p>
                         </div>
                     )

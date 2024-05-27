@@ -33,7 +33,6 @@ const OrderSchema: Schema = new Schema({
     orderProduct: [
         {
             product_id: { type: String, ref: 'Product', required: true },
-            store_id: { type: String, ref: 'Store', required: false },
             quantity: { type: String, required: true },
             price: { type: Schema.Types.Mixed, required: true },
             discount: { type: String, required: true },
