@@ -43,7 +43,7 @@ class UserServices {
         const user = await UserModel.findById({ _id });
         return user;
     }
-    async takeOrder(product_id: string, userId: string, quantity: number) {
+    async takeOrder(product_id: string, userId: string, quantity: number, version: string) {
         try {
             const product = await ProductModel.findOne({ _id: product_id });
             if (!product) {
@@ -82,10 +82,20 @@ class UserServices {
                     console.log("xxxx");
                     n=n+1;
                 }else if(order.status == "da_tao_order" ){
-    
-                    let existingProduct = order.orderProduct.find(item => item.product_id === product_id);
-                    if (existingProduct) {
+                    let existingProduct;
+                    let x = false;
+                    for (const product of order.orderProduct){
+                        if(product.product_id===product_id){
+                            existingProduct = product;
+                            break;
+                        }
+                    }
+
+
+                    // let existingProduct = order.orderProduct.find(item => item.product_id === product_id);
+                    if (existingProduct && existingProduct.version === version) {
                         existingProduct.quantity += quantity;
+                        break;
                     } else {
                         order.orderProduct.push({
                             product_id: product_id,
@@ -93,6 +103,7 @@ class UserServices {
                             quantity: quantity,
                             price: product.price,
                             discount: product.discount.toString(),
+                            version: version,
                         });
                     }
         
@@ -124,6 +135,7 @@ class UserServices {
                     quantity: quantity,
                     price: product.price,
                     discount: product.discount.toString(),
+                    version: version,
                 });
                 let totalPrice = 0;
                     for (const item of newOrder.orderProduct) {
@@ -146,6 +158,83 @@ class UserServices {
             };
         }
     }
+    // async takeOrder(product_id: string, userId: string, quantity: number, version: string) {
+    //     try {
+    //         const product = await ProductModel.findOne({ _id: product_id });
+    //         if (!product) {
+    //             return {
+    //                 success: false,
+    //                 message: 'Product not found',
+    //             };
+    //         }
+    
+    //         const user = await UserModel.findById(userId);
+    //         if (!user) {
+    //             return {
+    //                 success: false,
+    //                 message: 'User not found',
+    //             };
+    //         }
+    
+    //         let orders = await OrderModel.find({ user_id: userId });
+    //         if (!orders || orders.length === 0 ) {
+    //             const orderData = {
+    //                 totalprice: '0',
+    //                 date: new Date().toISOString(),
+    //                 user_id: userId,
+    //                 address: 'xxxx',
+    //                 deliver_id: 'xxxxx',
+    //                 phoneNumber: user.phoneNumber,
+    //                 status: 'da_tao_order',
+    //                 orderProduct: [],
+    //             };
+    //             const newOrder = await OrderModel.create(orderData);
+    //             orders = [newOrder];
+    //         }
+    
+    //         for (const order of orders) {
+    //             if (order.status === "da_tao_order") {
+    //                 let found = false;
+    //                 for (const item of order.orderProduct) {
+    //                     if (item.product_id === product_id && item.version === version) {
+    //                         item.quantity += quantity;
+    //                         found = true;
+    //                         break;
+    //                     }
+    //                 }
+    //                 if (!found) {
+    //                     order.orderProduct.push({
+    //                         product_id: product_id,
+    //                         store_id: 'store ID',
+    //                         quantity: quantity,
+    //                         price: product.price,
+    //                         discount: product.discount.toString(),
+    //                         version: version,
+    //                     });
+    //                 }
+    
+    //                 let totalPrice = 0;
+    //                 for (const item of order.orderProduct) {
+    //                     totalPrice += (parseFloat(item.price.toString()) * (1 - parseFloat(item.discount.toString()) / 100) * item.quantity);
+    //                 }
+    //                 order.totalprice = totalPrice.toFixed(2);
+    
+    //                 await order.save();
+    //             }
+    //         }
+    
+    //         return {
+    //             success: true,
+    //             message: 'Orders processed successfully',
+    //         };
+    //     } catch (error) {
+    //         console.error('Error in takeOrder:', error);
+    //         return {
+    //             success: false,
+    //             message: 'Failed to take orders',
+    //         };
+    //     }
+    // }
     
 
     async updateUser(_id: string,username: string, password: string, email: string, mobile: string) {
@@ -245,7 +334,7 @@ class UserServices {
             };
         }
     }
-    async addToCart(userId: string, productId: string, quantity: number) {
+    async addToCart(userId:string, productId:string, quantity:number, version:string) {
         try {
             const product = await ProductModel.findById(productId);
             if (!product) {
@@ -254,6 +343,7 @@ class UserServices {
                     message: 'Product not found',
                 };
             }
+
             const user = await UserModel.findById(userId);
             if (!user) {
                 return {
@@ -268,21 +358,28 @@ class UserServices {
                     user_id: userId,
                     cartProduct: [{
                         product_id: productId,
+                        version: version,
                         quantity: quantity
                     }]
                 });
             } else {
-                const productIndex = cart.cartProduct.findIndex(item => item.product_id === productId);
-                if (productIndex >= 0) {
+                const productIndex = cart.cartProduct.findIndex(item => 
+                    item.product_id === productId && item.version === version
+                );
+    
+                if (productIndex >=0) {
                     cart.cartProduct[productIndex].quantity += quantity;
                 } else {
                     cart.cartProduct.push({
                         product_id: productId,
+                        version: version,
                         quantity: quantity
                     });
                 }
             }
+
             await cart.save();
+    
             return {
                 success: true,
                 message: 'Product added to cart',
@@ -295,6 +392,7 @@ class UserServices {
             };
         }
     }
+    
     async viewAllOrder(userId: string) {
     try {
         const orders= await OrderModel.find({ user_id: userId });

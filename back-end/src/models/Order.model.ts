@@ -8,6 +8,7 @@ export interface IOrderProduct {
     quantity: number;
     price: string | number;
     discount: string;
+    version: string;
     
 }
 export interface IOrder extends Document {
@@ -38,7 +39,7 @@ const OrderSchema: Schema = new Schema({
             quantity: { type: Number, required: true },
             price: { type: Schema.Types.Mixed, required: true },
             discount: { type: String, required: true },
-            
+            version: { type: String, required: true , default:1},
         },
     ],
 });

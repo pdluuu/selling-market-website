@@ -467,8 +467,9 @@ class User {
             console.log(userId);
             const { product_id } = req.body;
             const {quantity} = req.body;
+            const {version} = req.body;
             console.log(product_id);
-            const result = await userServices.takeOrder(product_id, userId,quantity);
+            const result = await userServices.takeOrder(product_id, userId,quantity,version);
             if (result.success) {
                 return res.status(200).json({ message: 'successful operation' });
             }
@@ -482,7 +483,8 @@ class User {
             console.log(userId);
             const { productId } = req.body;
             const {quantity} = req.body;
-            const result = await userServices.addToCart(userId,productId, quantity);
+            const {version} = req.body;
+            const result = await userServices.addToCart(userId,productId, quantity, version);
             if (result.success) {
                 return res.status(200).json({ message: 'successful operation' });
             }
