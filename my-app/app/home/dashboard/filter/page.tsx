@@ -119,13 +119,14 @@ const Filter = ({
                             </FormItem>
                         )}
                     />
-                    <Button type="submit" className="mt-2">
+                    <Button type="submit" variant={"outline"} className="mt-2">
                         <FilterIcon width={20} />
                     </Button>
                 </form>
             </Form>
             <Button
                 className="mt-2"
+                variant={"outline"}
                 onClick={() => {
                     filterPrices(-1);
                     setBrand('');

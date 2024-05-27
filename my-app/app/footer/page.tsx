@@ -8,6 +8,7 @@ import youtube from '../../Images/video.png';
 import { Separator } from '@radix-ui/react-select';
 import { MenubarSeparator } from '@radix-ui/react-menubar';
 import { DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu';
+import logo from '../../Images/Screenshot 2024-05-27 114715.jpg'
 import Link from 'next/link';
 
 export default function Footer() {
@@ -17,8 +18,7 @@ export default function Footer() {
                 <div className='w-1/2 pl-5 lg:w-2/3'>
                     <Link href="/home/dashboard">
                         <Button className="lg:text-2xl text-xl font-bold  ">
-                            <MonitorCheck size={30} className="mr-2" />
-                            <span>Brand</span>
+                            <img src={logo.src} width={200}/>
                         </Button>
                     </Link>
                     <blockquote className="lg:mt-6 mt-4 lg:text-base text-xs border-l-2 pl-3 italic ">

@@ -5,7 +5,7 @@
         "price": 6590000,
         "category": "Smart Watch",
         "discount": 12,
-        "versions": [
+        "version": [
           {
             "color": "Trắng",
             "memory": "",
@@ -34,7 +34,7 @@
         "price": 21190000,
         "category": "Smart Watch",
         "discount": 0,
-        "versions": [
+        "version": [
           {
             "color": "Đen",
             "memory": "",
@@ -52,7 +52,7 @@
         "price": 18990000,
         "category": "Smart Watch",
         "discount": 0,
-        "versions": [
+        "version": [
           {
             "color": "Xanh",
             "memory": "",
@@ -71,7 +71,7 @@
         "price": 12790000,
         "category": "Smart Watch",
         "discount": 0,
-        "versions": [
+        "version": [
           {
             "color": "Hồng",
             "memory": "",
@@ -90,7 +90,7 @@
         "price": 8190000,
         "category": "Smart Watch",
         "discount": 0,
-        "versions": [
+        "version": [
           {
             "color": "Xanh đen đậm",
             "memory": "",
@@ -117,7 +117,7 @@
         "price": 4790000,
         "category": "Smart Watch",
         "discount": 10,
-        "versions": [
+        "version": [
           {
             "color": "Tím",
             "memory": "",
@@ -144,7 +144,7 @@
         "price": 2990000,
         "category": "Smart Watch",
         "discount": 0,
-        "versions": [
+        "version": [
           {
             "color": "Vàng hồng",
             "memory": "",
@@ -170,7 +170,7 @@
         "price": 6290000,
         "category": "Smart Watch",
         "discount": 6,
-        "versions": [
+        "version": [
           {
             "color": "Đen",
             "memory": "",
@@ -190,7 +190,7 @@
         "price": 7790000,
         "category": "Smart Watch",
         "discount": 4,
-        "versions": [
+        "version": [
           {
             "color": "Đen",
             "memory": "",
@@ -209,7 +209,7 @@
         "price": 6490000,
         "category": "Smart Watch",
         "discount": 0,
-        "versions": [
+        "version": [
           {
             "color": "Đen",
             "memory": "",
@@ -229,7 +229,7 @@
         "price": 5020000,
         "category": "Smart Watch",
         "discount": 5,
-        "versions": [
+        "version": [
           {
             "color": "Đen",
             "memory": "",
@@ -255,7 +255,7 @@
         "price": 11100000,
         "category": "Smart Watch",
         "discount": 0,
-        "versions": [
+        "version": [
           {
             "color": "Trắng",
             "memory": "",
@@ -285,7 +285,7 @@
         "price": 6160000,
         "category": "Smart Watch",
         "discount": 0,
-        "versions": [
+        "version": [
           {
             "color": "Xám",
             "memory": "",
@@ -311,7 +311,7 @@
         "price": 24690000,
         "category": "Smart Watch",
         "discount": 0,
-        "versions": [
+        "version": [
           {
             "color": "Đen",
             "memory": "",
@@ -331,7 +331,7 @@
         "price": 15660000,
         "category": "Smart Watch",
         "discount": 0,
-        "versions": [
+        "version": [
           {
             "color": "Trắng ",
             "memory": "",

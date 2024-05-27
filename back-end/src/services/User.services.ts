@@ -5,6 +5,7 @@ import ProductModel from '../models/Product.model';
 import ListRegisterModelModel from '../models/ListRegister.model';
 import ListRegisterModel from '../models/ListRegister.model';
 import ShoppingCartModel from '../models/ShoppingCart.model';
+import { compare, compareSync, genSaltSync, hash, hashSync } from 'bcrypt';
 
 class UserServices {
     // * tao nguoi dung
@@ -42,8 +43,63 @@ class UserServices {
         const user = await UserModel.findById({ _id }).select('email name username status role');
         return user;
     }
+    async getAllApply(type: string) {
+        try {
+            const listApply = await ListRegisterModel.find();
+            let list = listApply;
+            if (type !== 'all') {
+                list = listApply.filter((apply) => {
+                    apply.role === type;
+                    // apply.hide === false;
+                });
+            }
+            return list;
+        } catch (error) {
+            return 500;
+        }
+    }
+    async getAllList(type: string) {
+        try {
+            let list = await UserModel.find({
+                role: { $in: ['staff', 'deliver'] },
+            }).exec();
+            if (type !== 'all') {
+                list = list.filter((list) => list.role === type);
+            }
+            return list;
+        } catch (error) {
+            return 500;
+        }
+    }
+    async acceptUser(id: string, type: string) {
+        try {
+            if (!id || !type) {
+                return 400;
+            }
+            const updateRole = await UserModel.findByIdAndUpdate(id, { role: type }, { new: true });
+            if (!updateRole) {
+                return 404;
+            } else {
+                await ListRegisterModel.findOneAndUpdate({ userId: id }, { hide: true }, { new: true });
+                return 200;
+            }
+        } catch (error: any) {
+            return 500;
+        }
+    }
+    async notAcceptUser(id: string, type: string) {
+        try {
+            if (!id || !type) {
+                return 400;
+            }
+            await ListRegisterModel.findOneAndUpdate({ userId: id }, { hide: true }, { new: true });
+            return 200;
+        } catch (error: any) {
+            return 500;
+        }
+    }
 
-    async takeOrder(product_id: string, user_id: string) {
+    async takeOrder(product_id: string, user_id: string, quantity: number) {
         try {
             const product = await ProductModel.findOne({ _id: product_id });
             if (!product) {
@@ -69,6 +125,7 @@ class UserServices {
                     user_id: user_id,
                     address: 'xxxx',
                     deliver_id: 'xxxxx',
+                    status: 'chua_duoc_chuyen_di',
                     phoneNumber: user.phoneNumber,
                     orderProduct: [],
                 };
@@ -78,8 +135,8 @@ class UserServices {
             order.orderProduct.push({
             product_id: product_id,
             store_id: 'store ID',
-            quantity: '1', // Sửa lại nếu bạn có thông tin về số lượng
-            status: 'chua_duoc_chuyen_di',
+            quantity: quantity, // Sửa lại nếu bạn có thông tin về số lượng
+            
             price: product.price || 0,
             discount: (product.discount || '0').toString(),
         });
@@ -105,14 +162,16 @@ class UserServices {
         }
     }
 
-    async updateUser(_id: string, name: string, username: string, password: string, email: string, mobile: string) {
+    async updateUser(_id: string,username: string, password: string, email: string, mobile: string) {
         if ((await this.isExistEmail(email)) || (await this.isExistUsername(username))) {
             throw new InvalidInput('Email already exists');
         }
-        const data: { name: string; username: string; password: string; email: string; mobile: string } = {
-            name,
+        const salt = genSaltSync(10);
+        const hash = hashSync(password, salt);
+        const data: { username: string; password: string; email: string; mobile: string } = {
+
             username,
-            password,
+            password: hash,
             email,
             mobile,
         };
@@ -200,6 +259,78 @@ class UserServices {
             };
         }
     }
+    async addToCart(userId: string, productId: string, quantity: number, version:any) {
+        try {
+            const product = await ProductModel.findById(productId);
+            if (!product) {
+                return {
+                    success: false,
+                    message: 'Product not found',
+                };
+            }
+            const user = await UserModel.findById(userId);
+            if (!user) {
+                return {
+                    success: false,
+                    message: 'User not found',
+                };
+            }
+
+            let cart = await ShoppingCartModel.findOne({ user_id: userId });
+            if (!cart) {
+                cart = new ShoppingCartModel({
+                    user_id: userId,
+                    cartProduct: [{
+                        product_id: productId,
+                        quantity: quantity,
+                        version: version
+                    }]
+                });
+            } else {
+                const productIndex = cart.cartProduct.findIndex(item => item.product_id === productId);
+                if (productIndex >= 0) {
+                    cart.cartProduct[productIndex].quantity += quantity;
+                } else {
+                    cart.cartProduct.push({
+                        product_id: productId,
+                        quantity: quantity
+                    });
+                }
+            }
+            await cart.save();
+            return {
+                success: true,
+                message: 'Product added to cart',
+            };
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+            return {
+                success: false,
+                message: 'Failed to add product to cart',
+            };
+        }
+    }
+    async viewAllOrder(userId: string) {
+    try {
+        const orders= await OrderModel.find({ user_id: userId });
+
+        if(orders){
+            return{
+                success: true,
+                data: orders,
+            }
+        }else{
+            return{
+                success: false,
+                message: 'false',
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching orders:', error);
+        throw error;
+    }
+    }
+    
     async viewCart(userId: string) {
         try {
             const cart = await ShoppingCartModel.findOne({ user_id: userId });
@@ -238,19 +369,19 @@ class UserServices {
             throw error;
           }
     }
-    async checkOut(userId: string,productId: string) {
+
+    async checkOut(userId: string,orderId: string) {
         try {
-            const order = await OrderModel.findOne({user_id:userId});
-            const product_x = await ProductModel.findById(productId);
-            if (order && product_x) {
-                for (const product of order.orderProduct) {
-                    if (productId==product.product_id && product.status === 'da_nhan_hang') {
-                        return {
-                            success: true,
-                            message: 'san pham ' + productId + 'da duoc nhan',
-                        };
-                    }
+            const order = await OrderModel.findById(orderId);
+            if (order ) {
+                
+                if (order.status === 'da_nhan_hang') {
+                    return {
+                        success: true,
+                        message: 'san pham ' + orderId + 'da duoc nhan',
+                    };
                 }
+                
                 
             } else {
                 return {
@@ -265,80 +396,75 @@ class UserServices {
             };
           }
     }
-    // async purchersProduct(userId: string, productId: string) {
-    //     try {
-    //         const order = await OrderModel.findOne({user_id:userId});
-    //         const product_x = await ProductModel.findById(productId);
-    //         if (order && product_x) {
-    //             for (const product of order.orderProduct) {
-    //                 if (productId==product.product_id ) {
-    //                     product.status = 'da_nhan_hang';
-    //                     await order.save();
-    //                     return {
-    //                         success: true,
-    //                         message: 'san pham ' + productId + 'da duoc mua',
-    //                     };
-    //                 }
-    //             }
-                
-    //         } else {
-    //             return {
-    //                 success: false,
-    //                 message: 'Order not found',
-    //             };
-    //         }
-    //       } catch (error) {
-    //         return {
-    //             success: false,
-    //             message: 'error',
-    //         };
-    //       }
-    // }
-    async  purchersProduct(userId: string, productId: string) {
+    
+    async purchersOrder(userId: string, orderId: string) {
         try {
-            const order = await OrderModel.findOne({ user_id: userId });
-            const product_x = await ProductModel.findById(productId);
+            const order = await OrderModel.findById(orderId);
     
-            if (order && product_x) {
-                let productUpdated = false;
-                for (const product of order.orderProduct) {
-                    if (productId === product.product_id) {
-                        product.status = 'da_nhan_hang';
-                        productUpdated = true;
-                        console.log('Product status updated:', product);  // Log cập nhật trạng thái sản phẩm
-                        break;
-                    }
-                }
-    
-                if (productUpdated) {
-                    await order.save();
-                    console.log('Order saved:', order);  // Log việc lưu lại đơn hàng
-                    return {
-                        success: true,
-                        message: 'Sản phẩm ' + productId + ' đã được mua',
-                    };
-                } else {
-                    console.log('Product not found in order');  // Log khi sản phẩm không có trong đơn hàng
-                    return {
-                        success: false,
-                        message: 'Sản phẩm không có trong đơn hàng',
-                    };
-                }
-            } else {
-                console.log('Order or product not found');  // Log khi không tìm thấy đơn hàng hoặc sản phẩm
+            if (order && order.status === "da_tao_order") {
+                order.status = "order_dang_duoc_van_chuyen";
+                await order.save(); 
                 return {
-                    success: false,
-                    message: 'Đơn hàng hoặc sản phẩm không tồn tại',
+                    success: true,
+                    message: 'Đơn hàng đang được chuyển đi',
                 };
+            } else {
+                throw new Error('Đơn hàng không tồn tại hoặc không thể cập nhật trạng thái');
             }
         } catch (error) {
-            console.error('Error occurred:', error);  // Log lỗi nếu có
+            console.error('Error occurred:', error);  
             return {
                 success: false,
                 message: 'Lỗi: ' ,
             };
         }
     }
+
+    async receiveOrder(userId: string, orderId: string) {
+        try {
+            const order = await OrderModel.findById(orderId);
+    
+            if (order && order.status === "order_dang_duoc_van_chuyen") {
+                order.status = "order_da_duoc_nhan";
+                await order.save(); 
+                return {
+                    success: true,
+                    message: 'Đơn hàng đã đến tay người dùng',
+                };
+            } else {
+                throw new Error('Đơn hàng không tồn tại hoặc không thể cập nhật trạng thái');
+            }
+        } catch (error) {
+            console.error('Error occurred:', error);  
+            return {
+                success: false,
+                message: 'Lỗi: ' ,
+            };
+        }
+    }
+    
+    async viewDetailOrder(userId: string, orderId: string) {
+        try {
+            const order = await OrderModel.findById(orderId);
+    
+            if (order) {
+
+                return {
+                    success: true,
+                    data: order,
+                };
+            } else {
+                throw new Error('Đơn hàng không tồn tại hoặc không thể cập nhật trạng thái');
+            }
+        } catch (error) {
+            console.error('Error occurred:', error);  
+            return {
+                success: false,
+                message: 'Lỗi: ' ,
+            };
+        }
+    }
+
     // xóa một bản ghi trong danh sách register
     async deleteRegister(userId: string) {
         try {
@@ -383,79 +509,6 @@ class UserServices {
                 success: false,
                 message: 'error',
             };
-        }
-    }
-
-    async getAllApply(type: string) {
-        try {
-            const listApply = await ListRegisterModel.find();
-            let list = listApply;
-            if (type !== 'all') {
-                list = listApply.filter((apply) => {
-                    apply.role === type;
-                    // apply.hide === false;
-                });
-            }
-            return list;
-        } catch (error) {
-            return 500;
-        }
-    }
-
-    async getAllOrder(status: string) {
-        try {
-            let list = await OrderModel.find({
-                role: { $in: ['confirm', 'package', 'transition', 'delivered'] },
-            }).exec();
-            if (status !== 'all') {
-                // list = list.filter((list) => list.status === status);
-            }
-            return list;
-        } catch (error) {
-            return 500;
-        }
-    }
-
-    async getAllList(type: string) {
-        try {
-            let list = await UserModel.find({
-                role: { $in: ['staff', 'deliver'] },
-            }).exec();
-            if (type !== 'all') {
-                list = list.filter((list) => list.role === type);
-            }
-            return list;
-        } catch (error) {
-            return 500;
-        }
-    }
-
-    async notAcceptUser(id: string, type: string) {
-        try {
-            if (!id || !type) {
-                return 400;
-            }
-            await ListRegisterModel.findOneAndUpdate({ userId: id }, { hide: true }, { new: true });
-            return 200;
-        } catch (error: any) {
-            return 500;
-        }
-    }
-
-    async acceptUser(id: string, type: string) {
-        try {
-            if (!id || !type) {
-                return 400;
-            }
-            const updateRole = await UserModel.findByIdAndUpdate(id, { role: type }, { new: true });
-            if (!updateRole) {
-                return 404;
-            } else {
-                await ListRegisterModel.findOneAndUpdate({ userId: id }, { hide: true }, { new: true });
-                return 200;
-            }
-        } catch (error: any) {
-            return 500;
         }
     }
 

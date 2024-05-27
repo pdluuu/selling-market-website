@@ -11,6 +11,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import logo from '../Images/Screenshot 2024-05-27 114715.jpg'
 import { Separator } from '@radix-ui/react-select';
 import axios from 'axios';
 import {
@@ -70,10 +71,9 @@ function Navbar() {
 
     return (
         <div className="flex items-center w-full justify-between  p-2 lg:pl-8 lg:pr-7 h-86 ">
-            <Link href="/home/dashboard">
-                <Button className="  lg:text-2xl text-base font-bold p-4">
-                    <MonitorCheck className="lg:mr-2" size={30} />
-                    <span>Brand</span>
+            <Link href="/home/dashboard" className='-mb-3'>
+                <Button className='mt-3 h-[10px]'>
+                    <img width={150} height={30} src={logo.src}/>
                 </Button>
             </Link>
             <div className="flex flex-row-reverse items-center w-1/4">

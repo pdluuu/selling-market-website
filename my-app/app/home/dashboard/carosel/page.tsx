@@ -1,33 +1,43 @@
+'use client'
 import * as React from 'react';
 import { laptopData, phoneData } from '../sample-data';
 import { Card, CardContent } from '@/components/ui/card';
+import { useRouter } from 'next/navigation';
+import Autoplay from "embla-carousel-autoplay"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { Button } from '@/components/ui/button';
 export function CarouselPlugin() {
-    //   const plugin = React.useRef(
-    //     Autoplay({ delay: 2000, stopOnInteraction: true })
-    //   )
+      const plugin = React.useRef(
+        Autoplay({ delay: 2000, stopOnInteraction: true })
+      )
+    const router=useRouter();
     return (
-        <Carousel
-            //   plugins={[plugin.current]}
-            className="w-2/3 mt-6 mb-6 "
-            //   onMouseEnter={plugin.current.stop}
-            //   onMouseLeave={plugin.current.reset}
-        >
-            <CarouselContent>
-                {laptopData.map((image, index) => (
-                    <CarouselItem key={index}>
-                        <div className="p-1">
-                            <Card>
-                                <CardContent className="pt-4  flex relative justify-center">
-                                    <img src={image.images[0]} className="w-2/3" alt="asus" />
-                                </CardContent>
-                            </Card>
-                        </div>
+        
+    
+            <Carousel
+                  plugins={[plugin.current]}
+                className="w-[1600px] mb-6 "
+                  onMouseEnter={plugin.current.stop}
+                  onMouseLeave={plugin.current.reset}
+            >
+                <CarouselContent>
+                    <CarouselItem onClick={()=>router.push('/view-smartphone')}>
+            
+                            <img  className='w-[1920px] h-[500px]' src='https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2024/05/banner/1920x450-1920x450.jpg'/>
+            
                     </CarouselItem>
-                ))}
-            </CarouselContent>
-            <CarouselPrevious className="border-none" />
-            <CarouselNext className="border-none" />
-        </Carousel>
+                    <CarouselItem onClick={()=>router.push('/view-smartphone')}>
+            
+                            <img  className='w-[1920px] h-[500px]' src='https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2024/05/banner/720x220-720x220-75.png'/>
+            
+                    </CarouselItem><CarouselItem onClick={()=>router.push('/view-laptop')}>
+            
+                       <img  className='w-[1920px] h-[500px]' src='https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2024/05/banner/Laptop-Gaming-Chung-MB-2-720x220.png'/>
+            
+               </CarouselItem>
+                </CarouselContent>
+                <CarouselPrevious className="border-none -ml-7" />
+                <CarouselNext className="border-none -mr-7" />
+            </Carousel>
     );
 }
