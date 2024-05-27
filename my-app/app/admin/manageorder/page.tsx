@@ -2,7 +2,7 @@
 import NewMenubarMenu from '@/app/home/dashboard/menubar/page';
 import { Menubar, MenubarMenu, MenubarShortcut } from '@/components/ui/menubar';
 import { MenubarTrigger } from '@/components/ui/menubar';
-import { Check, FolderClosed, Gift, Star, Truck, X } from 'lucide-react';
+import { Check, FolderClosed, Gift, Star, Truck, Undo2, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import OrderItem from './order/page';
 import { IOrder } from '../../../../back-end/src/models/Order.model';
@@ -83,6 +83,13 @@ export default function ManageOrder() {
                                     <X />
                                 </MenubarShortcut>
                                 Đã hủy
+                            </MenubarTrigger>
+
+                            <MenubarTrigger onClick={() => setStatusFilter('returnData')}>
+                                <MenubarShortcut>
+                                    <Undo2 />
+                                </MenubarShortcut>
+                                Trả hàng/Hoàn tiền
                             </MenubarTrigger>
                         </div>
                     </MenubarMenu>
