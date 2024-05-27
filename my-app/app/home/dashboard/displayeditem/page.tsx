@@ -126,7 +126,7 @@ export default function DisplayedItem({
                 <Label className="font-bold md:text-xl text-base">
                     {reverse === 'true' ? category : brand || category}
                 </Label>
-                <Button onClick={handleViewMore} className='text-red-400'>
+                <Button onClick={handleViewMore} variant={"custom"} className='text-red-400'>
                     Xem thêm
                     <ChevronLast />
                 </Button>

@@ -72,7 +72,7 @@ function Navbar() {
     return (
         <div className="flex items-center w-full justify-between  p-2 lg:pl-8 lg:pr-7 h-86 ">
             <Link href="/home/dashboard" className='-mb-3'>
-                <Button className='mt-3 h-[10px]'>
+                <Button variant={"custom"} className='mt-3 h-[10px]'>
                     <img width={150} height={30} src={logo.src}/>
                 </Button>
             </Link>

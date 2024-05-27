@@ -17,7 +17,7 @@ export default function Footer() {
             <div className="flex lg:w-3/4 justify-between  ">
                 <div className='w-1/2 pl-5 lg:w-2/3'>
                     <Link href="/home/dashboard">
-                        <Button className="lg:text-2xl text-xl font-bold  ">
+                        <Button variant={"custom"} className="lg:text-2xl text-xl font-bold  ">
                             <img src={logo.src} width={200}/>
                         </Button>
                     </Link>
