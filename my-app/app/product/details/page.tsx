@@ -198,10 +198,10 @@ export default function Page({ item }: { item: IItem }) {
                                     </div>
                                 </CardHeader>
                                 <CardContent className="flex gap-3">
-                                    <Button type="submit" className=" flex-1">
+                                    <Button type="submit" className=" flex-1 bg-blue-600" >
                                         Mua ngay
                                     </Button>
-                                    <Button type="submit" className="flex-1">
+                                    <Button type="submit" className="flex-1 bg-red-600">
                                         Thêm vào giỏ hàng 
                                     </Button>
                                 </CardContent>
