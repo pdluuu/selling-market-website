@@ -443,13 +443,23 @@ class UserServices {
         }
     }
 
+    async updateStatusOrder(order_Id: string, status: string){
+        try {
+            let order = await OrderModel.findByIdAndUpdate(order_Id, {status: status}, {new: true});
+            console.log(order);
+            
+            return order;
+        } catch (error) {
+            return 500;
+        }
+    }
 
     async getAllOrder(status: string) {
         try {
             let list = await OrderModel.find({
-                role: { $in: ['confirm', 'package', 'transition', 'delivered'] },
+                status: { $in: ['allData', 'notExaminedData', 'package', 'deliveringData', 'completedData', 'deleteData', 'returnData'] },
             }).exec();
-            if (status !== 'all') {
+            if (status !== 'allData') {
                 list = list.filter((list) => list.status === status);
             }
             return list;

@@ -144,7 +144,7 @@ class User {
             return res.status(Err.statusCode).json({ message: Err.message });
         }
     }
-    async googleAuth() {}
+    async googleAuth() { }
 
     async password_getcode(req: Request<any, any, IForgotPassEmail>, res: Response<ISuccessRes | IFailRes>) {
         const { email } = req.body;
@@ -560,7 +560,7 @@ class User {
     async ViewOrder(req: Request<any, any, any>, res: Response<ISuccessRes | IFailRes>) {
         try {
             const { status } = req.params;
-            const allowedTypes = ['all', 'confirm', 'package', 'transition', 'delivered'];
+            const allowedTypes = ['allData', 'notExaminedData', 'package', 'deliveringData', 'completedData', 'deleteData', 'returnData'];
             if (!allowedTypes.includes(status)) {
                 throw new InvalidInput();
             }
@@ -625,127 +625,144 @@ class User {
             return res.status(Err.statusCode).json({ message: Err.message });
         }
     }
-    async CheckOut(req: Request<any, any, any>, res: Response<ISuccessRes | IFailRes>) {
+
+    async updateStatus(req: Request<any, any, any>, res: Response<ISuccessRes | IFailRes>) {
         try {
-            // Sử dụng service để lấy danh sách đăng kí từ cơ sở dữ liệu
-            const { userId } = req.body;
-            const { productId } = req.body;
-            const check_Out = await userServices.checkOut(userId, productId);
-            if (check_Out) {
-                console.log(check_Out.message);
-                return res.status(200).json({ message: 'Order placed successfully' });
-            } else {
-                return res.status(404).json({ message: 'xxxxxx' });
-            }
+            const { order_Id, status } = req.body;
+            const order = await userServices.updateStatusOrder(order_Id, status);
+            return res.status(200).json({
+                message: 'successful',
+                data: {
+                    order,
+                },
+            });
         } catch (error: any) {
-            console.log(error);
             const Err = new ErrorResponse(error.message as string, error.statusCode as number);
             return res.status(Err.statusCode).json({ message: Err.message });
         }
     }
-    async ViewCart(req: Request, res: Response) {
-        try {
-            const { userId } = req.body;
-            console.log(userId);
-            const cartItems = await userServices.viewCart(userId);
 
-            if (cartItems.success) {
-                return res.status(200).json({
-                    success: true,
-                    data: cartItems.data,
-                });
-            } else {
-                return res.status(400).json({
+    async CheckOut(req: Request<any, any, any>, res: Response<ISuccessRes | IFailRes>) {
+            try {
+                // Sử dụng service để lấy danh sách đăng kí từ cơ sở dữ liệu
+                const { userId } = req.body;
+                const { productId } = req.body;
+                const check_Out = await userServices.checkOut(userId, productId);
+                if (check_Out) {
+                    console.log(check_Out.message);
+                    return res.status(200).json({ message: 'Order placed successfully' });
+                } else {
+                    return res.status(404).json({ message: 'xxxxxx' });
+                }
+            } catch (error: any) {
+                console.log(error);
+                const Err = new ErrorResponse(error.message as string, error.statusCode as number);
+                return res.status(Err.statusCode).json({ message: Err.message });
+            }
+        }
+    async ViewCart(req: Request, res: Response) {
+            try {
+                const { userId } = req.body;
+                console.log(userId);
+                const cartItems = await userServices.viewCart(userId);
+
+                if (cartItems.success) {
+                    return res.status(200).json({
+                        success: true,
+                        data: cartItems.data,
+                    });
+                } else {
+                    return res.status(400).json({
+                        success: false,
+                        message: cartItems.message,
+                    });
+                }
+            } catch (error) {
+                console.error('Error retrieving cart items:', error);
+                return res.status(500).json({
                     success: false,
-                    message: cartItems.message,
+                    message: 'Internal server error',
                 });
             }
-        } catch (error) {
-            console.error('Error retrieving cart items:', error);
-            return res.status(500).json({
-                success: false,
-                message: 'Internal server error',
-            });
         }
-    }
 
     async ViewCartOfUser(req: Request, res: Response) {
-        try {
-            const { userId } = req.body;
-            console.log(userId);
-            const cartItems = await userServices.viewCartOfUser(userId);
-            return res.status(200).json({
-                success: true,
-                data: cartItems,
-            });
+            try {
+                const { userId } = req.body;
+                console.log(userId);
+                const cartItems = await userServices.viewCartOfUser(userId);
+                return res.status(200).json({
+                    success: true,
+                    data: cartItems,
+                });
 
-        } catch (error) {
-            console.error('Error retrieving cart items:', error);
-            return res.status(500).json({
-                success: false,
-                message: 'Internal server error',
-            });
+            } catch (error) {
+                console.error('Error retrieving cart items:', error);
+                return res.status(500).json({
+                    success: false,
+                    message: 'Internal server error',
+                });
+            }
         }
-    }
 
     async UpdateQuantity(req: Request, res: Response) {
-        try {
-            const {userId, productId, quantity} = req.body;
-            const cartItems = await userServices.updateQuantity(userId, productId, quantity);
-            return res.status(200).json({
-                success: true,
-                data: cartItems,
-            });
-        } catch (error) {
-            console.error('Error retrieving cart items:', error);
-            return res.status(500).json({
-                success: false,
-                message: 'Internal server error',
-            });
+            try {
+                const { userId, productId, quantity } = req.body;
+                const cartItems = await userServices.updateQuantity(userId, productId, quantity);
+                return res.status(200).json({
+                    success: true,
+                    data: cartItems,
+                });
+            } catch (error) {
+                console.error('Error retrieving cart items:', error);
+                return res.status(500).json({
+                    success: false,
+                    message: 'Internal server error',
+                });
+            }
         }
-    }
     
     async RemoveProduct(req: Request, res: Response) {
-        try {
-            const {userId, productId} = req.body;
-            const cartItems = await userServices.removeProduct(userId, productId);
-            return res.status(200).json({
-                success: true,
-                data: cartItems,
-            });
-        } catch (error) {
-            console.error('Error retrieving cart items:', error);
-            return res.status(500).json({
-                success: false,
-                message: 'Internal server error',
-            });
+            try {
+                const { userId, productId } = req.body;
+                const cartItems = await userServices.removeProduct(userId, productId);
+                return res.status(200).json({
+                    success: true,
+                    data: cartItems,
+                });
+            } catch (error) {
+                console.error('Error retrieving cart items:', error);
+                return res.status(500).json({
+                    success: false,
+                    message: 'Internal server error',
+                });
+            }
         }
-    }
 
     async PurchersProduct(req: Request, res: Response) {
-    try {
-        const { userId } = req.body;
-        const { productId } = req.body;
-        console.log(userId);
-        const product_purchers = await userServices.purchersProduct(userId, productId);
+            try {
+                const { userId } = req.body;
+                const { productId } = req.body;
+                console.log(userId);
+                const product_purchers = await userServices.purchersProduct(userId, productId);
 
-        if (product_purchers?.success) {
-            return res.status(200).json({
-                message: product_purchers.message,
-            });
-        } else {
-            return res.status(400).json({
-                message: 'no okxx',
-            });
+                if (product_purchers?.success) {
+                    return res.status(200).json({
+                        message: product_purchers.message,
+                    });
+                } else {
+                    return res.status(400).json({
+                        message: 'no okxx',
+                    });
+                }
+            } catch (error) {
+                console.error('Error retrieving cart items:', error);
+                return res.status(500).json({
+                    success: false,
+                    message: 'Internal server error',
+                });
+            }
         }
-    } catch (error) {
-        console.error('Error retrieving cart items:', error);
-        return res.status(500).json({
-            success: false,
-            message: 'Internal server error',
-        });
     }
-}
-}
-const user = new User();
+    const user = new User();
 export default user;

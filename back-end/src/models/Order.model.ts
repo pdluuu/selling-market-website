@@ -14,9 +14,9 @@ export interface IOrder extends Document {
     _id: string;
     totalprice: string;
     date: string;
-    user_id: string | Types.ObjectId;
+    user_id: String;
     address: string;
-    deliver_id: string | Types.ObjectId;
+    deliver_id: string;
     phoneNumber: string;
     status: string;
     orderProduct: IOrderProduct[];
@@ -32,9 +32,8 @@ const OrderSchema: Schema = new Schema({
     status: { type : String, require: true},
     orderProduct: [
         {
-
             product_id: { type: String, ref: 'Product', required: true },
-            store_id: { type: String, ref: 'Store', required: true },
+            store_id: { type: String, ref: 'Store', required: false },
             quantity: { type: String, required: true },
             price: { type: Schema.Types.Mixed, required: true },
             discount: { type: String, required: true },
@@ -45,3 +44,5 @@ const OrderSchema: Schema = new Schema({
 
 const OrderModel = mongoose.model<IOrder>('Order', OrderSchema);
 export default OrderModel;
+
+
