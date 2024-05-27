@@ -21,16 +21,16 @@ export function CarouselPlugin() {
                   onMouseLeave={plugin.current.reset}
             >
                 <CarouselContent>
-                    <CarouselItem onClick={()=>router.push('/view-smartphone')}>
+                    <CarouselItem onClick={()=>router.push('/home/view-smartphone')}>
             
                             <img  className='w-[1920px] h-[500px]' src='https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2024/05/banner/1920x450-1920x450.jpg'/>
             
                     </CarouselItem>
-                    <CarouselItem onClick={()=>router.push('/view-smartphone')}>
+                    <CarouselItem onClick={()=>router.push('/home/view-smartphone')}>
             
                             <img  className='w-[1920px] h-[500px]' src='https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2024/05/banner/720x220-720x220-75.png'/>
             
-                    </CarouselItem><CarouselItem onClick={()=>router.push('/view-laptop')}>
+                    </CarouselItem><CarouselItem onClick={()=>router.push('/home/view-laptop')}>
             
                        <img  className='w-[1920px] h-[500px]' src='https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/2024/05/banner/Laptop-Gaming-Chung-MB-2-720x220.png'/>
             
