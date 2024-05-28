@@ -12,17 +12,19 @@ export default function ManageOrder() {
     const [orders, setOrders] = useState<IOrder[]>([]);
     const [statusFilter, setStatusFilter] = useState('all');
 
+    console.log(localStorage.getItem('access_token'));
+
     const axiosInstance = axios.create({
         baseURL: process.env.NEXT_PUBLIC_API_URL,
         headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjQ2Y2QwYjU1NDczMDljMDAxMGNkYTQiLCJlbWFpbCI6ImFkbWluMUBnbWFpbC5jb20iLCJpYXQiOjE3MTY0NjM0MTh9.XhuNIpk29x7wri9RccoholUm3WVUXOGwqCOV9clRorw`,
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
         },
     });
 
     const fetchOrders = async (status: string): Promise<IOrder[]> => {
         try {
-            const response = await axiosInstance.get(`/admin//order/${status}`);
-            console.log(response.data.data.listApply);
+            const response = await axiosInstance.get(`/admin/order/${status}`);
+            console.log(response.data.data);
 
             return response.data.data.list as IOrder[];
         } catch (error) {
@@ -50,7 +52,7 @@ export default function ManageOrder() {
                     <div className="flex gap-16">
                         <MenubarTrigger onClick={() => setStatusFilter('all')}>Tất cả</MenubarTrigger>
 
-                        <MenubarTrigger onClick={() => setStatusFilter('confirm')}>
+                        <MenubarTrigger onClick={() => setStatusFilter('pending')}>
                             <MenubarShortcut>
                                 <FolderClosed />
                             </MenubarShortcut>{' '}

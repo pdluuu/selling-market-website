@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IShoppingCartProduct {
     product_id: string;
@@ -13,19 +13,16 @@ export interface IShoppingCart extends Document {
 
 const ShoppingCartSchema: Schema = new Schema(
     {
-        user_id: { type: String, ref: "User", require: true },
+        user_id: { type: String, ref: 'User', require: true, unique: true },
         cartProduct: [
             {
-                product_id: { type: String, ref: "Product", require: true },
+                product_id: { type: String, ref: 'Product', require: true, unique: true },
                 quantity: { type: Number, require: true, default: 1 },
             },
         ],
     },
-    { timestamps: true }
+    { timestamps: true },
 );
 
-const ShoppingCartModel = mongoose.model<IShoppingCart>(
-    "ShoppingCart",
-    ShoppingCartSchema
-);
+const ShoppingCartModel = mongoose.model<IShoppingCart>('ShoppingCart', ShoppingCartSchema);
 export default ShoppingCartModel;

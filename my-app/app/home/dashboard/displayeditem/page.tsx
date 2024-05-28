@@ -11,6 +11,7 @@ import { phoneData } from '../sample-data';
 import { useRouter } from 'next/navigation';
 import tag from '../../../../Images/tag3.png';
 import { useEffect, useState } from 'react';
+import DetailProduct from '@/components/Detail.Product';
 
 type ProductInfo = {
     _id: string;
@@ -18,7 +19,7 @@ type ProductInfo = {
     discount: number;
     price: number;
     brand: string;
-    version: string[];
+    version: any[];
     category: string;
     images: string[];
     items: string[];
@@ -163,6 +164,24 @@ export default function DisplayedItem({
                                                     đ
                                                 </span>
                                             </p>
+
+                                            <div className="">
+                                                <DetailProduct
+                                                    product={{
+                                                        _id: product._id,
+                                                        name: product.name,
+                                                        discount: product.discount,
+                                                        price: product.price,
+                                                        brand: product.brand,
+                                                        category: product.category,
+                                                        versions: product?.version.map((item) => {
+                                                            return { color: item?.color };
+                                                        }),
+
+                                                        images: product.images,
+                                                    }}
+                                                ></DetailProduct>
+                                            </div>
                                         </CardContent>
                                     </Card>
                                 </div>

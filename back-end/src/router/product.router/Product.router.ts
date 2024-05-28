@@ -3,9 +3,9 @@ import product from '../../controller/Product.controller';
 import { authenticateToken } from '../../middlerware/authentication';
 
 const productRouter = Router();
+productRouter.post('/create-product', product.createProduct);
 productRouter.post('/delete-product', authenticateToken, product.deleteProduct);
 
-productRouter.post('/create-product', authenticateToken, product.createProduct);
 productRouter.post('/update-product', authenticateToken, product.updateProduct);
 //red: IProduct, res: {message: "Update successfully//Error"}
 productRouter.post('/view-detail-product', product.viewDetailProduct);

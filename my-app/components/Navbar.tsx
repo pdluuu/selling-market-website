@@ -133,14 +133,14 @@ function Navbar() {
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={logOut}>
-                                <LogOut className="mr-2 h-4 w-4" />
+                                <LogIn className="mr-2 h-4 w-4" />
                                 <span>Đăng xuất</span>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 )}
                 <Bell size={25} />
-                <Link href="/cart">
+                <Link href="/home/cart">
                     <ShoppingCart size={25} />
                 </Link>
             </div>

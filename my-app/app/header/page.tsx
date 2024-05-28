@@ -144,7 +144,7 @@ function Header() {
                     </DropdownMenu>
                 )}
                 <Bell size={25} />
-                <Link href="/cart">
+                <Link href="/homecart">
                     <ShoppingCart size={25} />
                 </Link>
             </div>

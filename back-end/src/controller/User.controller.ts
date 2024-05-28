@@ -54,11 +54,11 @@ class User {
 
             // * accesstoken la dang ma hoa cua { id, email } can co khoa
 
-            const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET || '', {
-                expiresIn: process.env.EXPIRES_TOKEN_TIME,
+            const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET || 'ACCESS_TOKEN_SECRET', {
+                expiresIn: process.env.EXPIRES_TOKEN_TIME || '1h',
             });
 
-            const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET || '');
+            const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET || 'REFRESH_TOKEN_SECRET');
 
             await authService.addTokens(refreshToken, user._id);
 
@@ -98,7 +98,7 @@ class User {
             };
             console.log(process.env.EXPIRES_TOKEN_TIME);
             // phien ban ma hoa
-            const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET || '', {
+            const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET || 'ACCESS_TOKEN_SECRET', {
                 expiresIn: '1h',
             });
             // ma hoa + key -> phien ban chua decode
@@ -276,18 +276,15 @@ class User {
         }
     }
 
-    async get_access_token(
-        req: Request<any, any, { refreshToken: string}>,
-        res: Response<ISuccessRes | IFailRes>,
-    ) {
+    async get_access_token(req: Request<any, any, { refreshToken: string }>, res: Response<ISuccessRes | IFailRes>) {
         try {
-            const { refreshToken} = req.body;
+            const { refreshToken } = req.body;
             console.log(refreshToken);
-            
+
             if (!refreshToken) {
                 throw new MissingParameter('Missing refresh tokens');
             }
-            const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET || "");
+            const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET || '');
             const email = (payload as any).email;
             const user = await UserModel.findOne({ email: email });
             if (!user) {
@@ -560,11 +557,13 @@ class User {
     async ViewOrder(req: Request<any, any, any>, res: Response<ISuccessRes | IFailRes>) {
         try {
             const { status } = req.params;
-            const allowedTypes = ['all', 'confirm', 'package', 'transition', 'delivered'];
+            const allowedTypes = ['all', 'confirm', 'package', 'transition', 'delivered', 'pending'];
             if (!allowedTypes.includes(status)) {
                 throw new InvalidInput();
             }
+
             const list = await userServices.getAllOrder(status);
+            console.log(list);
             if (list === 500) {
                 throw new ErrorResponse('Internal server error', 500);
             }
@@ -579,7 +578,6 @@ class User {
             return res.status(Err.statusCode).json({ message: Err.message });
         }
     }
-
 
     async Accept(req: Request<any, any, any>, res: Response<ISuccessRes | IFailRes>) {
         try {
