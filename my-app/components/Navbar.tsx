@@ -21,8 +21,10 @@ import {
     LogIn,
     LogOut,
     MonitorCheck,
+    Notebook,
     SearchIcon,
     Settings,
+    ShoppingBag,
     ShoppingCart,
     User,
 } from 'lucide-react';
@@ -30,6 +32,9 @@ import Link from 'next/link';
 import { useEffect, useState, memo, useContext } from 'react';
 import { useRouter } from 'next/navigation';
 import { useStore } from 'zustand';
+
+import BRAND from '@/public/442006968_7610173559097035_3639226673492589947_n.jpg';
+import Image from 'next/image';
 type User = {
     _id: string;
     email: string;
@@ -45,7 +50,9 @@ function Navbar() {
     });
     const router = useRouter();
     // console.log(user);
-
+    const [needLogin, setNeedsLogin] = useState(
+        localStorage.getItem('user') && localStorage.getItem('access_token') ? false : true,
+    );
     const logOut = async () => {
         try {
             setUser(null);
@@ -63,6 +70,7 @@ function Navbar() {
             localStorage.removeItem('user');
             localStorage.removeItem('access_token');
             // setUser(null);
+            setNeedsLogin(true);
         } catch (error) {
             console.error('Error:', error);
         }
@@ -71,10 +79,13 @@ function Navbar() {
     return (
         <div className="flex items-center w-full justify-between  p-2 lg:pl-8 lg:pr-7 h-86 ">
             <Link href="/home/dashboard">
-                <Button className=" p-0 lg:text-2xl text-base font-bold p-4">
+                {/* <Button className=" p-0 lg:text-2xl text-base font-bold p-4">
                     <MonitorCheck className="lg:mr-2" size={30} />
                     <span>Brand</span>
-                </Button>
+                </Button> */}
+                <Button variant={'custom'} className="mt-3 h-[10px]">
+                    <img width={150} height={30} src={BRAND.src} />
+                </Button>{' '}
             </Link>
             <div className="flex flex-row-reverse items-center w-1/4">
                 <Input
@@ -89,7 +100,7 @@ function Navbar() {
             </div>
 
             <div className="flex items-center lg:space-x-4 ">
-                {!localStorage.getItem('user') ? (
+                {needLogin ? (
                     <Link href="/auth/login">
                         <Button>
                             <LogIn className="mr-2" />
@@ -109,7 +120,7 @@ function Navbar() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-56">
                             <DropdownMenuGroup>
-                                <Link href="/user">
+                                <Link href="/home/user">
                                     <DropdownMenuItem>
                                         <User className="mr-2 h-4 w-4" />
                                         <span>Tài khoản của tôi</span>
@@ -136,12 +147,25 @@ function Navbar() {
                                 <LogIn className="mr-2 h-4 w-4" />
                                 <span>Đăng xuất</span>
                             </DropdownMenuItem>
+                            {user?.role === 'admin' && (
+                                <DropdownMenuItem
+                                    onClick={() => {
+                                        router.push('/admin/dashboard');
+                                    }}
+                                >
+                                    <Notebook className="mr-2 h-4 w-4" />
+                                    <span>Quan li </span>
+                                </DropdownMenuItem>
+                            )}
                         </DropdownMenuContent>
                     </DropdownMenu>
                 )}
                 <Bell size={25} />
                 <Link href="/home/cart">
                     <ShoppingCart size={25} />
+                </Link>
+                <Link href="/home/payment">
+                    <ShoppingBag size={25} />
                 </Link>
             </div>
         </div>

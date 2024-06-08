@@ -28,7 +28,7 @@ const OrderSchema: Schema = new Schema({
     address: { type: String, required: true },
     deliver_id: { type: String, ref: 'User' },
     phoneNumber: { type: String, required: true },
-    status: { type: String, require: true, default: 'pending' },
+    status: { type: String, require: true, default: 'notExaminedData' },
     orderProduct: [
         {
             product_id: { type: String, ref: 'Product', required: true },

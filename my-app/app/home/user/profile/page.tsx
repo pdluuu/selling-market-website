@@ -22,24 +22,22 @@ import { Button } from '@/components/ui/button';
 // Định nghĩa kiểu dữ liệu cho user
 type User = {
     id: string;
-    name: string;
+    username: string;
     email: string;
     phone: string;
     role: string;
     address: string;
 };
 
-const initialUser: User = {
-    id: 'm5gr84i9',
-    name: 'xxxxxx',
-    email: 'ken99@yahoo.com',
-    phone: '0123456789',
-    role: 'user',
-    address: 'Số 4, Đường Bến, Xóm 3 Đồng Nhân Xã Đông La, Huyện Hoài Đức, Hà Nội',
-};
-
 export default function Profile() {
     // Sử dụng useForm hook để tạo ra form
+    const [initialUser, setinitialUser] = useState<User | any>();
+
+    React.useEffect(() => {
+        const user = localStorage.getItem('user');
+
+        user && setinitialUser(JSON.parse(user));
+    }, []);
     const form = useForm<User>({
         resolver: zodResolver(
             z.object({
@@ -49,7 +47,7 @@ export default function Profile() {
                 role: z.string(),
             }),
         ),
-        defaultValues: initialUser, // Sử dụng giá trị mặc định cho form từ initialUser
+        defaultValues: initialUser, // Sử dụng giá trị mặc định cho form từ initialUser?
     });
 
     return (
@@ -73,7 +71,7 @@ export default function Profile() {
                             {/* <!-- My contact --> */}
                             <div className="py-3 sm:order-none order-3">
                                 <CardTitle className="text-lg font-poppins font-bold text-top-color">
-                                    {initialUser.name}
+                                    {initialUser?.username}
                                 </CardTitle>
                                 <div className="border-2 w-20 border-top-color my-3"></div>
 
@@ -91,7 +89,7 @@ export default function Profile() {
                                                 ></path>
                                             </svg>
                                         </a>
-                                        <div className="ml-2 truncate">{initialUser.email}</div>
+                                        <div className="ml-2 truncate">{initialUser?.email}</div>
                                     </div>
                                     <div className="flex items-center my-1">
                                         <a
@@ -111,7 +109,7 @@ export default function Profile() {
                                                 ></path>
                                             </svg>
                                         </a>
-                                        <div>{initialUser.phone}</div>
+                                        <div>{initialUser?.phone}</div>
                                     </div>
                                     <div className="flex items-center my-1">
                                         <a
@@ -140,7 +138,7 @@ export default function Profile() {
                                 <h2 className="text-lg font-poppins font-bold text-top-color">Địa chỉ</h2>
                                 <div className="border-2 w-20 border-top-color my-3"></div>
 
-                                <p>{initialUser.address}</p>
+                                <p>{initialUser?.address}</p>
                             </div>
                             {/* <!-- Đơn mua --> */}
                             <div className="py-3 sm:order-none order-1">
@@ -167,20 +165,20 @@ export default function Profile() {
                                 <div className="flex flex-col">
                                     <div className="flex flex-col">
                                         <p className="text-lg font-bold ">Tên đăng nhập</p>
-                                        <Input value={initialUser.name} className="max-w-sm" />
+                                        <Input value={initialUser?.name} className="max-w-sm" />
                                     </div>
 
                                     <div className="flex flex-col mt-8">
                                         <p className="text-lg font-bold ">Tên</p>
-                                        <Input value={initialUser.name} className="max-w-sm" />
+                                        <Input value={initialUser?.name} className="max-w-sm" />
                                     </div>
                                     <div className="flex flex-col mt-8">
                                         <p className="text-lg font-bold ">Email</p>
-                                        <Input value={initialUser.email} className="max-w-sm" />
+                                        <Input value={initialUser?.email} className="max-w-sm" />
                                     </div>
                                     <div className="flex flex-col mt-8">
                                         <p className="text-lg font-bold text-gray-700">Số điện thoại</p>
-                                        <Input value={initialUser.phone} className="max-w-sm" />
+                                        <Input value={initialUser?.phone} className="max-w-sm" />
                                     </div>
                                 </div>
                             </div>

@@ -10,21 +10,12 @@ import axios from "axios";
 
 
 export default function ManageOrder() {
-    function isSuccessRes(response: ISuccessRes | IFailRes): response is ISuccessRes {
-        return (response as ISuccessRes).message === "successful";
-    }
-
-    function isFailRes(response: ISuccessRes | IFailRes): response is IFailRes {
-        return (response as IFailRes).message === "error";
-    }
-
-
     const [requests, setRequest] = useState<IListRegister[]>([]);
     const [roleFilter, setRoleFilter] = useState('all');
 
     const axiosInstance = axios.create({
         baseURL: process.env.NEXT_PUBLIC_API_URL,
-        headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjQ2Y2QwYjU1NDczMDljMDAxMGNkYTQiLCJlbWFpbCI6ImFkbWluMUBnbWFpbC5jb20iLCJpYXQiOjE3MTY0NjM0MTh9.XhuNIpk29x7wri9RccoholUm3WVUXOGwqCOV9clRorw` }
+        headers: { Authorization: `Bearer ${localStorage.getItem('refresh_token')}` }
     });
 
     const fetchRequests = async (type: string): Promise<IListRegister[]> => {
@@ -52,25 +43,27 @@ export default function ManageOrder() {
     }, [roleFilter]);
 
     return (
-        <div className="flex h-12 justify-start items-center border border-y w-full">
-            <Menubar className="border-none">
-                <MenubarMenu>
-                    <div className="flex gap-16 ml-56">
-                        <MenubarTrigger onClick={() => setRoleFilter('all')}>
-                            Tất cả
-                        </MenubarTrigger>
+        <div>
+            <div className="flex h-12 justify-start items-center border border-y w-full mt-8">
+                <Menubar className="border-none">
+                    <MenubarMenu>
+                        <div className="flex gap-16 ml-56">
+                            <MenubarTrigger onClick={() => setRoleFilter('all')}>
+                                Tất cả
+                            </MenubarTrigger>
 
-                        <MenubarTrigger onClick={() => setRoleFilter('staff')}>
-                            <MenubarShortcut><SquareUser /></MenubarShortcut> Staff
-                        </MenubarTrigger>
+                            <MenubarTrigger onClick={() => setRoleFilter('staff')}>
+                                <MenubarShortcut><SquareUser /></MenubarShortcut> Staff
+                            </MenubarTrigger>
 
-                        <MenubarTrigger onClick={() => setRoleFilter('deliver')}>
-                            <MenubarShortcut><Truck /></MenubarShortcut> Deliver
-                        </MenubarTrigger>
-                    </div>
-                </MenubarMenu>
-            </Menubar>
-            <div className="flex flex-row gap-16 content-center">
+                            <MenubarTrigger onClick={() => setRoleFilter('deliver')}>
+                                <MenubarShortcut><Truck /></MenubarShortcut> Deliver
+                            </MenubarTrigger>
+                        </div>
+                    </MenubarMenu>
+                </Menubar>
+            </div>
+            <div className="flex flex-row gap-16 content-center mx-16">
                 {requests.map((request) => (
                     <RequestItem key={request._id} request={request} />
                 ))}

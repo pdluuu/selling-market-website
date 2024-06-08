@@ -9,6 +9,7 @@ import { Separator } from '@radix-ui/react-select';
 import { MenubarSeparator } from '@radix-ui/react-menubar';
 import { DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu';
 import Link from 'next/link';
+import logo from '@/public/442006968_7610173559097035_3639226673492589947_n.jpg';
 
 export default function Footer() {
     return (
@@ -16,9 +17,8 @@ export default function Footer() {
             <div className="flex lg:w-3/4 justify-between  ">
                 <div className="w-1/2 pl-5 lg:w-2/3">
                     <Link href="/home/dashboard">
-                        <Button className="lg:text-2xl text-xl font-bold  ">
-                            <MonitorCheck size={30} className="mr-2" />
-                            <span>Brand</span>
+                        <Button variant={'custom'} className="lg:text-2xl text-xl font-bold  ">
+                            <img src={logo.src} width={200} />
                         </Button>
                     </Link>
                     <blockquote className="lg:mt-6 mt-4 lg:text-base text-xs border-l-2 pl-3 italic ">

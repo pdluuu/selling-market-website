@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import tag from '../../../../Images/tag3.png';
 import { useEffect, useState } from 'react';
 import DetailProduct from '@/components/Detail.Product';
+import { formatNumberWithDots } from '@/lib/utils';
 
 type ProductInfo = {
     _id: string;
@@ -157,9 +158,18 @@ export default function DisplayedItem({
                                                 />
                                             </div>
 
-                                            <CardTitle className="text-[18px]">{product.name}</CardTitle>
+                                            <CardTitle
+                                                className="text-[18px]"
+                                                style={{
+                                                    textOverflow: 'ellipsis',
+                                                    overflow: 'hidden',
+                                                    whiteSpace: 'nowrap',
+                                                }}
+                                            >
+                                                {product.name}
+                                            </CardTitle>
                                             <p className="text-[16px] relative">
-                                                {product.price}
+                                                {formatNumberWithDots(product.price)}
                                                 <span className="underline md:text-xs text-[8px] inline-block align-top">
                                                     đ
                                                 </span>

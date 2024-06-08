@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import ComboboxDemo from './combobox';
 import axios from 'axios';
 import { IProduct } from '../cart/page';
+import { formatNumberWithDots } from '@/lib/utils';
 
 interface CartItem {
     id: string;
@@ -87,7 +88,7 @@ export default function Payment() {
         <>
             {orders?.map((order) => {
                 return (
-                    <div className="w-5/6 mt-20 mx-auto">
+                    <div className="w-5/6 mt-20 mx-auto border-black">
                         <div className="flex flex-col">
                             <div className="flex justify-between">
                                 Địa chỉ nhận hàng
@@ -129,7 +130,9 @@ export default function Payment() {
                                                 <TableCell className="font-medium">{item.product_id.name}</TableCell>
                                                 <TableCell>{}</TableCell>
                                                 <TableCell>{item.quantity}</TableCell>
-                                                <TableCell className="text-right">{item.price}</TableCell>
+                                                <TableCell className="text-right">
+                                                    {formatNumberWithDots(Number(item.price))}
+                                                </TableCell>
                                             </TableRow>
                                         );
                                     })}
@@ -137,7 +140,7 @@ export default function Payment() {
                             </Table>
                         </div>
                         <div className="flex justify-between">
-                            <div>{order.totalprice}</div>
+                            <div>{formatNumberWithDots(Number(order.totalprice))}</div>
                             <div>
                                 <Button>{order.status}</Button>
                             </div>

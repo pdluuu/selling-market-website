@@ -32,6 +32,7 @@ import UserModel from '../models/User.model';
 import RefreshTokenModel, { IRefreshToken } from '../models/Token.model';
 import { ObjectId } from 'mongodb';
 import { log } from 'console';
+import OrderModel from '../models/Order.model';
 config();
 
 class User {
@@ -557,7 +558,16 @@ class User {
     async ViewOrder(req: Request<any, any, any>, res: Response<ISuccessRes | IFailRes>) {
         try {
             const { status } = req.params;
-            const allowedTypes = ['all', 'confirm', 'package', 'transition', 'delivered', 'pending'];
+            const allowedTypes = [
+                'allData',
+                'notExaminedData',
+                'package',
+                'deliveringData',
+                'completedData',
+                'deleteData',
+                'returnData',
+                'pending',
+            ];
             if (!allowedTypes.includes(status)) {
                 throw new InvalidInput();
             }
@@ -676,6 +686,34 @@ class User {
             if (product_purchers?.success) {
                 return res.status(200).json({
                     message: product_purchers.message,
+                });
+            } else {
+                return res.status(400).json({
+                    message: 'no okxx',
+                });
+            }
+        } catch (error) {
+            console.error('Error retrieving cart items:', error);
+            return res.status(500).json({
+                success: false,
+                message: 'Internal server error',
+            });
+        }
+    }
+    async updateStatus(req: Request, res: Response) {
+        try {
+            const { order_Id } = req.body;
+            const { status } = req.body;
+
+            const newOrder = await OrderModel.findById(order_Id);
+            if (newOrder && newOrder.status) {
+                newOrder.status = status;
+                await newOrder.save();
+            }
+
+            if (1) {
+                return res.status(200).json({
+                    message: 'Success',
                 });
             } else {
                 return res.status(400).json({

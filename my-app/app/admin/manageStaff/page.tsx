@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 import StaffItem from './staff/page';
 import { IUser } from '../../../../back-end/src/models/User.model';
 import axios from 'axios';
-import { headers } from 'next/headers';
 
 export default function ManageOrder() {
     //localStorage.setItem('access_token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjQ2Y2QwYjU1NDczMDljMDAxMGNkYTQiLCJlbWFpbCI6ImFkbWluMUBnbWFpbC5jb20iLCJpYXQiOjE3MTY0NjAzNzR9.WlzBBJ4yovP01iVOe-R_ZefzfEXaFPLVXUxHBJpvXrk');
@@ -17,9 +16,7 @@ export default function ManageOrder() {
 
     const axiosInstance = axios.create({
         baseURL: process.env.NEXT_PUBLIC_API_URL,
-        headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjQ2Y2QwYjU1NDczMDljMDAxMGNkYTQiLCJlbWFpbCI6ImFkbWluMUBnbWFpbC5jb20iLCJpYXQiOjE3MTY0NjM0MTh9.XhuNIpk29x7wri9RccoholUm3WVUXOGwqCOV9clRorw`,
-        },
+        headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjQ2Y2QwYjU1NDczMDljMDAxMGNkYTQiLCJlbWFpbCI6ImFkbWluMUBnbWFpbC5jb20iLCJpYXQiOjE3MTY0NjM0MTh9.XhuNIpk29x7wri9RccoholUm3WVUXOGwqCOV9clRorw` }
     });
 
     const fetchStaffs = async (type: string): Promise<IUser[]> => {
@@ -46,36 +43,39 @@ export default function ManageOrder() {
         getStaffs();
     }, [roleFilter]);
 
+
     return (
-        <div className="flex h-12 justify-start items-center border border-y w-full">
-            <div className="flex">
-                <Menubar className="border-none">
-                    <MenubarMenu>
-                        <div className="flex gap-16 ml-56">
-                            <MenubarTrigger onClick={() => setRoleFilter('all')}>Tất cả</MenubarTrigger>
+        <div className='w-full'>
+            <div className="flex h-12 justify-start items-center border border-y w-full mt-8">
+                <div className="flex">
+                    <Menubar className="border-none">
+                        <MenubarMenu>
+                            <div className="flex gap-16 ml-56">
+                                <MenubarTrigger onClick={() => setRoleFilter('all')}>Tất cả</MenubarTrigger>
 
-                            <MenubarTrigger onClick={() => setRoleFilter('staff')}>
-                                <MenubarShortcut>
-                                    <SquareUser />
-                                </MenubarShortcut>{' '}
-                                Staff
-                            </MenubarTrigger>
+                                <MenubarTrigger onClick={() => setRoleFilter('staff')}>
+                                    <MenubarShortcut>
+                                        <SquareUser />
+                                    </MenubarShortcut>{' '}
+                                    Staff
+                                </MenubarTrigger>
 
-                            <MenubarTrigger onClick={() => setRoleFilter('deliver')}>
-                                <MenubarShortcut>
-                                    <Truck />
-                                </MenubarShortcut>{' '}
-                                Deliver
-                            </MenubarTrigger>
-                        </div>
-                    </MenubarMenu>
-                </Menubar>
+                                <MenubarTrigger onClick={() => setRoleFilter('deliver')}>
+                                    <MenubarShortcut>
+                                        <Truck />
+                                    </MenubarShortcut>{' '}
+                                    Deliver
+                                </MenubarTrigger>
+                            </div>
+                        </MenubarMenu>
+                    </Menubar>
+                </div>
             </div>
-            <div className="flex flex-row gap-16 content-center">
-                {staffs.map((staff) => (
-                    <StaffItem key={staff._id} staff={staff} />
-                ))}
-            </div>
+            <div className="flex flex-row gap-16 content-center ml-8 mx-auto">
+                    {staffs.map((staff) => (
+                        <StaffItem key={staff._id} staff={staff} />
+                    ))}
+                </div>
         </div>
     );
 }

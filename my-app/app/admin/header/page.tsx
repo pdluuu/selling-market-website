@@ -40,8 +40,9 @@ function Header() {
     // const userr: User | null = JSON.parse(localStorage.getItem("user"||null)||" ");
     const [user, setUser] = useState<User | null>(() => {
         const storedUser = localStorage.getItem('user');
-        return storedUser ? JSON.parse(storedUser) : null;
+        return storedUser !== null ? JSON.parse(storedUser) : null;
     });
+
     const router = useRouter();
     // console.log(user);
 
@@ -74,24 +75,6 @@ function Header() {
 
     return (
         <div className="flex items-center w-full justify-between  p-2 lg:pl-8 lg:pr-7 h-86 ">
-            <Link href="/home/dashboard">
-                <Button className=" p-0 lg:text-2xl text-base font-bold">
-                    <MonitorCheck className="lg:mr-2" size={30} />
-                    <span>Brand</span>
-                </Button>
-            </Link>
-            <div className="flex flex-row-reverse items-center w-1/4">
-                <Input
-                    type="text"
-                    className="w-full lg:text-base text-xs lg:rounded-3xl rounded-xl h-30 "
-                    placeholder="Bạn tìm gì..."
-                />
-
-                <Button type="submit" className="absolute  lg:rounded-r-3xl lg:rounded-l-none rounded-1/2">
-                    <SearchIcon />
-                </Button>
-            </div>
-
             <div className="flex items-center lg:space-x-4 ">
                 {!localStorage.getItem('access_token') ? (
                     <Link href="/auth/login">
@@ -113,16 +96,10 @@ function Header() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-56">
                             <DropdownMenuGroup>
-                                <Link href="//home/user">
+                                <Link href="/home/ser">
                                     <DropdownMenuItem>
                                         <User className="mr-2 h-4 w-4" />
                                         <span>Tài khoản của tôi</span>
-                                    </DropdownMenuItem>
-                                </Link>
-                                <Link href="/view-order">
-                                    <DropdownMenuItem>
-                                        <CreditCard className="mr-2 h-4 w-4" />
-                                        <span>Đơn hàng</span>
                                     </DropdownMenuItem>
                                 </Link>
                                 <DropdownMenuItem>
@@ -143,12 +120,8 @@ function Header() {
                         </DropdownMenuContent>
                     </DropdownMenu>
                 )}
-                <Bell size={25} />
-                <Link href="/homecart">
-                    <ShoppingCart size={25} />
-                </Link>
             </div>
         </div>
     );
 }
-export default memo(Header);
+export default Header;

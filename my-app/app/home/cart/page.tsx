@@ -17,6 +17,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useRouter } from 'next/navigation';
+import { formatNumberWithDots } from '@/lib/utils';
 
 interface CartItem {
     product_id: string;
@@ -281,7 +282,7 @@ export default function Cart() {
                                     <Button onClick={() => increaseNumber(cart.product_id)}>+</Button>
                                 </div>
                             </TableCell>
-                            <TableCell className="text-right">{cart.price}</TableCell>
+                            <TableCell className="text-right">{formatNumberWithDots(cart.price)}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
@@ -289,7 +290,7 @@ export default function Cart() {
             <div className="flex justify-between">
                 <Button onClick={handleDeleteSelected}>Xoa</Button>
                 <div className="flex gap-10 items-center">
-                    Total: {calculateTotal()}
+                    Total: {formatNumberWithDots(calculateTotal())}
                     <Dialog>
                         <DialogTrigger asChild>
                             <Button onClick={handlePayment}>Thanh Toan</Button>
