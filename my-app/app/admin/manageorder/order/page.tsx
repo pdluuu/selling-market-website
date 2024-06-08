@@ -114,6 +114,7 @@ export default function OrderItem({ order }: { order: IOrder }) {
                     (product) => (
                         <div key={product._id}>
                             <p>Ten san pham: {product[0].name || 'Unknown'}</p>
+                            <p>Version: {product[0].version}</p>
                             <p>So luong: {product.quantity}</p>
                         </div>
                     )
