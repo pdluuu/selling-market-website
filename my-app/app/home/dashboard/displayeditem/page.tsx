@@ -11,8 +11,11 @@ import { phoneData } from '../sample-data';
 import { useRouter } from 'next/navigation';
 import tag from '../../../../Images/tag3.png';
 import { useEffect, useState } from 'react';
+<<<<<<< HEAD
 import DetailProduct from '@/components/Detail.Product';
 import { formatNumberWithDots } from '@/lib/utils';
+=======
+>>>>>>> refs/remotes/origin/main
 
 type ProductInfo = {
     _id: string;
@@ -20,7 +23,11 @@ type ProductInfo = {
     discount: number;
     price: number;
     brand: string;
+<<<<<<< HEAD
     version: any[];
+=======
+    version: string[];
+>>>>>>> refs/remotes/origin/main
     category: string;
     images: string[];
     items: string[];
@@ -44,7 +51,11 @@ export default function DisplayedItem({
         case 'Điện thoại':
             categoyy = 'Smart Phone';
             break;
+<<<<<<< HEAD
         case 'Máy tính':
+=======
+        case 'Laptop':
+>>>>>>> refs/remotes/origin/main
             categoyy = 'Laptop';
             break;
         case 'Đồng hồ':
@@ -58,9 +69,14 @@ export default function DisplayedItem({
             break;
     }
     const brandd = brand || '';
+<<<<<<< HEAD
     let pricey = -1;
     if (price) pricey = price;
     if (price == 0) pricey = 0;
+=======
+    let pricee = -1;
+    if (price) pricee = price;
+>>>>>>> refs/remotes/origin/main
 
     const getProduct = async () => {
         try {
@@ -72,15 +88,29 @@ export default function DisplayedItem({
                 body: JSON.stringify({
                     category: categoyy,
                     brand: brandd,
+<<<<<<< HEAD
                     price: pricey,
                 }),
             });
             const result = await response.json();
             setListProduct(result.data);
+=======
+                    price: pricee,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const result = await response.json();
+            console.log('Success get produts', result.data);
+            if (result.data.length !== 0) setListProduct(result.data);
+>>>>>>> refs/remotes/origin/main
         } catch (e) {
             console.log(e);
         }
     };
+<<<<<<< HEAD
     useEffect(() => {
         getProduct();
     }, [brand, price]);
@@ -88,6 +118,15 @@ export default function DisplayedItem({
     const handleViewMore = () => {
         if (reverse === 'true') {
             const url = `/home/view-category-brand`;
+=======
+    if (listProduct?.length === 0) getProduct();
+
+    console.log(listProduct);
+    // listProduct=phoneData
+    const handleViewMore = () => {
+        if (reverse === 'true') {
+            const url = `/view-category-brand`;
+>>>>>>> refs/remotes/origin/main
             if (category) localStorage.setItem('category', category);
             if (brand) localStorage.setItem('brand', brand);
             localStorage.setItem('reverse', reverse);
@@ -96,6 +135,7 @@ export default function DisplayedItem({
             if (!brand) {
                 switch (category) {
                     case 'Điện thoại':
+<<<<<<< HEAD
                         router.push('/home/view-smartphone');
                         break;
                     case 'Máy tính':
@@ -109,11 +149,30 @@ export default function DisplayedItem({
                         break;
                     case 'Phụ kiện':
                         router.push('/home/view-accessory');
+=======
+                        router.push('/view-smartphone');
+                        break;
+                    case 'Laptop':
+                        router.push('/view-laptop');
+                        break;
+                    case 'Đồng hồ':
+                        router.push('/view-watch');
+                        break;
+                    case 'Tablet':
+                        router.push('/view-tablet');
+                        break;
+                    case 'Phụ kiện':
+                        router.push('/view-accessory');
+>>>>>>> refs/remotes/origin/main
                         break;
                 }
                 localStorage.setItem('category', category);
             } else {
+<<<<<<< HEAD
                 const url = `/home/view-category-brand`;
+=======
+                const url = `/view-category-brand`;
+>>>>>>> refs/remotes/origin/main
                 localStorage.setItem('category', category);
                 localStorage.setItem('brand', brand);
                 router.push(url);
@@ -134,6 +193,7 @@ export default function DisplayedItem({
             </div>
             <Carousel className="">
                 <CarouselContent className="-ml-1 ">
+<<<<<<< HEAD
                     {listProduct?.length !== 0 ? (
                         listProduct?.map((product, index) => (
                             <CarouselItem key={index} className="pl-1  basis-1/3 lg:basis-1/5 ">
@@ -200,6 +260,43 @@ export default function DisplayedItem({
                     ) : (
                         <div></div>
                     )}
+=======
+                    {listProduct?.map((product, index) => (
+                        <CarouselItem key={index} className="pl-1  basis-1/3 lg:basis-1/5 ">
+                            <div className="p-[3px] md:p-1  ">
+                                <Card className="">
+                                    {product.discount === 0 ? (
+                                        <div></div>
+                                    ) : (
+                                        <div className="absolute z-10 -ml-[30px] -mt-10 h-auto w-auto ">
+                                            <img src={tag.src} width={120} className="transform scale-y-[-1]" />
+                                            <p className=" absolute ml-8 -mt-[75px] text-white font-bold text-xs">
+                                                Giảm {product.discount}%
+                                            </p>
+                                        </div>
+                                    )}
+                                    <CardContent className="md:pt-4 h-[290px] shadow-md p-[12px]  flex flex-col md:space-y-2 space-y-1">
+                                        <div className="w-auto z-0 flex justify-center h-[107px]">
+                                            <img
+                                                src={product.images[0]}
+                                                className="object-cover h-full hover:scale-110 transition duration-500"
+                                                alt="asus"
+                                            />
+                                        </div>
+
+                                        <CardTitle className="text-[18px]">{product.name}</CardTitle>
+                                        <p className="text-[16px] relative">
+                                            {product.price}
+                                            <span className="underline md:text-xs text-[8px] inline-block align-top">
+                                                đ
+                                            </span>
+                                        </p>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        </CarouselItem>
+                    ))}
+>>>>>>> refs/remotes/origin/main
                 </CarouselContent>
                 <CarouselPrevious className=" border-none" />
                 <CarouselNext className=" border-none" />

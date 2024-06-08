@@ -1,8 +1,15 @@
 'use client';
+<<<<<<< HEAD
 import { MenubarDemo } from '../dashboard/category/page';
 import DisplayedItem from '../dashboard/displayeditem/page';
 import BreadcrumbWithCustomSeparator from '../dashboard/breadcrumb/page';
 import { laptopData } from '../dashboard/sample-data';
+=======
+import { MenubarDemo } from '../../home/dashboard/category/page';
+import DisplayedItem from '../../home/dashboard/displayeditem/page';
+import BreadcrumbWithCustomSeparator from '../../home/dashboard/breadcrumb/page';
+import { laptopData } from '../../home/dashboard/sample-data';
+>>>>>>> refs/remotes/origin/main
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Badge } from '../../../components/ui/badge';
@@ -31,7 +38,11 @@ export default function ViewCategoryBrand() {
         case 'Điện thoại':
             categoyy = 'Smart Phone';
             break;
+<<<<<<< HEAD
         case 'Máy tính':
+=======
+        case 'Laptop':
+>>>>>>> refs/remotes/origin/main
             categoyy = 'Laptop';
             break;
         case 'Đồng hồ':

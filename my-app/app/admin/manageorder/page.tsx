@@ -2,6 +2,7 @@
 import NewMenubarMenu from '@/app/home/dashboard/menubar/page';
 import { Menubar, MenubarMenu, MenubarShortcut } from '@/components/ui/menubar';
 import { MenubarTrigger } from '@/components/ui/menubar';
+<<<<<<< HEAD
 import { Check, FolderClosed, Gift, Star, Truck, Undo2, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import OrderItem from './order/page';
@@ -31,6 +32,21 @@ export default function ManageOrder() {
             }
             throw error; // Re-throw the error to be handled by the caller
         }
+=======
+import { FolderClosed, Gift, Star, Truck } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import OrderItem from './order/page';
+import { IOrder } from '../../../../back-end/src/models/Order.model';
+
+export default function ManageOrder() {
+    const [orders, setOrders] = useState<IOrder[]>([]);
+    const [statusFilter, setStatusFilter] = useState('all');
+
+    const fetchOrders = async (status: string): Promise<IOrder[]> => {
+        const response = await fetch(`/admin/order/${status}`);
+        const data = await response.json();
+        return data;
+>>>>>>> refs/remotes/origin/main
     };
 
     useEffect(() => {
@@ -42,6 +58,7 @@ export default function ManageOrder() {
     }, [statusFilter]);
 
     return (
+<<<<<<< HEAD
         <div>
             <div className="flex h-12 justify-center items-center border border-y w-full mt-8">
                 <Menubar className="border-none">
@@ -95,6 +112,45 @@ export default function ManageOrder() {
                 </Menubar>
             </div>
             <div className="flex flex-row gap-16 content-center mx-16">
+=======
+        <div className="flex h-12 justify-center items-center border border-y w-full">
+            <Menubar className="border-none">
+                <MenubarMenu>
+                    <div className="flex gap-16">
+                        <MenubarTrigger onClick={() => setStatusFilter('all')}>Tất cả</MenubarTrigger>
+
+                        <MenubarTrigger onClick={() => setStatusFilter('confirm')}>
+                            <MenubarShortcut>
+                                <FolderClosed />
+                            </MenubarShortcut>{' '}
+                            Đang chờ xác thực
+                        </MenubarTrigger>
+
+                        <MenubarTrigger onClick={() => setStatusFilter('package')}>
+                            <MenubarShortcut>
+                                <Gift />
+                            </MenubarShortcut>{' '}
+                            Đang chuẩn bị hàng
+                        </MenubarTrigger>
+
+                        <MenubarTrigger onClick={() => setStatusFilter('transition')}>
+                            <MenubarShortcut>
+                                <Truck />
+                            </MenubarShortcut>{' '}
+                            Đang giao hàng
+                        </MenubarTrigger>
+
+                        <MenubarTrigger onClick={() => setStatusFilter('delivered')}>
+                            <MenubarShortcut>
+                                <Star />
+                            </MenubarShortcut>{' '}
+                            Giao hàng thành công
+                        </MenubarTrigger>
+                    </div>
+                </MenubarMenu>
+            </Menubar>
+            <div>
+>>>>>>> refs/remotes/origin/main
                 {orders.map((order) => (
                     <OrderItem key={order._id} order={order} />
                 ))}

@@ -290,12 +290,19 @@ class AuthService {
             console.log(error);
         }
     }
+<<<<<<< HEAD
     async authGoogle(
         email: string,
 
         name: string,
         image: string,
     ) {}
+=======
+    async authGoogle( email : string, 
+        
+        name : string,
+        image : string) {}
+>>>>>>> refs/remotes/origin/main
 }
 
 const authService = new AuthService();

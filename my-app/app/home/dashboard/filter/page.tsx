@@ -109,10 +109,17 @@ const Filter = ({
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
+<<<<<<< HEAD
                                         <SelectItem value="0">Dưới 10 triệu</SelectItem>
                                         <SelectItem value="1">10 - 20 triệu</SelectItem>
                                         <SelectItem value="2">20 - 30 triệu</SelectItem>
                                         <SelectItem value="3">Trên 30 triệu</SelectItem>
+=======
+                                        <SelectItem value="1">Dưới 10 triệu</SelectItem>
+                                        <SelectItem value="2">Dưới 20 triệu</SelectItem>
+                                        <SelectItem value="3">Dưới 30 triệu</SelectItem>
+                                        <SelectItem value="4">Trên 30 triệu</SelectItem>
+>>>>>>> refs/remotes/origin/main
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />

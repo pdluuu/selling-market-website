@@ -9,8 +9,12 @@ adminRouter.get('/view/:type', authenticateToken, isAdmin, user.ViewApply);
 adminRouter.get('/list/:type', authenticateToken, isAdmin, user.ViewList);
 adminRouter.post('/accept', authenticateToken, isAdmin, user.Accept);
 adminRouter.post('/notAccept', authenticateToken, isAdmin, user.notAccept);
+<<<<<<< HEAD
 
 adminRouter.get('/order/:status', authenticateToken, isAdmin, user.ViewOrder);
 adminRouter.post('/order/update-status', authenticateToken, isAdmin, user.updateStatus);
+=======
+adminRouter.get('/order/:status', authenticateToken, isAdmin, user.ViewOrder);
+>>>>>>> refs/remotes/origin/main
 
 export default adminRouter;

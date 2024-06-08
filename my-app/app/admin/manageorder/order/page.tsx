@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { IOrder } from '../../../../../back-end/src/models/Order.model';
 import { IProduct } from '../../../../../back-end/src/models/Product.model';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/components/ui/dialog';
@@ -205,3 +206,19 @@ export default function OrderItem({ order }: { order: IOrder }) {
         </div>
     );
 }
+=======
+import { IOrder } from "../../../../../back-end/src/models/Order.model"
+export default function OrderItem({ order } : {order : IOrder}){
+    return(
+        <div className="order-item border p-4 mb-4">
+            <p>Status: {order.status}</p>
+            <p>Date: {order.date}</p>
+            <p>Total Price: {order.totalprice}</p>
+            <p>Address: {order.address}</p>
+            <p>Phone Number: {order.phoneNumber}</p>
+        </div>
+    )
+}
+
+
+>>>>>>> refs/remotes/origin/main

@@ -22,7 +22,11 @@ export default function BreadcrumbWithCustomSeparator({
     let firstt = '';
     let secondd = '';
 
+<<<<<<< HEAD
     if (reverse === 'true') {
+=======
+    if (reverse==="true") {
+>>>>>>> refs/remotes/origin/main
         if (brand) firstt = brand;
         if (category) secondd = category;
         sectionLink = './view-brand';
@@ -31,6 +35,7 @@ export default function BreadcrumbWithCustomSeparator({
         if (category) firstt = category;
         switch (category) {
             case 'Điện thoại':
+<<<<<<< HEAD
                 sectionLink = '/home/view-smartphone';
                 break;
             case 'Máy tính':
@@ -44,6 +49,21 @@ export default function BreadcrumbWithCustomSeparator({
                 break;
             case 'Phụ kiện':
                 sectionLink = '/home/view-accessory';
+=======
+                sectionLink = './view-smartphone';
+                break;
+            case 'Laptop':
+                sectionLink = './view-laptop';
+                break;
+            case 'Đồng hồ':
+                sectionLink = './view-watch';
+                break;
+            case 'Tablet':
+                sectionLink = './view-tablet';
+                break;
+            case 'Phụ kiện':
+                sectionLink = './view-accessory';
+>>>>>>> refs/remotes/origin/main
                 break;
         }
     }
@@ -51,13 +71,21 @@ export default function BreadcrumbWithCustomSeparator({
         <Breadcrumb className="ml-0 mt-6 -mb-3 w-full lg:w-3/4 flex">
             <BreadcrumbList>
                 <BreadcrumbItem>
+<<<<<<< HEAD
                     <Link href="/home/dashboard">
+=======
+                    <Link href="/dashboard">
+>>>>>>> refs/remotes/origin/main
                         <BreadcrumbPage>Home</BreadcrumbPage>
                     </Link>
                 </BreadcrumbItem>
 
                 <BreadcrumbSeparator />
+<<<<<<< HEAD
                 <BreadcrumbItem onClick={()=>{console.log(sectionLink)}}>
+=======
+                <BreadcrumbItem>
+>>>>>>> refs/remotes/origin/main
                     <Link href={sectionLink}>
                         <BreadcrumbPage>{firstt}</BreadcrumbPage>
                     </Link>

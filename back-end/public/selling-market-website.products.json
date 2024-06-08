@@ -7,7 +7,11 @@
   "price": 21990000,
   "category": "Smart Phone",
   "discount": 12,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Xanh rêu",
       "memory": "8GB-256GB",
@@ -97,7 +101,11 @@
   "price": 8290000,
   "category": "Smart Phone",
   "discount": 0,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Kem",
       "memory": "A35(8-128)",
@@ -198,7 +206,11 @@
   "price": 26890000,
   "category": "Smart Phone",
   "discount": 20,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Xám",
       "memory": "256GB",
@@ -315,7 +327,11 @@
   "price": 18990000,
   "category": "Smart Phone",
   "discount": 26,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Xanh mint",
       "memory": "256GB",
@@ -416,7 +432,11 @@
   "price": 33990000,
   "category": "Smart Phone",
   "discount": 17,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Xanh da trời",
       "memory": "256GB",
@@ -517,7 +537,11 @@
   "price": 8990000,
   "category": "Smart Phone",
   "discount": 0,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Xanh",
       "memory": "256GB",
@@ -604,7 +628,11 @@
   "price": 16990000,
   "category": "Smart Phone",
   "discount": 0,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Xám",
       "memory": "512GB",
@@ -685,7 +713,11 @@
   "price": 41990000,
   "category": "Smart Phone",
   "discount": 6,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Vàng đồng",
       "memory": "512GB",
@@ -767,7 +799,11 @@
   "price": 22990000,
   "category": "Smart Phone",
   "discount": 0,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Hồng",
       "memory": "256GB",
@@ -854,7 +890,11 @@
   "price": 7990000,
   "category": "Smart Phone",
   "discount": 11,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Xanh dương",
       "memory": "256GB",
@@ -937,7 +977,11 @@
   "price": 29590000,
   "discount": 15,
   "category": "Smart Phone",
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Titan xanh",
       "memory": "256GB",
@@ -1054,7 +1098,11 @@
   "price": 13750000,
   "category": "Smart Phone",
   "discount": 22,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Xanh lá",
       "memory": "128GB",
@@ -1189,7 +1237,11 @@
   "price": 27390000,
   "category": "Smart Phone",
   "discount": 7,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Tím",
       "memory": "128GB",
@@ -1291,7 +1343,11 @@
   "price": 16490000,
   "category": "Smart Phone",
   "discount": 19,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Tím nhạt",
       "memory": "128GB",
@@ -1414,7 +1470,11 @@
   "price": 13490000,
   "category": "Smart Phone",
   "discount": 19,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Trắng",
       "memory": "128GB",
@@ -1526,7 +1586,11 @@
   "price": 4990000,
   "category": "Smart Phone",
   "discount": 5,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Vàng",
       "memory": "8GB-128GB",
@@ -1628,7 +1692,11 @@
   "price": 3490000,
   "category": "Smart Phone",
   "discount": 0,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Bạc",
       "memory": "4GB",
@@ -1729,7 +1797,11 @@
   "price": 8990000,
   "category": "Smart Phone",
   "discount": 5,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Tím",
       "memory": "256GB",
@@ -1816,7 +1888,11 @@
   "price": 21490000,
   "category": "Smart Phone",
   "discount": 12,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Xanh lá",
       "memory": "512GB",
@@ -1903,7 +1979,11 @@
   "price": 10990000,
   "category": "Smart Phone",
   "discount": 0,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Xanh dương",
       "memory": "8GB",
@@ -2004,7 +2084,11 @@
   "price": 1590000,
   "category": "Smart Phone",
   "discount": 0,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Đỏ",
       "memory": "32GB",
@@ -2101,7 +2185,11 @@
   "price": 2390000,
   "category": "Smart Phone",
   "discount": 0,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Xanh lá",
       "memory": "4GB",
@@ -2201,7 +2289,11 @@
   "price": 990000,
   "category": "Smart Phone",
   "discount": 0,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Xanh ngọc",
       "memory": "32GB",
@@ -2292,7 +2384,11 @@
   "price": 3190000,
   "category": "Smart Phone",
   "discount": 0,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Xanh ngọc",
       "memory": "3GB-32GB",
@@ -2382,7 +2478,11 @@
   "price": 3990000,
   "category": "Smart Phone",
   "discount": 0,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Xanh lá",
       "memory": "32GB",
@@ -2472,7 +2572,11 @@
   "price": 1039000,
   "category": "Smart Phone",
   "discount": 9,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Tím nhạt",
       "memory": "256GB",
@@ -2578,7 +2682,11 @@
   "price": 21250000,
   "category": "Smart Phone",
   "discount": 8,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Xanh lá",
       "memory": "256GB",
@@ -2678,7 +2786,11 @@
   "price": 1230000,
   "category": "Smart Phone",
   "discount": 10,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Đen",
       "memory": "128GB",
@@ -2762,7 +2874,11 @@
   "price": 10990000,
   "category": "Smart Phone",
   "discount": 6,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Xanh lá",
       "memory": "128GB",
@@ -2850,7 +2966,11 @@
   "price": 9990000,
   "category": "Smart Phone",
   "discount": 0,
+<<<<<<< HEAD
   "version": [
+=======
+  "versions": [
+>>>>>>> refs/remotes/origin/main
     {
       "color": "Xám",
       "memory": "128GB",

@@ -21,20 +21,28 @@ import {
     LogIn,
     LogOut,
     MonitorCheck,
+<<<<<<< HEAD
     Notebook,
     SearchIcon,
     Settings,
     ShoppingBag,
+=======
+    SearchIcon,
+    Settings,
+>>>>>>> refs/remotes/origin/main
     ShoppingCart,
     User,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState, memo, useContext } from 'react';
 import { useRouter } from 'next/navigation';
+<<<<<<< HEAD
 import { useStore } from 'zustand';
 
 import BRAND from '@/public/442006968_7610173559097035_3639226673492589947_n.jpg';
 import Image from 'next/image';
+=======
+>>>>>>> refs/remotes/origin/main
 type User = {
     _id: string;
     email: string;
@@ -50,9 +58,13 @@ function Navbar() {
     });
     const router = useRouter();
     // console.log(user);
+<<<<<<< HEAD
     const [needLogin, setNeedsLogin] = useState(
         localStorage.getItem('user') && localStorage.getItem('access_token') ? false : true,
     );
+=======
+
+>>>>>>> refs/remotes/origin/main
     const logOut = async () => {
         try {
             setUser(null);
@@ -67,10 +79,17 @@ function Navbar() {
                 },
                 body: JSON.stringify(reqBody),
             });
+<<<<<<< HEAD
             localStorage.removeItem('user');
             localStorage.removeItem('access_token');
             // setUser(null);
             setNeedsLogin(true);
+=======
+
+            localStorage.clear();
+            window.location.replace('/');
+            // setUser(null);
+>>>>>>> refs/remotes/origin/main
         } catch (error) {
             console.error('Error:', error);
         }
@@ -78,6 +97,7 @@ function Navbar() {
 
     return (
         <div className="flex items-center w-full justify-between  p-2 lg:pl-8 lg:pr-7 h-86 ">
+<<<<<<< HEAD
             <Link href="/home/dashboard">
                 {/* <Button className=" p-0 lg:text-2xl text-base font-bold p-4">
                     <MonitorCheck className="lg:mr-2" size={30} />
@@ -86,6 +106,13 @@ function Navbar() {
                 <Button variant={'custom'} className="mt-3 h-[10px]">
                     <img width={150} height={30} src={BRAND.src} />
                 </Button>{' '}
+=======
+            <Link href="/dashboard">
+                <Button className=" p-0 lg:text-2xl text-base font-bold p-4">
+                    <MonitorCheck className="lg:mr-2" size={30} />
+                    <span>Brand</span>
+                </Button>
+>>>>>>> refs/remotes/origin/main
             </Link>
             <div className="flex flex-row-reverse items-center w-1/4">
                 <Input
@@ -100,7 +127,11 @@ function Navbar() {
             </div>
 
             <div className="flex items-center lg:space-x-4 ">
+<<<<<<< HEAD
                 {needLogin ? (
+=======
+                {!localStorage.getItem('access_token') ? (
+>>>>>>> refs/remotes/origin/main
                     <Link href="/auth/login">
                         <Button>
                             <LogIn className="mr-2" />
@@ -120,13 +151,21 @@ function Navbar() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="w-56">
                             <DropdownMenuGroup>
+<<<<<<< HEAD
                                 <Link href="/home/user">
+=======
+                                <Link href="/user">
+>>>>>>> refs/remotes/origin/main
                                     <DropdownMenuItem>
                                         <User className="mr-2 h-4 w-4" />
                                         <span>Tài khoản của tôi</span>
                                     </DropdownMenuItem>
                                 </Link>
+<<<<<<< HEAD
                                 <Link href="/home/view-order">
+=======
+                                <Link href="/view-order">
+>>>>>>> refs/remotes/origin/main
                                     <DropdownMenuItem>
                                         <CreditCard className="mr-2 h-4 w-4" />
                                         <span>Đơn hàng</span>
@@ -144,6 +183,7 @@ function Navbar() {
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={logOut}>
+<<<<<<< HEAD
                                 <LogIn className="mr-2 h-4 w-4" />
                                 <span>Đăng xuất</span>
                             </DropdownMenuItem>
@@ -157,16 +197,27 @@ function Navbar() {
                                     <span>Quan li </span>
                                 </DropdownMenuItem>
                             )}
+=======
+                                <LogOut className="mr-2 h-4 w-4" />
+                                <span>Đăng xuất</span>
+                            </DropdownMenuItem>
+>>>>>>> refs/remotes/origin/main
                         </DropdownMenuContent>
                     </DropdownMenu>
                 )}
                 <Bell size={25} />
+<<<<<<< HEAD
                 <Link href="/home/cart">
                     <ShoppingCart size={25} />
                 </Link>
                 <Link href="/home/payment">
                     <ShoppingBag size={25} />
                 </Link>
+=======
+                <Link href="/cart">
+                    <ShoppingCart size={25} />
+                </Link>
+>>>>>>> refs/remotes/origin/main
             </div>
         </div>
     );

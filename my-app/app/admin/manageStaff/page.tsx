@@ -6,6 +6,7 @@ import { SquareUser, Truck } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import StaffItem from './staff/page';
 import { IUser } from '../../../../back-end/src/models/User.model';
+<<<<<<< HEAD
 import axios from 'axios';
 
 export default function ManageOrder() {
@@ -33,6 +34,17 @@ export default function ManageOrder() {
             }
             throw error; // Re-throw the error to be handled by the caller
         }
+=======
+
+export default function ManageOrder() {
+    const [staffs, setStaffs] = useState<IUser[]>([]);
+    const [roleFilter, setRoleFilter] = useState('all');
+
+    const fetchStaffs = async (type: string): Promise<IUser[]> => {
+        const response = await fetch(`/admin/list/${type}`);
+        const data = await response.json();
+        return data;
+>>>>>>> refs/remotes/origin/main
     };
 
     useEffect(() => {
@@ -43,6 +55,7 @@ export default function ManageOrder() {
         getStaffs();
     }, [roleFilter]);
 
+<<<<<<< HEAD
 
     return (
         <div className='w-full'>
@@ -76,6 +89,36 @@ export default function ManageOrder() {
                         <StaffItem key={staff._id} staff={staff} />
                     ))}
                 </div>
+=======
+    return (
+        <div className="flex h-12 justify-start items-center border border-y w-full">
+            <Menubar className="border-none">
+                <MenubarMenu>
+                    <div className="flex gap-16 ml-56">
+                        <MenubarTrigger onClick={() => setRoleFilter('all')}>Tất cả</MenubarTrigger>
+
+                        <MenubarTrigger onClick={() => setRoleFilter('staff')}>
+                            <MenubarShortcut>
+                                <SquareUser />
+                            </MenubarShortcut>{' '}
+                            Staff
+                        </MenubarTrigger>
+
+                        <MenubarTrigger onClick={() => setRoleFilter('deliver')}>
+                            <MenubarShortcut>
+                                <Truck />
+                            </MenubarShortcut>{' '}
+                            Deliver
+                        </MenubarTrigger>
+                    </div>
+                </MenubarMenu>
+            </Menubar>
+            <div>
+                {staffs.map((staff) => (
+                    <StaffItem key={staff._id} staff={staff} />
+                ))}
+            </div>
+>>>>>>> refs/remotes/origin/main
         </div>
     );
 }

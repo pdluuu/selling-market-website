@@ -33,7 +33,11 @@ export default function NewMenubarMenu({
             categoryLink = '/home/view-smartphone';
             break;
         case 'Máy tính':
+<<<<<<< HEAD
             categoryLink = '/home/view-laptop';
+=======
+            categoryLink = './view-laptop';
+>>>>>>> refs/remotes/origin/main
             break;
         case 'Đồng hồ':
             categoryLink = '/home/view-watch';
@@ -47,13 +51,20 @@ export default function NewMenubarMenu({
     }
     const router = useRouter();
     const handleClick = (brand: string) => {
+<<<<<<< HEAD
         const url = `/home/view-category-brand`;
         localStorage.setItem('category', category);
         localStorage.setItem('brand', brand);
+=======
+        const url = `/view-category-brand`;
+        localStorage.setItem("category",category);
+        localStorage.setItem("brand",brand);
+>>>>>>> refs/remotes/origin/main
         router.push(url);
     };
     return (
         <MenubarMenu open={openDropdown} onOpenChange={() => setOpenDropdown(false)}>
+<<<<<<< HEAD
             <MenubarTrigger
                 onClick={() => router.push(categoryLink)}
                 onMouseEnter={() => setOpenDropdown(true)}
@@ -63,6 +74,18 @@ export default function NewMenubarMenu({
                 {category}
             </MenubarTrigger>
 
+=======
+            
+                <MenubarTrigger
+                    onClick={() => router.push(categoryLink)}
+                    onMouseEnter={() => setOpenDropdown(true)}
+                    className="lg:w-64 lg:text-base text-xs hover:bg-accent"
+                >
+                    {icon}
+                    {category}
+                </MenubarTrigger>
+           
+>>>>>>> refs/remotes/origin/main
             <MenubarContent
                 onMouseLeave={() => {
                     setOpenDropdown(false);

@@ -19,6 +19,7 @@ import api from '@/config/axios.config';
 const SignUpSchema = z
     .object({
         email: z.string().email(),
+<<<<<<< HEAD
         password: z
             .string()
             .min(8, { message: 'Password is too short' })
@@ -27,6 +28,9 @@ const SignUpSchema = z
                 message:
                     'Password must include at least one uppercase letter, one lowercase letter, one number, and one special character',
             }),
+=======
+        password: z.string().min(8, { message: 'Password is too short' }).max(20, { message: 'Password is too long' }),
+>>>>>>> refs/remotes/origin/main
         username: z.string(),
         confirmPassword: z.string(),
     })
@@ -53,6 +57,7 @@ export default function Login() {
         try {
             const { username, email, password } = values;
             console.log(JSON.stringify({ username, email, password }));
+<<<<<<< HEAD
             const response = await api.post('/auth/sign-up', { username, email, password }).then((data) => {
                 console.log(data.data);
 
@@ -82,6 +87,19 @@ export default function Login() {
                     localStorage.setItem('user', JSON.stringify(data?.data?.data));
                 });
             window.location.replace('/home/dashboard');
+=======
+            const response = api.post('/auth/sign-up', { username, email, password }).then((data) => {
+                console.log(data.data);
+
+                localStorage.setItem('access_token', data?.data?.data?.accessToken);
+                localStorage.setItem('refresh_token', data?.data?.data?.refreshToken);
+                localStorage.setItem('email', email);
+            });
+
+            // console.log('Send code for validation:', result);
+
+            // router.push('/auth/code_for_registration');
+>>>>>>> refs/remotes/origin/main
         } catch (e) {
             console.log(e);
         }
@@ -172,7 +190,11 @@ export default function Login() {
                                         Remember me
                                     </label>
                                 </div>
+<<<<<<< HEAD
                                 <Link href={"/auth/forgot_password"} className="font-medium underline underline-offset-4">
+=======
+                                <Link href={'/forgot-password'} className="font-medium underline underline-offset-4">
+>>>>>>> refs/remotes/origin/main
                                     Forgot password
                                 </Link>
                             </div>

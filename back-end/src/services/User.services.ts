@@ -76,6 +76,7 @@ class UserServices {
             }
 
             order.orderProduct.push({
+<<<<<<< HEAD
                 product_id: product_id,
                 store_id: 'store ID',
                 quantity: '1', // Sửa lại nếu bạn có thông tin về số lượng
@@ -83,6 +84,15 @@ class UserServices {
                 price: product.price || 0,
                 discount: (product.discount || '0').toString(),
             });
+=======
+            product_id: product_id,
+            store_id: 'store ID',
+            quantity: '1', // Sửa lại nếu bạn có thông tin về số lượng
+            status: 'chua_duoc_chuyen_di',
+            price: product.price || 0,
+            discount: (product.discount || '0').toString(),
+        });
+>>>>>>> refs/remotes/origin/main
 
             let totalPrice = 0;
             for (const item of order.orderProduct) {
@@ -203,6 +213,7 @@ class UserServices {
     async viewCart(userId: string) {
         try {
             const cart = await ShoppingCartModel.findOne({ user_id: userId });
+<<<<<<< HEAD
 
             if (cart) {
                 const cartItems = await Promise.all(
@@ -227,12 +238,39 @@ class UserServices {
                     success: true,
                     data: cartItems,
                 };
+=======
+      
+            if (cart) {
+              const cartItems = await Promise.all(
+                cart.cartProduct.map(async (item) => {
+                  const product = await ProductModel.findById(item.product_id);
+                  if (product) {
+                    return {
+                      _id: product._id,
+                      name: product.name,
+                      discount: product.discount,
+                      price: product.price,
+                      brand: product.brand,
+                      items: product.items,
+                      category: product.category,
+                      images: product.images,
+                    };
+                  }
+                })
+              );
+              cartItems.filter((item) => item !== undefined);
+              return{ 
+                success: true,
+                data: cartItems,
+              };
+>>>>>>> refs/remotes/origin/main
             } else {
                 return {
                     success: false,
                     message: 'ok',
                 };
             }
+<<<<<<< HEAD
         } catch (error) {
             console.error('Error retrieving cart items:', error);
             throw error;
@@ -245,24 +283,50 @@ class UserServices {
             if (order && product_x) {
                 for (const product of order.orderProduct) {
                     if (productId == product.product_id && product.status === 'da_nhan_hang') {
+=======
+          } catch (error) {
+            console.error('Error retrieving cart items:', error);
+            throw error;
+          }
+    }
+    async checkOut(userId: string,productId: string) {
+        try {
+            const order = await OrderModel.findOne({user_id:userId});
+            const product_x = await ProductModel.findById(productId);
+            if (order && product_x) {
+                for (const product of order.orderProduct) {
+                    if (productId==product.product_id && product.status === 'da_nhan_hang') {
+>>>>>>> refs/remotes/origin/main
                         return {
                             success: true,
                             message: 'san pham ' + productId + 'da duoc nhan',
                         };
                     }
                 }
+<<<<<<< HEAD
+=======
+                
+>>>>>>> refs/remotes/origin/main
             } else {
                 return {
                     success: false,
                     message: 'Order not found',
                 };
             }
+<<<<<<< HEAD
         } catch (error) {
+=======
+          } catch (error) {
+>>>>>>> refs/remotes/origin/main
             return {
                 success: false,
                 message: 'error',
             };
+<<<<<<< HEAD
         }
+=======
+          }
+>>>>>>> refs/remotes/origin/main
     }
     // async purchersProduct(userId: string, productId: string) {
     //     try {
@@ -279,7 +343,11 @@ class UserServices {
     //                     };
     //                 }
     //             }
+<<<<<<< HEAD
 
+=======
+                
+>>>>>>> refs/remotes/origin/main
     //         } else {
     //             return {
     //                 success: false,
@@ -293,17 +361,26 @@ class UserServices {
     //         };
     //       }
     // }
+<<<<<<< HEAD
     async purchersProduct(userId: string, productId: string) {
         try {
             const order = await OrderModel.findOne({ user_id: userId });
             const product_x = await ProductModel.findById(productId);
 
+=======
+    async  purchersProduct(userId: string, productId: string) {
+        try {
+            const order = await OrderModel.findOne({ user_id: userId });
+            const product_x = await ProductModel.findById(productId);
+    
+>>>>>>> refs/remotes/origin/main
             if (order && product_x) {
                 let productUpdated = false;
                 for (const product of order.orderProduct) {
                     if (productId === product.product_id) {
                         product.status = 'da_nhan_hang';
                         productUpdated = true;
+<<<<<<< HEAD
                         console.log('Product status updated:', product); // Log cập nhật trạng thái sản phẩm
                         break;
                     }
@@ -312,29 +389,54 @@ class UserServices {
                 if (productUpdated) {
                     await order.save();
                     console.log('Order saved:', order); // Log việc lưu lại đơn hàng
+=======
+                        console.log('Product status updated:', product);  // Log cập nhật trạng thái sản phẩm
+                        break;
+                    }
+                }
+    
+                if (productUpdated) {
+                    await order.save();
+                    console.log('Order saved:', order);  // Log việc lưu lại đơn hàng
+>>>>>>> refs/remotes/origin/main
                     return {
                         success: true,
                         message: 'Sản phẩm ' + productId + ' đã được mua',
                     };
                 } else {
+<<<<<<< HEAD
                     console.log('Product not found in order'); // Log khi sản phẩm không có trong đơn hàng
+=======
+                    console.log('Product not found in order');  // Log khi sản phẩm không có trong đơn hàng
+>>>>>>> refs/remotes/origin/main
                     return {
                         success: false,
                         message: 'Sản phẩm không có trong đơn hàng',
                     };
                 }
             } else {
+<<<<<<< HEAD
                 console.log('Order or product not found'); // Log khi không tìm thấy đơn hàng hoặc sản phẩm
+=======
+                console.log('Order or product not found');  // Log khi không tìm thấy đơn hàng hoặc sản phẩm
+>>>>>>> refs/remotes/origin/main
                 return {
                     success: false,
                     message: 'Đơn hàng hoặc sản phẩm không tồn tại',
                 };
             }
         } catch (error) {
+<<<<<<< HEAD
             console.error('Error occurred:', error); // Log lỗi nếu có
             return {
                 success: false,
                 message: 'Lỗi: ',
+=======
+            console.error('Error occurred:', error);  // Log lỗi nếu có
+            return {
+                success: false,
+                message: 'Lỗi: ' ,
+>>>>>>> refs/remotes/origin/main
             };
         }
     }
@@ -394,7 +496,10 @@ class UserServices {
                     apply.role === type;
                     // apply.hide === false;
                 });
+<<<<<<< HEAD
                 list = list.filter((apply) => apply.role === type);
+=======
+>>>>>>> refs/remotes/origin/main
             }
             return list;
         } catch (error) {
@@ -405,6 +510,7 @@ class UserServices {
     async getAllOrder(status: string) {
         try {
             let list = await OrderModel.find({
+<<<<<<< HEAD
                 role: {
                     $in: [
                         'allData',
@@ -423,6 +529,12 @@ class UserServices {
             }
             if (status === 'allData') {
                 list = await OrderModel.find({}).exec();
+=======
+                role: { $in: ['confirm', 'package', 'transition', 'delivered'] },
+            }).exec();
+            if (status !== 'all') {
+                // list = list.filter((list) => list.status === status);
+>>>>>>> refs/remotes/origin/main
             }
             return list;
         } catch (error) {

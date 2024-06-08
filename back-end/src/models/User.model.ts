@@ -20,11 +20,15 @@ export interface IUser extends Document {
     username: string;
     status: UserStatus;
     role: UserRole;
+<<<<<<< HEAD
     vetify_user: {
         code: string;
         expiresAt: number;
     };
     reset_password: {
+=======
+    reset_password?: {
+>>>>>>> refs/remotes/origin/main
         code: string;
         expiresAt: number;
     };

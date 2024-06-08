@@ -55,11 +55,19 @@ class User {
 
             // * accesstoken la dang ma hoa cua { id, email } can co khoa
 
+<<<<<<< HEAD
             const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET || 'ACCESS_TOKEN_SECRET', {
                 expiresIn: process.env.EXPIRES_TOKEN_TIME || '1h',
             });
 
             const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET || 'REFRESH_TOKEN_SECRET');
+=======
+            const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET || '', {
+                expiresIn: process.env.EXPIRES_TOKEN_TIME,
+            });
+
+            const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET || '');
+>>>>>>> refs/remotes/origin/main
 
             await authService.addTokens(refreshToken, user._id);
 
@@ -99,7 +107,11 @@ class User {
             };
             console.log(process.env.EXPIRES_TOKEN_TIME);
             // phien ban ma hoa
+<<<<<<< HEAD
             const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET || 'ACCESS_TOKEN_SECRET', {
+=======
+            const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET || '', {
+>>>>>>> refs/remotes/origin/main
                 expiresIn: '1h',
             });
             // ma hoa + key -> phien ban chua decode
@@ -277,7 +289,14 @@ class User {
         }
     }
 
+<<<<<<< HEAD
     async get_access_token(req: Request<any, any, { refreshToken: string }>, res: Response<ISuccessRes | IFailRes>) {
+=======
+    async get_access_token(
+        req: Request<any, any, { refreshToken: string; email: string }>,
+        res: Response<ISuccessRes | IFailRes>,
+    ) {
+>>>>>>> refs/remotes/origin/main
         try {
             const { refreshToken } = req.body;
             console.log(refreshToken);
@@ -558,6 +577,7 @@ class User {
     async ViewOrder(req: Request<any, any, any>, res: Response<ISuccessRes | IFailRes>) {
         try {
             const { status } = req.params;
+<<<<<<< HEAD
             const allowedTypes = [
                 'allData',
                 'notExaminedData',
@@ -574,6 +594,13 @@ class User {
 
             const list = await userServices.getAllOrder(status);
             console.log(list);
+=======
+            const allowedTypes = ['all', 'confirm', 'package', 'transition', 'delivered'];
+            if (!allowedTypes.includes(status)) {
+                throw new InvalidInput();
+            }
+            const list = await userServices.getAllOrder(status);
+>>>>>>> refs/remotes/origin/main
             if (list === 500) {
                 throw new ErrorResponse('Internal server error', 500);
             }
@@ -700,6 +727,7 @@ class User {
             });
         }
     }
+<<<<<<< HEAD
     async updateStatus(req: Request, res: Response) {
         try {
             const { order_Id } = req.body;
@@ -728,6 +756,8 @@ class User {
             });
         }
     }
+=======
+>>>>>>> refs/remotes/origin/main
 }
 const user = new User();
 export default user;

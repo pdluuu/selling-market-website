@@ -28,7 +28,17 @@ app.use(helmet());
 app.use(compression());
 app.use(json());
 app.use(express.urlencoded({ extended: true })); // support encoded bodies
+<<<<<<< HEAD
 app.use(cors());
+=======
+app.use(
+    cors({
+        origin: 'http://localhost:3000',
+        methods: 'GET,POST,PUT,DELETE',
+        credentials: true,
+    }),
+);
+>>>>>>> refs/remotes/origin/main
 
 // * api version
 app.use(express.urlencoded({ extended: true })); // support encoded bodies

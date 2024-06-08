@@ -33,6 +33,7 @@ export default function Footer() {
                 </div>
                 <div className="w-1/2 lg:w-1/3">
                     <Card className="bg-transparent border-none  ">
+<<<<<<< HEAD
                         <CardContent className="space-y-1 lg:p-6 p-3">
                             <CardTitle className=" lg:text-2xl text-base">Liên hệ</CardTitle>
                             <CardDescription className=" w-auto lg:text-base text-[11px]">
@@ -41,6 +42,12 @@ export default function Footer() {
                             <CardDescription className="lg:text-base text-[11px]">
                                 Địa chỉ: Số 1 Đại Cồ Việt
                             </CardDescription>
+=======
+                        <CardContent className='space-y-1 lg:p-6 p-3'>
+                            <CardTitle className=' lg:text-2xl text-base'>Liên hệ</CardTitle>
+                            <CardDescription className=" w-auto lg:text-base text-[11px]">Số điện thoại: 0395235125</CardDescription>
+                            <CardDescription className="lg:text-base text-[11px]">Địa chỉ: Số 1 Đại Cồ Việt</CardDescription>
+>>>>>>> refs/remotes/origin/main
                         </CardContent>
                     </Card>
                 </div>

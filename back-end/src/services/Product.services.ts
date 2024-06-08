@@ -45,6 +45,7 @@ class ProductServices {
     }
     async viewProduct(brand: string, price: number, category: string) {
         try {
+            console.log(brand,price,category)
             let query: { category?: string; brand?: string; price?: any } = {};
 
       if (brand) {
@@ -60,6 +61,7 @@ class ProductServices {
             if (category) {
                 query.category = category;
             }
+            console.log(query)
             const result = ProductModel.find(query);
             
             return result;

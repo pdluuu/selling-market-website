@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import productServices from '../services/Product.services';
 import jwt from 'jsonwebtoken';
 
@@ -46,12 +47,70 @@ class Product {
             }
         } catch (error: any) {
             console.log(error);
+=======
+import productServices from "../services/Product.services";
+import jwt from "jsonwebtoken";
 
-            const Err = new ErrorResponse(error.message as string, error.statusCode as number);
+import { Response, Request } from "express";
+import {
+  ErrorResponse,
+  ErrorResponseType,
+  InvalidInput,
+  MissingParameter,
+} from "../utils/errorResponse";
+import auhtService from "../services/auth.service";
+import Logger from "../lib/logger";
+import {
+  IFailRes,
+  ISignIn,
+  ISignUp,
+  ISuccessRes,
+  ITokenWithRole,
+} from "../utils/auth.interface";
+import { IProduct, IViewProduct } from "../models/Product.model";
+import { config } from "dotenv";
+import { authenticateRole } from "../middlerware/role.authentication";
+import { crossOriginResourcePolicy } from "helmet";
+config();
+class Product {
+  async createProduct(
+    req: Request<any, any, IProduct>,
+    res: Response<ISuccessRes | IFailRes>
+  ) {
+    try {
+      const { name, brand, discount, version, price, category, images, items } =
+        req.body;
 
-            return res.status(Err.statusCode).json({ message: Err.message });
-        }
+      if (!name || !brand || !price || !category || !images) {
+        throw new MissingParameter();
+      }
+
+      const product = await productServices.createProduct(
+        name,
+        brand,
+        discount,
+        version,
+        price,
+        category,
+        images,
+        items
+      );
+
+      return res.status(200).json({
+        message: "Create successfully",
+      });
+    } catch (error: any) {
+      console.log(error);
+>>>>>>> refs/remotes/origin/main
+
+      const Err = new ErrorResponse(
+        error.message as string,
+        error.statusCode as number
+      );
+
+      return res.status(Err.statusCode).json({ message: Err.message });
     }
+<<<<<<< HEAD
     async deleteProduct(req: Request, res: Response<ISuccessRes | IFailRes>) {
         try {
             const { userId } = req.body;
@@ -70,12 +129,30 @@ class Product {
         } catch (error: any) {
             // Logger.error(error);
             console.log(error);
+=======
+  }
+  async deleteProduct(req: Request, res: Response<ISuccessRes | IFailRes>) {
+    try {
+      authenticateRole(req, res, async () => {
+        const { id } = req.body;
+        const product = productServices.deleteProduct(id);
+        return res.status(200).json({
+          message: "Delete successfully",
+        });
+      });
+    } catch (error: any) {
+      // Logger.error(error);
+      console.log(error);
+>>>>>>> refs/remotes/origin/main
 
-            const Err = new ErrorResponse(error.message as string, error.statusCode as number);
+      const Err = new ErrorResponse(
+        error.message as string,
+        error.statusCode as number
+      );
 
-            return res.status(Err.statusCode).json({ message: Err.message });
-        }
+      return res.status(Err.statusCode).json({ message: Err.message });
     }
+<<<<<<< HEAD
     async updateProduct(req: Request, res: Response<ISuccessRes | IFailRes>) {
         try {
             const { userId } = req.body;
@@ -114,8 +191,49 @@ class Product {
             const Err = new ErrorResponse(error.message as string, error.statusCode as number);
 
             return res.status(Err.statusCode).json({ message: Err.message });
+=======
+  }
+  async updateProduct(
+    req: Request<any, any, IProduct>,
+    res: Response<ISuccessRes | IFailRes>
+  ) {
+    try {
+      authenticateRole(req, res, async () => {
+        const {
+          id,
+          name,
+          brand,
+          discount,
+          version,
+          price,
+          category,
+          images,
+          items,
+        } = req.body;
+
+        if (!name || !brand || !price || !category || !images) {
+          throw new MissingParameter();
+>>>>>>> refs/remotes/origin/main
         }
+
+        const product = await productServices.updateProduct(req.body);
+
+        return res.status(200).json({
+          message: "Update successfully",
+        });
+      });
+    } catch (error: any) {
+      // Logger.error(error);
+      console.log(error);
+
+      const Err = new ErrorResponse(
+        error.message as string,
+        error.statusCode as number
+      );
+
+      return res.status(Err.statusCode).json({ message: Err.message });
     }
+<<<<<<< HEAD
     async addToCart(userId: string, productId: string, quantity: number) {
         try {
             const product = await ProductModel.findById(productId);
@@ -178,28 +296,48 @@ class Product {
         } catch (error: any) {
             // Logger.error(error);
             console.log(error);
+=======
+  }
+  async viewProduct(req: Request<any, any, IViewProduct>, res: Response) {
+    try {
+      const { brand, price, category } = req.body;
 
-            const Err = new ErrorResponse(error.message as string, error.statusCode as number);
+      const product = await productServices.viewProduct(brand, price, category);
+      console.log("in controller");
+      console.log(product);
+      return res.status(200).json({ message: "successfull", data: product });
+    } catch (error: any) {
+      // Logger.error(error);
+      console.log(error);
 
-            return res.status(Err.statusCode).json({ message: Err.message });
-        }
+      const Err = new ErrorResponse(
+        error.message as string,
+        error.statusCode as number
+      );
+>>>>>>> refs/remotes/origin/main
+
+      return res.status(Err.statusCode).json({ message: Err.message });
     }
-    async viewDetailProduct(req: Request, res: Response) {
-        try {
-            const { _id } = req.body;
+  }
+  async viewDetailProduct(req: Request, res: Response) {
+    try {
+      const { _id } = req.body;
 
-            const product = await productServices.viewDetailProduct(_id);
+      const product = await productServices.viewDetailProduct(_id);
 
-            return res.status(200).json(product);
-        } catch (error: any) {
-            // Logger.error(error);
-            console.log(error);
+      return res.status(200).json(product);
+    } catch (error: any) {
+      // Logger.error(error);
+      console.log(error);
 
-            const Err = new ErrorResponse(error.message as string, error.statusCode as number);
+      const Err = new ErrorResponse(
+        error.message as string,
+        error.statusCode as number
+      );
 
-            return res.status(Err.statusCode).json({ message: Err.message });
-        }
+      return res.status(Err.statusCode).json({ message: Err.message });
     }
+  }
 }
 const product = new Product();
 export default product;

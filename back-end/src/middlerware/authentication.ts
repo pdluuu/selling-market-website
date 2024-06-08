@@ -17,7 +17,34 @@ export function authenticateToken(req: Request<any, any, any>, res: Response, ne
             message: 'Un-verified',
         });
 
+<<<<<<< HEAD
     jwt.verify(token, String(process.env.ACCESS_TOKEN_SECRET), (err: any, payload: JwtPayLoad | any) => {
+=======
+    jwt.verify(token, "kkk", (err: any, payload: JwtPayLoad | any) => {
+        if (err) {
+            console.log(err);
+            return res.status(403).json({
+                message: 'Un-verified',
+            });
+        }
+
+        req.user = payload;
+        req.body.userId = payload._id;
+        console.log(req.user);
+        next();
+    });
+}
+
+export function authenticateTempToken(req: Request<any, any, any>, res: Response, next: NextFunction) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (token == null)
+        return res.status(401).json({
+            message: 'Un-verified',
+        });
+
+    jwt.verify(token, process.env.TEMP_TOKEN_SECRET || '', (err: any, payload: JwtPayLoad | any) => {
+>>>>>>> refs/remotes/origin/main
         if (err) {
             console.log(err);
             return res.status(403).json({
@@ -79,4 +106,5 @@ export async function isAdmin(req: Request<any, any, any>, res: Response, next: 
             mes: 'Internal server error',
         });
     }
+
 }

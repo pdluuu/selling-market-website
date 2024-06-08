@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { IListRegister } from "../../../../../back-end/src/models/ListRegister.model"
 import { useState } from "react";
@@ -63,6 +64,16 @@ export default function RequestItem({ request }: { request: IListRegister }) {
                 </div>
             </DialogContent>
         </Dialog>
+=======
+import { IListRegister } from "../../../../../back-end/src/models/ListRegister.model"
+export default function RequestItem({ request } : {request : IListRegister}){
+    return(
+        <div className="order-item border p-4 mb-4">
+            <p>UserId: {request.userId}</p>
+            <p>Email: {request.email}</p>
+            <p>Role: {request.role}</p>
+        </div>
+>>>>>>> refs/remotes/origin/main
     )
 }
 
